@@ -52,7 +52,6 @@ static int cmd_q(char *args) {
 }
 
 static int cmd_si(char *args){
-	//TODO add Assert, remove it one day.
 	char *point=args; 
 	uint64_t number = 0; 
 	if (*point == '-'){ return -1; }
