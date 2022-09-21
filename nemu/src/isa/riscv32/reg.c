@@ -24,6 +24,8 @@ const char *regs[] = {
 };
 
 void isa_reg_display() {
+//TODO 加入输入，可以只输出指定register的值
+	
 }
 
 word_t isa_reg_str2val(const char *s, bool *success) {
