@@ -18,7 +18,6 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "sdb.h"
-
 static int is_batch_mode = false;
 
 void init_regex();
@@ -52,6 +51,18 @@ static int cmd_q(char *args) {
   return -1;
 }
 
+static int cmd_si(char *args){
+	//TODO add Assert, remove it one day.
+	char *point=args; 
+	uint64_t number = 0; 
+	if (*point == '-'){ return -1; }
+	for (; *point <= '9' && *point >= '0' ; point++){
+		number = number*10 + *point-'0';
+	}
+	cpu_exec(number);
+	return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -62,6 +73,7 @@ static struct {
   { "help", "Display information about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
+	{ "si", "Execute n steps of the program then stop", cmd_si },
 
   /* TODO: Add more commands */
 
