@@ -92,10 +92,13 @@ static int cmd_x(char *args) {
 	int i;
 	char tem;
 	for (i=0; i<strlen(n)-1; i++) {
-		num = num*10 + n[i];
+		if (n[i] < '9' && n[i] > '0'){
+			num = num*10 + n[i];
+		}
+		else {break;}
 	}
 	
-	paddr_t addr= 0;
+paddr_t addr= 0;
 	/*解析地址：将string转换成paddr_t */	
 	for (i=2; i<strlen(exp)-1; i++) {
 		tem = exp[i];
