@@ -93,9 +93,9 @@ static int cmd_x(char *args) {
 	char tem;
 	for (i=0; i<strlen(n)-1; i++) {
 		if (n[i] < '9' && n[i] > '0'){
-			num = num*10 + n[i];
+			num = num*10 + n[i] - '0';
 		}
-		else {break;}
+		else {printf("input args error"); return 0;}
 	}
 	
 paddr_t addr= 0;
