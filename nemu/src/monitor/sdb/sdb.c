@@ -106,11 +106,11 @@ static int cmd_x(char *args) {
 		else if (tem >= 'a' && tem <= 'f') {addr = addr*16 + tem - 'a' + 10;}
 		else {printf("error input\n");}
 	}
-
+	printf("%lu",sizeof(paddr_t));
 	/* 输出地址对应的数据 */
 	for (i=0; i< num; i++) {
 		printf("output\n");
-		printf("%c",(uint32_t)paddr_read(addr,4));
+		printf("%c",(uint32_t)paddr_read(addr ,4));
 	}
 	printf("\n");	
 	return 0;
