@@ -98,22 +98,18 @@ static int cmd_x(char *args) {
 		else {printf("input args error"); return 0;}
 	}
 	
-paddr_t addr= 0;
+	paddr_t addr= 0;
 	/*解析地址：将string转换成paddr_t */	
 	for (i=2; i<strlen(exp); i++) {
 		tem = exp[i];
-		printf("\n%c\n",tem);//2323323//2323323
 		if (tem >= '0' && tem <= '9') {addr = addr*16 + tem - '0';}
 		else if (tem >= 'a' && tem <= 'f') {addr = addr*16 + tem - 'a' + 10;}
 		else {printf("error input\n");}
 	}
 
-	printf("\n%s\n",n);
-	printf("\n***%x\n",addr);
-	printf("\n$$$%d\n",num);
 	/* 输出地址对应的数据 */
 	for (i=0; i< num; i++) {
-		printf("%u",(uint32_t)paddr_read(addr,4));
+		printf("%c",(uint32_t)paddr_read(addr,4));
 	}
 	printf("\n");	
 	return 0;
