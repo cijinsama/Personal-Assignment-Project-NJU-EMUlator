@@ -104,10 +104,9 @@ static int cmd_x(char *args) {
 		else {printf("error input\n");}
 	}
 	printf("\n***%x\n",addr);
-	
+	printf("\n$$$%d\n",num);
 	/* 输出地址对应的数据 */
 	for (i=0; i< num; i++) {
-
 		printf("%u",(uint32_t)paddr_read(addr,4));
 	}
 	printf("\n");	
