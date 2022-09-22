@@ -41,6 +41,21 @@ static char* rl_gets() {
   return line_read;
 }
 
+static int cmd_info(char *args) {
+	if (strlen(args) != 1) {
+		printf("args error");
+		return 0;
+	}
+	if (*args == 'r'){
+		isa_reg_display();
+		return 0;
+	}
+	else if (*args == 'w') {
+	}
+	printf("args error");
+	return 0;
+}
+
 static int cmd_c(char *args) {
   cpu_exec(-1);
   return 0;
@@ -52,7 +67,7 @@ static int cmd_q(char *args) {
   return -1;
 }
 
-static int cmd_si(char *args){
+static int cmd_si(char *args) {
 	char *point=args; 
 	uint64_t number = 0; 
 	if (*point == '-'){ return -1; }
@@ -74,6 +89,7 @@ static struct {
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
 	{ "si", "Execute n steps of the program then stop", cmd_si },
+	{ "info", "Print status", cmd_info },
 
   /* TODO: Add more commands */
 
