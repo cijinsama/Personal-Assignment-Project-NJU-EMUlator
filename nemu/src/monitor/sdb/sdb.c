@@ -110,7 +110,7 @@ static int cmd_x(char *args) {
 	/* 输出地址对应的数据 */
 	for (i=0; i< num; i++) {
 		printf("\nuuuun%u\n", addr);
-		printf("%x",(uint32_t)paddr_read(addr++ ,4));
+		printf("%x",(uint32_t)paddr_read(addr+= sizeof(paddr_t)*16 ,4));
 	}
 	printf("\n");	
 	return 0;
