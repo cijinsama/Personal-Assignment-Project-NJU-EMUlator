@@ -92,7 +92,7 @@ static int cmd_x(char *args) {
 	int i;
 	char tem;
 	for (i=0; i<strlen(n)-1; i++) {
-		if (n[i] < '9' && n[i] > '0'){
+		if (n[i] <= '9' && n[i] >= '0'){
 			num = num*10 + n[i] - '0';
 		}
 		else {printf("input args error"); return 0;}
