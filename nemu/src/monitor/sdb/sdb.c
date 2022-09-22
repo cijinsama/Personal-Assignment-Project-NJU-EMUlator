@@ -109,7 +109,8 @@ static int cmd_x(char *args) {
 
 	/* 输出地址对应的数据 */
 	for (i=0; i< num; i++) {
-		printf("%c",(uint32_t)paddr_read(addr++ ,4));
+		//printf("%c ",(uint32_t)paddr_read(addr++ ,4));
+		printf("%c ",(char)paddr_read(addr++ ,4));
 	}
 	printf("\n");	
 	return 0;
