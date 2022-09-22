@@ -71,7 +71,6 @@ static int cmd_info(char *args) {
 
 
 static int cmd_x(char *args) {
-	printf("%s", args);
 	char *n = strtok(args, " ");
 	if (n == NULL) {
 		printf("lack of arg1\n");
@@ -95,6 +94,7 @@ static int cmd_x(char *args) {
 	for (i=0; i<strlen(n); i++) {
 		num = num*10 + n[i];
 	}
+	
 	paddr_t addr= 0;
 	/*解析地址：将string转换成paddr_t */	
 	for (i=2; i<strlen(exp); i++) {
@@ -103,7 +103,9 @@ static int cmd_x(char *args) {
 		else if (tem >= 'a' && tem <= 'f') {addr = addr*16 + tem - 'a' + 10;}
 		else {printf("error input\n");}
 	}
-
+	printf("\n***%x\n",addr);
+	
+	/* 输出地址对应的数据 */
 	for (i=0; i< num; i++) {
 
 		printf("%u",(uint32_t)paddr_read(addr,4));
