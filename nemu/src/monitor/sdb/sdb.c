@@ -109,8 +109,8 @@ static int cmd_x(char *args) {
 
 	/* 输出地址对应的数据 */
 	for (i=0; i< num; i++) {
-		//printf("%x",(uint32_t)paddr_read(addr ,4));
-		printf("%c",(uint32_t)paddr_read(addr ,4));
+		printf("%x",(uint32_t)paddr_read(addr ,4));
+		//printf("%c",(uint32_t)paddr_read(addr ,4));
 		addr += 1024;
 	}
 	printf("\n");	
