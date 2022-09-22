@@ -100,7 +100,7 @@ static int cmd_x(char *args) {
 	
 paddr_t addr= 0;
 	/*解析地址：将string转换成paddr_t */	
-	for (i=2; i<strlen(exp)-1; i++) {
+	for (i=2; i<strlen(exp); i++) {
 		tem = exp[i];
 		printf("\n%c\n",tem);//2323323//2323323
 		if (tem >= '0' && tem <= '9') {addr = addr*16 + tem - '0';}
