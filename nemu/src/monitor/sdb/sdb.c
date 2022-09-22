@@ -102,6 +102,7 @@ paddr_t addr= 0;
 	/*解析地址：将string转换成paddr_t */	
 	for (i=2; i<strlen(exp)-1; i++) {
 		tem = exp[i];
+		printf("\n%c\n",tem);//2323323//2323323
 		if (tem >= '0' && tem <= '9') {addr = addr*16 + tem - '0';}
 		else if (tem >= 'a' && tem <= 'f') {addr = addr*16 + tem - 'a' + 10;}
 		else {printf("error input\n");}
