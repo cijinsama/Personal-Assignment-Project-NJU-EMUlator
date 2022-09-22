@@ -27,7 +27,7 @@ void isa_reg_display() {
 //TODO 加入输入，可以只输出指定register的值
 	int regs_amount = sizeof(regs)/sizeof(regs[0]);
 	for (int i=0;i<regs_amount;i++){
-		printf("%-4s\t%08x\t%08lu\n",reg_name(i,0),cpu.gpr[i],(unsigned long)cpu.gpr[i]);
+		printf("%-4s\t0x%08x\t%08lu\n",reg_name(i,0),cpu.gpr[i],(unsigned long)cpu.gpr[i]);
 	}	
 }
 
