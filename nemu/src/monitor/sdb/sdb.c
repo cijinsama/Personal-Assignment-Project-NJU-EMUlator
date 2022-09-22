@@ -74,15 +74,13 @@ static int cmd_x(char *args) {
 	printf("%s", args);
 	char *n = strtok(args, " ");
 	if (n == NULL) {
-		printf("%s", args);
 		printf("lack of arg1\n");
 		return 1;
 	}
 
 	args += strlen(n);
-	char *exp = strtok(args," ");
+	char *exp = strtok(NULL," ");
 	if (exp == NULL) {
-		printf("%s", args);
 		printf("lack of arg2\n");
 		return 1;
 	}
