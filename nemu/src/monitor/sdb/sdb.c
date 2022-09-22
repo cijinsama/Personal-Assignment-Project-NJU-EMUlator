@@ -17,6 +17,7 @@
 #include <cpu/cpu.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <memory/paddr.h>
 #include "sdb.h"
 static int is_batch_mode = false;
 
@@ -41,18 +42,72 @@ static char* rl_gets() {
   return line_read;
 }
 
+static int cmd_si(char *args) {
+	char *point=args; 
+	uint64_t number = 0; 
+	if (*point == '-'){ return -1; }
+	for (; *point <= '9' && *point >= '0' ; point++){
+		number = number*10 + *point-'0';
+	}
+	cpu_exec(number);
+	return 0;
+}
+
 static int cmd_info(char *args) {
 	if (strlen(args) != 1) {
-		printf("args error");
-		return 0;
+		printf("args error\n");
+		return 1;
 	}
 	if (*args == 'r'){
 		isa_reg_display();
 		return 0;
 	}
 	else if (*args == 'w') {
+	//TODO
 	}
-	printf("args error");
+	printf("args error\n");
+	return 1;
+}
+
+
+static int cmd_x(char *args) {
+	char *n = strtok(args, " ");
+	if (n == NULL) {
+		printf("lack of arg\n");
+		return 1;
+	}
+
+	args += strlen(n);
+	char *exp = strtok(args," ");
+	if (exp == NULL) {
+		printf("lack of arg\n");
+		return 1;
+	}
+
+	//if (!exists(exp)) {
+	//	printf("Don't exist such exp\n");
+	//	return 1;
+	//}
+	int num = 0;
+	int i;
+	char tem;
+	for (i=0; i<strlen(n); i++) {
+		num = num*10 + n[i];
+	}
+	paddr_t addr= 0;
+	/*解析地址：将string转换成paddr_t */	
+	for (i=2; i<strlen(exp); i++) {
+		tem = exp[i];
+		if (tem >= '0' && tem <= '9') {addr = addr*16 + tem - '0';}
+		else if (tem >= 'a' && tem <= 'f') {addr = addr*16 + tem - 'a' + 10;}
+		else {printf("error input\n");}
+	}
+
+	for (i=0; i< num; i++) {
+
+		printf("%u",(uint32_t)paddr_read(addr,4));
+	}
+	printf("\n");	
 	return 0;
 }
 
@@ -67,16 +122,6 @@ static int cmd_q(char *args) {
   return -1;
 }
 
-static int cmd_si(char *args) {
-	char *point=args; 
-	uint64_t number = 0; 
-	if (*point == '-'){ return -1; }
-	for (; *point <= '9' && *point >= '0' ; point++){
-		number = number*10 + *point-'0';
-	}
-	cpu_exec(number);
-	return 0;
-}
 
 static int cmd_help(char *args);
 
@@ -90,6 +135,7 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
 	{ "si", "Execute n steps of the program then stop", cmd_si },
 	{ "info", "Print status", cmd_info },
+	{ "x", "scan the memory for given addr string", cmd_x },
 
   /* TODO: Add more commands */
 
