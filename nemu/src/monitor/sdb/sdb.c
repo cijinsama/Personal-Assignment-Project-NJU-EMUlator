@@ -103,6 +103,8 @@ static int cmd_x(char *args) {
 		else if (tem >= 'a' && tem <= 'f') {addr = addr*16 + tem - 'a' + 10;}
 		else {printf("error input\n");}
 	}
+
+	printf("\n%s\n",n);
 	printf("\n***%x\n",addr);
 	printf("\n$$$%d\n",num);
 	/* 输出地址对应的数据 */
