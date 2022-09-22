@@ -91,7 +91,7 @@ static int cmd_x(char *args) {
 	int num = 0;
 	int i;
 	char tem;
-	for (i=0; i<strlen(n)-1; i++) {
+	for (i=0; i<strlen(n); i++) {
 		if (n[i] <= '9' && n[i] >= '0'){
 			num = num*10 + n[i] - '0';
 		}
