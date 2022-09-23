@@ -20,8 +20,12 @@
  */
 #include <regex.h>
 
+
+#define MAX_NUMBER_BUFFER 32
+
+
 enum {
-  TK_NOTYPE = 256, TK_EQ,
+  TK_NOTYPE = 256, TK_EQ, TK_NUMBER_NOEND = 257, TK_NUMBER_END = 258,
 
   /* TODO: Add more token types */
 
@@ -39,6 +43,13 @@ static struct rule {
   {" +", TK_NOTYPE},    // spaces
   {"\\+", '+'},         // plus
   {"==", TK_EQ},        // equal
+	{"\\-", '-'},         // minus
+	{"\\*", '*'},					// times
+	{"/", '/'},						// divide
+	{"\\(", '('},					// quotes_left
+	{"\\)", ')'},					// quotes_right
+	{"[0-9]{MAX_NUMBER_BUFFER}", TK_NUMBER_NOEND},	// number0-9,the non end part
+	{"[0-9]{1,MAX_NUMBER_BUFFER-1}", TK_NUMBER_END}															// number0-9,the end part_测试是否可以用32个
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -95,9 +106,29 @@ static bool make_token(char *e) {
          */
 
         switch (rules[i].token_type) {
-          default: TODO();
+					case TK_NOTYPE: 
+						break;
+					case '+':
+					case '-':
+					case '*':
+					case '/':
+					case '(':
+					case ')':
+						tokens[nr_token].type = rules->token_type;
+						tokens[nr_token].str[0] =(char)rules->token_type;
+						nr_token++;
+						break;
+					case TK_NUMBER_NOEND:
+						tokens[nr_token].type = rules->token_type;
+					  memcpy(tokens[nr_token].str,substr_start,MAX_NUMBER_BUFFER);
+						break;
+					case TK_NUMBER_END:
+						tokens[nr_token].type = rules->token_type;
+					  memcpy(tokens[nr_token].str,substr_start,MAX_NUMBER_BUFFER-1);
+						break;
+          default:
+						printf("Unknow expression\n");	
         }
-
         break;
       }
     }
