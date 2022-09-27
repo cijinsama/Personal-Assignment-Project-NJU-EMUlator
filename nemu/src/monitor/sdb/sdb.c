@@ -19,6 +19,7 @@
 #include <readline/history.h>
 #include <memory/paddr.h>
 #include "sdb.h"
+#define ERROR_GOON 1
 static int is_batch_mode = false;
 
 void init_regex();
@@ -45,7 +46,7 @@ static char* rl_gets() {
 static int cmd_si(char *args) {
 	char *point=args; 
 	uint64_t number = 0; 
-	if (*point == '-'){ return -1; }
+	if (*point == '-'){ return ERROR_GOON; }
 	for (; *point <= '9' && *point >= '0' ; point++){
 		number = number*10 + *point-'0';
 	}
@@ -56,17 +57,17 @@ static int cmd_si(char *args) {
 static int cmd_info(char *args) {
 	if (strlen(args) != 1) {
 		printf("args error\n");
-		return 1;
-	}
+		return ERROR_GOON;
+	} 
 	if (*args == 'r'){
 		isa_reg_display();
 		return 0;
-	}
-	else if (*args == 'w') {
+	} 
+	el se if (*args == 'w') {
 	//TODO
 	}
 	printf("args error\n");
-	return 1;
+	return ERROR_GOON;
 }
 
 
@@ -74,28 +75,24 @@ static int cmd_x(char *args) {
 	char *n = strtok(args, " ");
 	if (n == NULL) {
 		printf("lack of arg1\n");
-		return 1;
-	}
+		return ERROR_GOON;
+	} 
 
 	args += strlen(n);
 	char *exp = strtok(NULL," ");
 	if (exp == NULL) {
 		printf("lack of arg2\n");
-		return 1;
-	}
+		return ERROR_GOON;
+	} 
 
-	//if (!exists(exp)) {
-	//	printf("Don't exist such exp\n");
-	//	return 1;
-	//}
 	int num = 0;
 	int i;
 	char tem;
-	for (i=0; i<strlen(n); i++) {
+	for (i=0; i<strlen(n); i ++) {
 		if (n[i] <= '9' && n[i] >= '0'){
 			num = num*10 + n[i] - '0';
-		}
-		else {printf("input args error"); return 0;}
+		} 
+		else {printf("input args error\n"); return ERROR_GOON;}
 	}
 	
 	paddr_t addr= 0;
@@ -105,16 +102,31 @@ static int cmd_x(char *args) {
 		if (tem >= '0' && tem <= '9') {addr = addr*16 + tem - '0';}
 		else if (tem >= 'a' && tem <= 'f') {addr = addr*16 + tem - 'a' + 10;}
 		else {printf("error input\n");}
-	}
+	} 
 
 	/* 输出地址对应的数据  */
 	for (i=0; i< num; i++, addr+=4) {
 		//printf("%08x",(uint32_t)paddr_read(addr ,4));
 		printf("0x%08x\n",(uint32_t)paddr_read(addr ,4));
-	}
+	} 
 	printf("\n");	
 	return 0;
 }
+
+static int cmd_p(char *args) {
+	bool success;
+	uint32_t ans = 0;
+	ans = expr(args, &success);
+	if (!success) {
+		printf("please retry\n");
+		return ERROR_GOON;
+	}
+	else {
+		printf("%d\n",ans);
+		return 0;
+	}
+	return ERROR_GOON;
+} 
 
 static int cmd_c(char *args) {
   cpu_exec(-1);
@@ -141,7 +153,7 @@ static struct {
 	{ "si", "Execute n steps of the program then stop", cmd_si },
 	{ "info", "Print status", cmd_info },
 	{ "x", "scan the memory for given addr string", cmd_x },
-
+	{ "p", "evaluate the expr", cmd_p },
   /* TODO: Add more commands */
 
 };
