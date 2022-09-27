@@ -25,9 +25,10 @@
 #define MAX_NUMBER_SINGAL 32
 #define ERROR_MESSAGE_UNKNOWN -1
 #define ERROR_MESSAGE_VALUE -2
+#define MAX_NUMBER_HEX 32
 
 enum {
-  TK_NOTYPE = 256, TK_EQ, TK_NUMBER_NOEND = 257, TK_NUMBER_END = 258,
+  TK_NOTYPE = 256, TK_EQ, TK_NUMBER_NOEND = 257, TK_NUMBER_END = 258,TK_HEX = 259,TK_REG = 260, TK_EQ = 261, TK_UEQ = 262, DEREF = 263, NEGTIVE = 264
 
   /* TODO: Add more token types */
 
@@ -42,16 +43,20 @@ static struct rule {
    * Pay attention to the precedence level of different rules.
    */
 
-  {" +", TK_NOTYPE},    // spaces
-  {"\\+", '+'},         // plus
-  {"==", TK_EQ},        // equal
-	{"\\-", '-'},         // minus
-	{"\\*", '*'},					// times
-	{"/", '/'},						// divide
-	{"\\(", '('},					// quotes_left
-	{"\\)", ')'},					// quotes_right
+  {" +", TK_NOTYPE},																			// spaces
+  {"\\+", '+'},																						// plus
+	{"\\-", '-'},																						// minus
+	{"\\*", '*'},																						// times
+	{"/", '/'},																							// divide
+	{"\\(", '('},																						// quotes_left
+	{"\\)", ')'},																						// quotes_right
+	{"0x[0-9a-f]{1,MAX_NUMBER_HEX}", TK_HEX},								// hexadecimal-number
 	{"[0-9]{MAX_NUMBER_BUFFER}(?:[0-9])", TK_NUMBER_NOEND},	// number0-9,the non end part
-	{"[0-9]{1,MAX_NUMBER_SINGAL}(?:[^0-9])", TK_NUMBER_END}															// number0-9,the end part_测试是否可以用32个
+	{"[0-9]{1,MAX_NUMBER_SINGAL}(?:[^0-9])", TK_NUMBER_END},// number0-9,the end part_测试是否可以用32个
+	{"\\$[a-zA-Z1-9]+", TK_REG},																// reg_name
+  {"==", TK_EQ},																					// equal
+	{"!=", TK_UEQ},																					// unequal
+	{"&&", TK_AND},																					// and
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -116,19 +121,40 @@ static bool make_token(char *e) {
 					case '/':
 					case '(':
 					case ')':
+					case TK_EQ:
+					case TK_UEQ:
+					case TK_AND:
 						tokens[nr_token].type = rules->token_type;
-						tokens[nr_token].str[0] =(char)rules->token_type;
+						memcpy(tokens[nr_token].str, substr_start,substr_len);
+						nr_token++;
+						break;
+					case TK_HEX:
+						tokens[nr_token].type = rules->token_type;
+						if (substr_len > MAX_NUMBER_HEX){
+							printf("HEX number is larger than storage\n");
+							return false;
+						}
+						else{
+							memcpy(tokens[nr_token].str,substr_start+2,substr_len-2);
+						}
 						nr_token++;
 						break;
 					case TK_NUMBER_NOEND:
 						tokens[nr_token].type = rules->token_type;
 					  memcpy(tokens[nr_token].str,substr_start,MAX_NUMBER_BUFFER);
+						nr_token++;
 						break;
 					case TK_NUMBER_END:
 						tokens[nr_token].type = rules->token_type;
 					  memcpy(tokens[nr_token].str,substr_start,MAX_NUMBER_SINGAL);
+						nr_token++;
 						break;
-          default:
+					case TK_REG:
+						tokens[nr_token].type = rules->token_type;	
+						memcpy(tokens[nr_token].str, substr_start+1,substr_len-1);
+						nr_token++;
+						break;
+					default:
 						printf("Unknow expression\n");	
         }
         break;
@@ -197,25 +223,46 @@ uint32_t eval(Token* back_pointer, Token* front_pointer, int* error_message) {
 	}
 	/*when expr is number and is the end of it*/
 	else if (back_pointer == front_pointer) {
-		if (back_pointer.type != TK_NUMBER_END) {
+		if (back_pointer == TK_HEX) {
+			uint32_t single_number = 0;
+			char curchar;
+			for (int i=0; i<strlen(back_pointer.str); i++){
+				curchar = back_pointer.str[i];	
+				if (curchar <= 9 && curchar >= 0) single_number = single_number * 10 + curchar - '0';
+				else single_number = single_number * 10 + curchar - 'a' + 10;
+			}
+			return single_number;	
+		}
+		else if (back_pointer.type == TK_REG) {
+			bool success;
+			uint32_t single_number = isa_reg_str2val(back_pointer.str, &success);
+			if (success) {
+				return single_number;
+			}
+			error_message = ERROR_MESSAGE_UNKNOWN;	
+			return 1;
+		}
+		else if (back_pointer.type != TK_NUMBER_END) {
 			*error_message = ERROR_MESSAGE_VALUE;
 			fprintf(stderr, "pointer is supposed to point at a number, but got token type %d\nin line : %d and file : %s\n", back_pointer.type,__LINE__, __FILE__);
 			return 1;
 		}
-		uint32_t single_number = 0;
-		/*backforward search for the whole number string*/
-		while (back_pointer.type == TK_NUMBER_NOEND || back_pointer.type == TK_NUMBER_END) { back_pointer--; }
-		/*deal with the nonend part*/
-		while ((++back_pointer).type == TK_NUMBER_NOEND) {
-			 for (int i=0; i<MAX_NUMBER_BUFFER; i++) {
+		else {
+			uint32_t single_number = 0;
+			/*backforward search for the whole number string*/
+			while (back_pointer.type == TK_NUMBER_NOEND || back_pointer.type == TK_NUMBER_END) { back_pointer--; }
+			/*deal with the nonend part*/
+			while ((++back_pointer).type == TK_NUMBER_NOEND) {
+				 for (int i=0; i<MAX_NUMBER_BUFFER; i++) {
+					single_number = single_number*10 + back_pointer.str[i] - '0';
+				 }   
+			}
+			/*deal with the end part*/
+			for (int i=0; back_pointer.str[i]!=0 && i< MAX_NUMBER_SINGAL; i++){
 				single_number = single_number*10 + back_pointer.str[i] - '0';
-			 }   
+			}
+			return single_number;
 		}
-		/*deal with the end part*/
-		for (int i=0; back_pointer.str[i]!=0 && i< MAX_NUMBER_SINGAL; i++){
-			single_number = single_number*10 + back_pointer.str[i] - '0';
-		}
-		return single_number;
 	}
 	else if (check_parentheses(back_pointer, front_pointer) == true) {
 	/* The expression is surrounded by a matched pair of parentheses.
@@ -238,21 +285,41 @@ uint32_t eval(Token* back_pointer, Token* front_pointer, int* error_message) {
 				else if (back_pointer[i].type == ')') {count--; continue; }
 			}
 			else if (back_pointer[i].type == '(') { count++; continue; }
-			else if (back_pointer[i].type == '*' || back_pointer[i].type == '/') {
+			else if (back_pointer[i].type == TK_AND) {
 				main_op = back_pointer + i;	
 			}
-			else if (back_pointer[i].type == '+' || back_pointer[i].type == '-') {
-				if (main_op.type == '*' || back_pointer.type == '/') {
+			else if (back_pointer[i].type == TK_EQ || back_pointer[i].type == TK_UEQ) {
+				if (back_pointer[i].type == TK_AND) {
 					continue;
 				}
 				else {
 					main_op = back_pointer + i;
 				}
 			}
+			else if (back_pointer[i].type == '+' || back_pointer[i].type == '-') {
+				if (main_op.type == TK_EQ || main_op.type == TK_UEQ || main_op.type == TK_AND ) {
+					main_op = back_pointer + i;
+				}
+			}
+			else if (back_pointer[i].type == '*' || back_pointer[i].type == '/') {
+				if (main_op.type == '+' || main_op.type == '-' || main_op.type == TK_AND || main_op.type == TK_EQ || main_op.type == TK_UEQ) {
+					main_op = back_pointer + i;
+				}
+			}
+			else if (back_pointer[i].type == DEREF || back_pointer[i].type == NEGTIVE) {
+				if (main_op.type == '+' || main_op.type == '-' || main_op.type == TK_AND || main_op.type == TK_EQ || main_op.type == TK_UEQ || main_op.type == '*' || main_op.type == '/') {
+					main_op = back_pointer + i;
+				}
+			}
 		}
 		/*use the main operator to eval*/
-		val1 = eval(p, main_op - 1, error_message);
-		val2 = eval(main_op + 1, q, error_message);
+		if (main_op.type != DEREF && main_op.type != NEGTIVE){
+			val1 = eval(back_pointer, main_op - 1, error_message);
+			val2 = eval(main_op + 1, front_pointer, error_message);
+		}
+		else {
+			val2 = eval(main_op + 1, front_pointer, error_message);
+		}
 		if (*error_message != ERROR_MESSAGE_OK) { return 1; }
 		switch (op_type) {
 			case '+': return val1 + val2;
@@ -266,6 +333,10 @@ uint32_t eval(Token* back_pointer, Token* front_pointer, int* error_message) {
 				}
 				return val1 / val2;
 			}
+			case TK_EQ: return val1 == val2;
+			case TK_UEQ: return val1 != val2;
+			case TK_AND: return val1 && val2;
+			case DEREF: return paddr_read(val2,4);
 			default: {
 				*error_message = ERROR_MESSAGE_UNKNOWN;
 				fprintf(stderr, "Unkown error\nin line : %d and file : %s\n",__LINE__, __FILE__);
@@ -283,8 +354,18 @@ word_t expr(char *e, bool *success) {
    }
 	int error_message = 0;
 	uint32_t ans = 0;
-	eval()
-  /* TODO: Insert codes to evaluate the expression. */		
+  
+	/*处理*与-的二异性*/
+	for (i = 0; i < nr_token; i ++) {
+		if (tokens[i].type == '-' && (i == 0 || (tokens[i - 1].type != ')' && tokens[i - 1].type != TK_NUMBER_END && tokens[i - 1].type != TK_NUMBER_NOEND && tokens[i - 1].type != TK_HEX && tokens[i - 1].type != TK_REG ) ) ) {
+			tokens[i].type = NEGTIVE;
+		}
+		if (tokens[i].type == '*' && (i == 0 || (tokens[i - 1].type != ')' && tokens[i - 1].type != TK_NUMBER_END && tokens[i - 1].type != TK_NUMBER_NOEND && tokens[i - 1].type != TK_HEX && tokens[i - 1].type != TK_REG ) ) ) {
+			tokens[i].type = DEREF;
+		}
+	}
+	
+	/* TODO: Insert codes to evaluate the expression. */		
 	ans = eval(tokens, tokens+nr_token, error_message);
 	if (error_message == 0) {
 		*success = true;
