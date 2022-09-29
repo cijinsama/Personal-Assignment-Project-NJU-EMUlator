@@ -38,6 +38,29 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #endif
   if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
+// 自己写的部分
+#ifdef CONFIG_WATCHPOINT
+	int new_value;
+	bool successful;
+	WP* watcher_pointer = watcher_head;
+	while (watcher_pointer != NULL) {
+		new_value = expr(watcher_pointer.expr,&successful);
+		if (!successful) {
+			fprintf(stderr, "evaluation error\n");
+			panic();
+			break;
+		}
+		if (new_value != watcher_pointer.last_value) {
+			watcher_pointer.last_value = new_value;
+			nemu_state.state = NEMU_STOP;
+		}
+		watcher_pointer = watcher_pointer.next;
+	}
+	if (nemu_state.state == NEMU_STOP) {
+		printf("trigered the watchpoint, program stop.\n");
+	}
+#endif 
+//
 }
 
 static void exec_once(Decode *s, vaddr_t pc) {
@@ -51,7 +74,7 @@ static void exec_once(Decode *s, vaddr_t pc) {
   int ilen = s->snpc - s->pc;
   int i;
   uint8_t *inst = (uint8_t *)&s->isa.inst.val;
-  for (i = ilen - 1; i >= 0; i --) {
+   for (i = ilen - 1; i >= 0; i --) {
     p += snprintf(p, 4, " %02x", inst[i]);
   }
   int ilen_max = MUXDEF(CONFIG_ISA_x86, 8, 4);

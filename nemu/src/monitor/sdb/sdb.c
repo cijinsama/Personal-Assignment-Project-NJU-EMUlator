@@ -63,7 +63,7 @@ static int cmd_info(char *args) {
 		isa_reg_display();
 		return 0;
 	} 
-	el se if (*args == 'w') {
+	else if (*args == 'w') {
 	//TODO
 	}
 	printf("args error\n");
@@ -120,13 +120,28 @@ static int cmd_p(char *args) {
 	if (!success) {
 		printf("please retry\n");
 		return ERROR_GOON;
-	}
+	 }
 	else {
 		printf("%d\n",ans);
 		return 0;
-	}
+	} 
 	return ERROR_GOON;
 } 
+
+WP* watcher_head;
+
+static int cmd_w(char *args) {
+	watcher_head = new_wp( args ); 
+	return 0;
+}
+
+static int cmd_d(char *args) {
+	int single_number = 0;
+	for (int i=0; args[i] != '\0'; i++){
+		single_number = single_number*10 + args[i] - '0';
+	}
+	return 0;
+}
 
 static int cmd_c(char *args) {
   cpu_exec(-1);
@@ -154,6 +169,8 @@ static struct {
 	{ "info", "Print status", cmd_info },
 	{ "x", "scan the memory for given addr string", cmd_x },
 	{ "p", "evaluate the expr", cmd_p },
+	{ "w", "set a new watcher", cmd_w },
+	{ "d", "del a watcher", cmd_d }
   /* TODO: Add more commands */
 
 };

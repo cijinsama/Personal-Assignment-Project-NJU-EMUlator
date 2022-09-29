@@ -14,16 +14,10 @@
 ***************************************************************************************/
 
 #include "sdb.h"
-
+#include <string.h>
 #define NR_WP 32
 
-typedef struct watchpoint {
-  int NO;
-  struct watchpoint *next;
-
-  /* TODO: Add more members if necessary */
-
-} WP;
+//将这里的WP定义放到了sdb.h
 
 static WP wp_pool[NR_WP] = {};
 static WP *head = NULL, *free_ = NULL;
@@ -40,4 +34,36 @@ void init_wp_pool() {
 }
 
 /* TODO: Implement the functionality of watchpoint */
+WP* new_wp( char* expr ) {
+	if (free_ == NULL) {
+		fprintf(stderr,"lack of free watch point.\n");
+		panic();
+		Assert(0,"\n");
+	}
+	WP* tem = free_;
+	free_ = free_->next;
+	tem->next = head;
+	head = tem;
+	strcpy(tem->expr, expr);
+	return head;
+}
 
+void free_wp(WP *wp) {
+	int i;
+	if (head == wp) {
+		head = wp->next;
+	}
+	else {
+		for (i=0; head[i].next != wp && head[i].next != NULL; i++) {}
+		if (head[i].next == NULL) { panic(); }
+		head[i].next = wp->next;
+	}
+	wp->next = NULL;
+	if (free_ == NULL)	{
+		free_ = wp;
+	}
+	else {
+		wp->next = free_;
+		free_ = wp;
+	}
+}

@@ -20,15 +20,18 @@
  */
 #include <regex.h>
 #include <math.h>
+#include <memory/paddr.h>
 
 #define MAX_NUMBER_BUFFER 32
 #define MAX_NUMBER_SINGAL 32
 #define ERROR_MESSAGE_UNKNOWN -1
 #define ERROR_MESSAGE_VALUE -2
+#define ERROR_MESSAGE_OK -3
+#define ERROR_MESSAGE_DEVIDE_ZERO -4
 #define MAX_NUMBER_HEX 32
 
 enum {
-  TK_NOTYPE = 256, TK_EQ, TK_NUMBER_NOEND = 257, TK_NUMBER_END = 258,TK_HEX = 259,TK_REG = 260, TK_EQ = 261, TK_UEQ = 262, DEREF = 263, NEGTIVE = 264
+  TK_NOTYPE = 256, TK_NUMBER_NOEND = 257, TK_NUMBER_END = 258,TK_HEX = 259,TK_REG = 260, TK_EQ = 261, TK_UEQ = 262, DEREF = 263, NEGTIVE = 264, TK_AND = 265
 
   /* TODO: Add more token types */
 
@@ -81,7 +84,7 @@ void init_regex() {
 }
 
 typedef struct token {
-  int type = 0;
+  int type;//这里改掉了=0
   char str[32];
 } Token;
 
@@ -195,7 +198,7 @@ bool examin_if_make_token(char *e, bool *success) {
 #endif
 
 bool check_parentheses(Token* back_pointer, Token* front_pointer) {
-	if (back_pointer.type == '(' && back_pointer.type == ')'){
+	if (back_pointer->type == '(' && back_pointer->type == ')'){
 		int count = 0;
 		for (int i=0; back_pointer+i <= front_pointer && count >= 0; i++) {
 			if (back_pointer[i].type == '(') {
@@ -218,48 +221,48 @@ uint32_t eval(Token* back_pointer, Token* front_pointer, int* error_message) {
 		fprintf(stderr, "back_pointer is larger than front_pointer\nin line : %d and file : %s\n",__LINE__, __FILE__);
 		return 1;
 	}
-	else if (back_pointer.type == TK_NUMBER_NOEND) {
+	else if (back_pointer->type == TK_NUMBER_NOEND) {
 		eval(back_pointer+1,front_pointer,error_message);
 	}
 	/*when expr is number and is the end of it*/
 	else if (back_pointer == front_pointer) {
-		if (back_pointer == TK_HEX) {
+		if (back_pointer->type == TK_HEX) {
 			uint32_t single_number = 0;
 			char curchar;
-			for (int i=0; i<strlen(back_pointer.str); i++){
-				curchar = back_pointer.str[i];	
+			for (int i=0; i<strlen(back_pointer->str); i++){
+				curchar = back_pointer->str[i];	
 				if (curchar <= 9 && curchar >= 0) single_number = single_number * 10 + curchar - '0';
 				else single_number = single_number * 10 + curchar - 'a' + 10;
 			}
 			return single_number;	
 		}
-		else if (back_pointer.type == TK_REG) {
+		else if (back_pointer->type == TK_REG) {
 			bool success;
-			uint32_t single_number = isa_reg_str2val(back_pointer.str, &success);
+			uint32_t single_number = isa_reg_str2val(back_pointer->str, &success);
 			if (success) {
 				return single_number;
 			}
-			error_message = ERROR_MESSAGE_UNKNOWN;	
+			*error_message = ERROR_MESSAGE_UNKNOWN;	
 			return 1;
 		}
-		else if (back_pointer.type != TK_NUMBER_END) {
+		else if (back_pointer->type != TK_NUMBER_END) {
 			*error_message = ERROR_MESSAGE_VALUE;
-			fprintf(stderr, "pointer is supposed to point at a number, but got token type %d\nin line : %d and file : %s\n", back_pointer.type,__LINE__, __FILE__);
+			fprintf(stderr, "pointer is supposed to point at a number, but got token type %d\nin line : %d and file : %s\n", back_pointer->type,__LINE__, __FILE__);
 			return 1;
 		}
 		else {
 			uint32_t single_number = 0;
 			/*backforward search for the whole number string*/
-			while (back_pointer.type == TK_NUMBER_NOEND || back_pointer.type == TK_NUMBER_END) { back_pointer--; }
+			while (back_pointer->type == TK_NUMBER_NOEND || back_pointer->type == TK_NUMBER_END) { back_pointer--; }
 			/*deal with the nonend part*/
-			while ((++back_pointer).type == TK_NUMBER_NOEND) {
+			while ((++back_pointer)->type == TK_NUMBER_NOEND) {
 				 for (int i=0; i<MAX_NUMBER_BUFFER; i++) {
-					single_number = single_number*10 + back_pointer.str[i] - '0';
+					single_number = single_number*10 + back_pointer->str[i] - '0';
 				 }   
 			}
 			/*deal with the end part*/
-			for (int i=0; back_pointer.str[i]!=0 && i< MAX_NUMBER_SINGAL; i++){
-				single_number = single_number*10 + back_pointer.str[i] - '0';
+			for (int i=0; back_pointer->str[i]!=0 && i< MAX_NUMBER_SINGAL; i++){
+				single_number = single_number*10 + back_pointer->str[i] - '0';
 			}
 			return single_number;
 		}
@@ -268,12 +271,13 @@ uint32_t eval(Token* back_pointer, Token* front_pointer, int* error_message) {
 	/* The expression is surrounded by a matched pair of parentheses.
 	* If that is the case, just throw away the parentheses.
 	*/
-		return eval(back_pointer + 1, front_pointer - 1);
+		return eval(back_pointer + 1, front_pointer - 1, error_message);
 	}
 	else {
 		/*find the main operator*/
 		Token* main_op = back_pointer;
 		int count = 0;	//用 count 作为括号匹配栈
+		uint32_t val1 = 0,val2 = 0;
 		for (int i=0; main_op+i <= front_pointer; i++) {
 			if (count < 0) {
 				*error_message = ERROR_MESSAGE_UNKNOWN;
@@ -297,23 +301,23 @@ uint32_t eval(Token* back_pointer, Token* front_pointer, int* error_message) {
 				}
 			}
 			else if (back_pointer[i].type == '+' || back_pointer[i].type == '-') {
-				if (main_op.type == TK_EQ || main_op.type == TK_UEQ || main_op.type == TK_AND ) {
+				if (main_op->type == TK_EQ || main_op->type == TK_UEQ || main_op->type == TK_AND ) {
 					main_op = back_pointer + i;
 				}
 			}
 			else if (back_pointer[i].type == '*' || back_pointer[i].type == '/') {
-				if (main_op.type == '+' || main_op.type == '-' || main_op.type == TK_AND || main_op.type == TK_EQ || main_op.type == TK_UEQ) {
+				if (main_op->type == '+' || main_op->type == '-' || main_op->type == TK_AND || main_op->type == TK_EQ || main_op->type == TK_UEQ) {
 					main_op = back_pointer + i;
 				}
 			}
 			else if (back_pointer[i].type == DEREF || back_pointer[i].type == NEGTIVE) {
-				if (main_op.type == '+' || main_op.type == '-' || main_op.type == TK_AND || main_op.type == TK_EQ || main_op.type == TK_UEQ || main_op.type == '*' || main_op.type == '/') {
+				if (main_op->type == '+' || main_op->type == '-' || main_op->type == TK_AND || main_op->type == TK_EQ || main_op->type == TK_UEQ || main_op->type == '*' || main_op->type == '/') {
 					main_op = back_pointer + i;
 				}
 			}
 		}
 		/*use the main operator to eval*/
-		if (main_op.type != DEREF && main_op.type != NEGTIVE){
+		if (main_op->type != DEREF && main_op->type != NEGTIVE){
 			val1 = eval(back_pointer, main_op - 1, error_message);
 			val2 = eval(main_op + 1, front_pointer, error_message);
 		}
@@ -321,14 +325,14 @@ uint32_t eval(Token* back_pointer, Token* front_pointer, int* error_message) {
 			val2 = eval(main_op + 1, front_pointer, error_message);
 		}
 		if (*error_message != ERROR_MESSAGE_OK) { return 1; }
-		switch (op_type) {
+		switch (main_op->type) {
 			case '+': return val1 + val2;
 			case '-': return val1 - val2;
-			case '*': return val1 - val2;
+			case '*': return val1 * val2;
 			case '/': {
 				if (val2 == 0) {
 					*error_message = ERROR_MESSAGE_DEVIDE_ZERO;
-					fprintf(stderr, "Devide zero \nin line : %d and file : %s\n", back_pointer.type,__LINE__, __FILE__);
+					fprintf(stderr, "Devide zero \nin line : %d and file : %s\n", __LINE__, __FILE__);
 					return 1;
 				}
 				return val1 / val2;
@@ -344,6 +348,7 @@ uint32_t eval(Token* back_pointer, Token* front_pointer, int* error_message) {
 			}
 		}
 	}
+	return 1;
 }
 
 
@@ -356,7 +361,7 @@ word_t expr(char *e, bool *success) {
 	uint32_t ans = 0;
   
 	/*处理*与-的二异性*/
-	for (i = 0; i < nr_token; i ++) {
+	for (int i = 0; i < nr_token; i ++) {
 		if (tokens[i].type == '-' && (i == 0 || (tokens[i - 1].type != ')' && tokens[i - 1].type != TK_NUMBER_END && tokens[i - 1].type != TK_NUMBER_NOEND && tokens[i - 1].type != TK_HEX && tokens[i - 1].type != TK_REG ) ) ) {
 			tokens[i].type = NEGTIVE;
 		}
@@ -366,7 +371,7 @@ word_t expr(char *e, bool *success) {
 	}
 	
 	/* TODO: Insert codes to evaluate the expression. */		
-	ans = eval(tokens, tokens+nr_token, error_message);
+	ans = eval(tokens, tokens+nr_token, &error_message);
 	if (error_message == 0) {
 		*success = true;
 		return ans;
