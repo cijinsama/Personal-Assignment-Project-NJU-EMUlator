@@ -222,6 +222,7 @@ uint32_t eval(Token* back_pointer, Token* front_pointer, int* error_message) {
 		//printf("asd %s\n",(back_pointer+ddd)->str);
 	//}
 	putchar(*(back_pointer->str));
+	putchar('\n');
 	//////
 	if (back_pointer > front_pointer) {
 		*error_message = ERROR_MESSAGE_UNKNOWN;
