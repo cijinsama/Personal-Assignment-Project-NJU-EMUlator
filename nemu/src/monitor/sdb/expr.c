@@ -53,7 +53,7 @@ static struct rule {
 	{"/", '/'},																							// divide
 	{"\\(", '('},																						// quotes_left
 	{"\\)", ')'},																						// quotes_right
-	{"0x[0-9a-f]{1,MAX_NUMBER_HEX}", TK_HEX},								// hexadecimal-number
+	{"0x[0-9a-f]+", TK_HEX},								// hexadecimal-number
 	{"[0-9]{MAX_NUMBER_BUFFER}(?:[0-9])", TK_NUMBER_NOEND},	// number0-9,the non end part
 	{"[0-9]{1,MAX_NUMBER_SINGAL}(?:[^0-9])", TK_NUMBER_END},// number0-9,the end part_测试是否可以用32个
 	{"\\$[a-zA-Z1-9]+", TK_REG},																// reg_name
