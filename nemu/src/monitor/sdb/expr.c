@@ -217,6 +217,11 @@ bool check_parentheses(Token* back_pointer, Token* front_pointer) {
 
 uint32_t eval(Token* back_pointer, Token* front_pointer, int* error_message) {
 	/*Error input*/
+	/////
+	for (int ddd = 0; back_pointer + ddd != front_pointer; ddd ++){
+		printf("asd %s\n",(back_pointer+ddd)->str);
+	}
+	//////
 	if (back_pointer > front_pointer) {
 		*error_message = ERROR_MESSAGE_UNKNOWN;
 		fprintf(stderr, "back_pointer is larger than front_pointer\nin line : %d and file : %s\n",__LINE__, __FILE__);
