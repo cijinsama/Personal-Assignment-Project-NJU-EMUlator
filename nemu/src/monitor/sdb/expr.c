@@ -329,7 +329,7 @@ uint32_t eval(Token* back_pointer, Token* front_pointer, int* error_message) {
 		else {
 			val2 = eval(main_op + 1, front_pointer, error_message);
 		}
-		if (*error_message != ERROR_MESSAGE_OK) { return 1; }
+		if (*error_message != ERROR_MESSAGE_OK || *error_message != 0) { return 1; }
 		switch (main_op->type) {
 			case '+': return val1 + val2;
 			case '-': return val1 - val2;
