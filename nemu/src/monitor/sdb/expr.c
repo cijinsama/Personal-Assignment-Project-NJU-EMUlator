@@ -381,7 +381,7 @@ word_t expr(char *e, bool *success) {
 	}
 	
 	/* TODO: Insert codes to evaluate the expression. */		
-	ans = eval(tokens, tokens+nr_token, &error_message);
+	ans = eval(tokens, tokens+nr_token-1, &error_message);
 	if (error_message == 0) {
 		*success = true;
 		return ans;
