@@ -40,7 +40,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
 // 自己写的部分
 #ifdef CONFIG_WATCHPOINT
-	int new_value;
+	uint32_t new_value;
 	bool successful;
 	WP* watcher_pointer = watcher_head;
 	while (watcher_pointer != NULL) {
@@ -51,6 +51,9 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 			break;
 		}
 		if (new_value != watcher_pointer.last_value) {
+			printf("Hardware watchpoint %d : %s\n", watcher_pointer.NO, watcher_pointer.str);
+			printf("Old value : %d\n", watcher_pointer.last_value);
+			printf("New value : %d\n", new_value);
 			watcher_pointer.last_value = new_value;
 			nemu_state.state = NEMU_STOP;
 		}

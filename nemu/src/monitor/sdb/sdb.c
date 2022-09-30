@@ -25,6 +25,10 @@ static int is_batch_mode = false;
 void init_regex();
 void init_wp_pool();
 
+WP* watcher_head = NULL;
+
+
+
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 static char* rl_gets() {
   static char *line_read = NULL;
@@ -64,12 +68,17 @@ static int cmd_info(char *args) {
 		printf("args error\n");
 		return ERROR_GOON;
 	} 
-	if (*args == 'r'){
+	else if (*args == 'r'){
 		isa_reg_display();
 		return 0;
 	} 
 	else if (*args == 'w') {
-	//TODO
+		WP* temp = watcher_head;
+		while (temp != NULL){
+			printf("Hardware watchpoint %d : %s\n", temp->NO, temp->expr);
+			printf("Old value : %d\n", temp->last_value);
+		}
+		return 0;
 	}
 	printf("args error\n");
 	return ERROR_GOON;
@@ -133,7 +142,6 @@ static int cmd_p(char *args) {
 	return ERROR_GOON;
 } 
 
-WP* watcher_head;
 
 static int cmd_w(char *args) {
 	watcher_head = new_wp( args ); 
