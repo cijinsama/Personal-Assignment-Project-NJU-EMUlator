@@ -46,9 +46,14 @@ static char* rl_gets() {
 static int cmd_si(char *args) {
 	char *point=args; 
 	uint64_t number = 0; 
-	if (*point == '-'){ return ERROR_GOON; }
-	for (; *point <= '9' && *point >= '0' ; point++){
-		number = number*10 + *point-'0';
+	if (args == NULL) {
+		number = 1;
+	}
+	else if (*point == '-'){ return ERROR_GOON; }
+	else {
+		for (; *point <= '9' && *point >= '0' ; point++){
+			number = number*10 + *point-'0';
+		}
 	}
 	cpu_exec(number);
 	return 0;
