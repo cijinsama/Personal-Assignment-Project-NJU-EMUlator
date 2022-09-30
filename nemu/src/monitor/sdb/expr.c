@@ -56,8 +56,8 @@ static struct rule {
 	{"0x[0-9a-f]{1,32}", TK_HEX},								// hexadecimal-number  从{1,MAX_NUMBER_HEX}改成了+
 	//{"[0-9]{32}(?=[0-9])", TK_NUMBER_NOEND},	// number0-9,the non end part
 	//{"[0-9]{1,32}\\(?![0-9]\\)", TK_NUMBER_END},// number0-9,the end part_测试是否可以用32个
-	{"[0-9]+", TK_NUMBER_END},// number0-9
-	{"\\$[a-zA-Z1-9]+", TK_REG},																// reg_name
+	{"[0-9]+", TK_NUMBER_END},															// number0-9
+	{"\\$[a-zA-Z1-9]+", TK_REG},														// reg_name
   {"==", TK_EQ},																					// equal
 	{"!=", TK_UEQ},																					// unequal
 	{"&&", TK_AND},																					// and
@@ -128,6 +128,8 @@ static bool make_token(char *e) {
 					case TK_EQ:
 					case TK_UEQ:
 					case TK_AND:
+					case TK_NUMBER_NOEND:
+					case TK_NUMBER_END:
 						memcpy(tokens[nr_token].str, substr_start,substr_len);
 						break;
 					case TK_HEX:
@@ -138,12 +140,6 @@ static bool make_token(char *e) {
 						else{
 							memcpy(tokens[nr_token].str,substr_start+2,substr_len-2);
 						}
-						break;
-					case TK_NUMBER_NOEND:
-					  memcpy(tokens[nr_token].str,substr_start,MAX_NUMBER_BUFFER);
-						break;
-					case TK_NUMBER_END:
-					  memcpy(tokens[nr_token].str,substr_start,MAX_NUMBER_SINGAL);
 						break;
 					case TK_REG:
 						memcpy(tokens[nr_token].str, substr_start+1,substr_len-1);
@@ -254,9 +250,8 @@ uint32_t eval(Token* back_pointer, Token* front_pointer, int* error_message) {
 		}
 		else {/*now, the back_pointer to a TK_NUMBER_END, back search for the whole number*/
 			uint32_t single_number = 0;
-			int i = 0;
 			/*backforward search for the whole number string*/
-			while ((back_pointer-i)->type == TK_NUMBER_NOEND || (back_pointer-i)->type == TK_NUMBER_END) { i++; }
+			while (back_pointer->type == TK_NUMBER_NOEND || back_pointer->type == TK_NUMBER_END) { back_pointer--; }
 			/*deal with the nonend part*/
 			while ((++back_pointer)->type == TK_NUMBER_NOEND) {
 				 for (int i=0; i<MAX_NUMBER_BUFFER; i++) {
