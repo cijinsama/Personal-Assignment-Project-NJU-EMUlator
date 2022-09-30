@@ -252,10 +252,11 @@ uint32_t eval(Token* back_pointer, Token* front_pointer, int* error_message) {
 			fprintf(stderr, "pointer is supposed to point at a number, but got token type %d\nin line : %d and file : %s\n", back_pointer->type,__LINE__, __FILE__);
 			return 1;
 		}
-		else {
+		else {/*now, the back_pointer to a TK_NUMBER_END, back search for the whole number*/
 			uint32_t single_number = 0;
+			int i = 0;
 			/*backforward search for the whole number string*/
-			while (back_pointer->type == TK_NUMBER_NOEND || back_pointer->type == TK_NUMBER_END) { back_pointer--; }
+			while ((back_pointer-i)->type == TK_NUMBER_NOEND || (back_pointer-i)->type == TK_NUMBER_END) { i++; }
 			/*deal with the nonend part*/
 			while ((++back_pointer)->type == TK_NUMBER_NOEND) {
 				 for (int i=0; i<MAX_NUMBER_BUFFER; i++) {
