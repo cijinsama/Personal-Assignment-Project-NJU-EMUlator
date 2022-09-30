@@ -128,12 +128,9 @@ static bool make_token(char *e) {
 					case TK_EQ:
 					case TK_UEQ:
 					case TK_AND:
-						tokens[nr_token].type = rules->token_type;
 						memcpy(tokens[nr_token].str, substr_start,substr_len);
-						nr_token++;
 						break;
 					case TK_HEX:
-						tokens[nr_token].type = rules->token_type;
 						if (substr_len > MAX_NUMBER_HEX){
 							printf("HEX number is larger than storage\n");
 							return false;
@@ -141,26 +138,21 @@ static bool make_token(char *e) {
 						else{
 							memcpy(tokens[nr_token].str,substr_start+2,substr_len-2);
 						}
-						nr_token++;
 						break;
 					case TK_NUMBER_NOEND:
-						tokens[nr_token].type = rules->token_type;
 					  memcpy(tokens[nr_token].str,substr_start,MAX_NUMBER_BUFFER);
-						nr_token++;
 						break;
 					case TK_NUMBER_END:
-						tokens[nr_token].type = rules->token_type;
 					  memcpy(tokens[nr_token].str,substr_start,MAX_NUMBER_SINGAL);
-						nr_token++;
 						break;
 					case TK_REG:
-						tokens[nr_token].type = rules->token_type;	
 						memcpy(tokens[nr_token].str, substr_start+1,substr_len-1);
-						nr_token++;
 						break;
 					default:
 						printf("Unknow expression\n");	
         }
+				tokens[nr_token].type = rules[i].token_type;
+				nr_token++;
         break;
       }
     }
