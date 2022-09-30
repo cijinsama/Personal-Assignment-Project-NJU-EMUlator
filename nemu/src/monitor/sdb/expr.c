@@ -284,11 +284,11 @@ uint32_t eval(Token* back_pointer, Token* front_pointer, int* error_message) {
 		return eval(back_pointer + 1, front_pointer - 1, error_message);
 	}
 	else {
-		/*find the main operator*/
-		Token* main_op = back_pointer;
+		/*find the main operator, which means the last operator*/
+		Token* main_op = NULL;
 		int count = 0;	//用 count 作为括号匹配栈
 		uint32_t val1 = 0,val2 = 0;
-		for (int i=0; main_op+i <= front_pointer; i++) {
+		for (int i=0; back_pointer+i <= front_pointer; i++) {
 			if (count < 0) {
 				*error_message = ERROR_MESSAGE_UNKNOWN;
 				fprintf(stderr, "Unkown error\nin line : %d and file : %s\n",__LINE__, __FILE__);
@@ -311,20 +311,23 @@ uint32_t eval(Token* back_pointer, Token* front_pointer, int* error_message) {
 				}
 			}
 			else if (back_pointer[i].type == '+' || back_pointer[i].type == '-') {
-				if (main_op->type == TK_EQ || main_op->type == TK_UEQ || main_op->type == TK_AND ) {
+				if (main_op == NULL || main_op->type == TK_EQ || main_op->type == TK_UEQ || main_op->type == TK_AND ) {
 					main_op = back_pointer + i;
 				}
 			}
 			else if (back_pointer[i].type == '*' || back_pointer[i].type == '/') {
-				if (main_op->type == '+' || main_op->type == '-' || main_op->type == TK_AND || main_op->type == TK_EQ || main_op->type == TK_UEQ) {
+				if (main_op == NULL || main_op->type == '+' || main_op->type == '-' || main_op->type == TK_AND || main_op->type == TK_EQ || main_op->type == TK_UEQ) {
 					main_op = back_pointer + i;
 				}
 			}
 			else if (back_pointer[i].type == DEREF || back_pointer[i].type == NEGTIVE) {
-				if (main_op->type == '+' || main_op->type == '-' || main_op->type == TK_AND || main_op->type == TK_EQ || main_op->type == TK_UEQ || main_op->type == '*' || main_op->type == '/') {
+				if (main_op == NULL || main_op->type == '+' || main_op->type == '-' || main_op->type == TK_AND || main_op->type == TK_EQ || main_op->type == TK_UEQ || main_op->type == '*' || main_op->type == '/') {
 					main_op = back_pointer + i;
 				}
 			}
+		}
+		if (main_op == NULL) {
+			Assert(false,"didn't find the main_op");
 		}
 		/*use the main operator to eval*/
 		if (main_op->type != DEREF && main_op->type != NEGTIVE){
