@@ -25,6 +25,7 @@
 #define MAX_NUMBER_BUFFER 32
 #define MAX_NUMBER_SINGAL 32
 #define ERROR_MESSAGE_BACK_IS_GREATER -5
+#define ERROR_MESSAGE_NUMBER_END -6
 #define ERROR_MESSAGE_UNKNOWN -1
 #define ERROR_MESSAGE_VALUE -2
 #define ERROR_MESSAGE_OK -3
@@ -235,7 +236,7 @@ uint32_t eval(Token* back_pointer, Token* front_pointer, int* error_message) {
 			if (success) {
 				return single_number;
 			}
-			*error_message = ERROR_MESSAGE_UNKNOWN;	
+			*error_message = ERROR_MESSAGE_NUMBER_END;	
 			return 1;
 		}
 		else if (back_pointer->type != TK_NUMBER_END) {
