@@ -375,5 +375,6 @@ word_t expr(char *e, bool *success) {
 		return ans;
 	}
 	*success = false;
+	printf("error_msg : %d\n", error_message);
 	return 0;
 }
