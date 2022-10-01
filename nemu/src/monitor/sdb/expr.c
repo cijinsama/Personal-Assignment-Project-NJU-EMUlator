@@ -34,9 +34,7 @@
 
 enum {
   TK_NOTYPE = 256, TK_NUMBER_NOEND = 257, TK_NUMBER_END = 258,TK_HEX = 259,TK_REG = 260, TK_EQ = 261, TK_UEQ = 262, DEREF = 263, NEGTIVE = 264, TK_AND = 265
-
   /* TODO: Add more token types */
-
 };
 
 static struct rule {
