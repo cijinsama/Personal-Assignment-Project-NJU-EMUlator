@@ -24,6 +24,7 @@
 
 #define MAX_NUMBER_BUFFER 32
 #define MAX_NUMBER_SINGAL 32
+#define ERROR_MESSAGE_BACK_IS_GREATER -5
 #define ERROR_MESSAGE_UNKNOWN -1
 #define ERROR_MESSAGE_VALUE -2
 #define ERROR_MESSAGE_OK -3
@@ -209,7 +210,7 @@ bool check_parentheses(Token* back_pointer, Token* front_pointer) {
 uint32_t eval(Token* back_pointer, Token* front_pointer, int* error_message) {
 	/*Error input*/
 	if (back_pointer > front_pointer) {
-		*error_message = ERROR_MESSAGE_UNKNOWN;
+		*error_message = ERROR_MESSAGE_BACK_IS_GREATER;
 		fprintf(stderr, "back_pointer is larger than front_pointer\nin line : %d and file : %s\n",__LINE__, __FILE__);
 		return 1;
 	}
