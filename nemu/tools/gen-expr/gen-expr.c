@@ -19,7 +19,7 @@
 #include <time.h>
 #include <assert.h>
 #include <string.h>
-
+#define max_number 99990
 // this should be enough
 static char buf[65536] = {};
 static char code_buf[65536 + 128] = {}; // a little larger than `buf`
@@ -31,8 +31,38 @@ static char *code_format =
 "  return 0; "
 "}";
 
-static void gen_rand_expr() {
-  buf[0] = '\0';
+static int ind = 0;
+static char operator[] = {'+', '-', '*'};
+
+uint32_t choose(uint32_t n) {
+	uint32_t ans = rand();
+	ans = ans % n;
+	return ans;
+}
+void gen(char input) {
+	buf[ind] = input;
+	ind++;
+}
+void gen_num() {
+	uint32_t ans = rand();
+	ans = ans % max_number;
+	ans = ans + 1;
+	while (ans != 0) {
+		gen(ans % 10);
+		ans = ans / 10;
+	}
+}
+void gen_rand_op() {
+	uint32_t ans = rand();
+	ans = ans % (sizeof(operator)/sizeof(operator[0]));
+	gen(operator[ans]);
+}
+void gen_rand_expr() {
+	switch (choose(3)) {
+		case 0: gen_num(); break;
+		case 1: gen('('); gen_rand_expr(); gen(')'); break;
+		default: gen_rand_expr(); gen_rand_op(); gen_rand_expr(); break;
+	}
 }
 
 int main(int argc, char *argv[]) {
@@ -45,7 +75,7 @@ int main(int argc, char *argv[]) {
   int i;
   for (i = 0; i < loop; i ++) {
     gen_rand_expr();
-
+		printf("%s",buf);//233333333333233333333333
     sprintf(code_buf, code_format, buf);
 
     FILE *fp = fopen("/tmp/.code.c", "w");
@@ -60,7 +90,10 @@ int main(int argc, char *argv[]) {
     assert(fp != NULL);
 
     int result;
-    fscanf(fp, "%d", &result);
+		int temp = 1, temp2 = 2;
+		temp = temp2 + temp;
+		temp2 = temp + temp2;
+    temp = fscanf(fp, "%d", &result);
     pclose(fp);
 
     printf("%u %s\n", result, buf);
