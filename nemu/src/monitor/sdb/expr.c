@@ -164,7 +164,7 @@ static bool make_token(char *e) {
 
   return true;
 }
-#if 1==1
+#if 1==0
 bool examin_if_make_token(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;
