@@ -318,9 +318,9 @@ uint32_t eval(Token* back_pointer, Token* front_pointer, int* error_message) {
 		else {
 			val2 = eval(main_op + 1, front_pointer, error_message);
 		}
-		printf("use the main operator %d : %s\n",main_op->type,main_op->str);/*2333333*/
-		printf("use the val1 %d, val2 %d\n",val1,val2);/*2333333*/
-		printf("use the back_pointer %s, front_pointer %s\n",back_pointer->str,front_pointer->str);/*2333333*/
+		//printf("use the main operator %d : %s\n",main_op->type,main_op->str);/*2333333*/
+		//printf("use the val1 %d, val2 %d\n",val1,val2);/*2333333*/
+		//printf("use the back_pointer %s, front_pointer %s\n",back_pointer->str,front_pointer->str);/*2333333*/
 		if (*error_message != ERROR_MESSAGE_OK && *error_message != 0) { return 1; }
 		switch (main_op->type) {
 			case '+': return val1 + val2;
