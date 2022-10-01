@@ -311,6 +311,7 @@ uint32_t eval(Token* back_pointer, Token* front_pointer, int* error_message) {
 			Assert(false,"didn't find the main_op");
 		}
 		/*use the main operator to eval*/
+		printf("use the main operator %d : %s\n",main_op->type,main_op->str);
 		if (main_op->type != DEREF && main_op->type != NEGTIVE){
 			val1 = eval(back_pointer, main_op - 1, error_message);
 			val2 = eval(main_op + 1, front_pointer, error_message);
