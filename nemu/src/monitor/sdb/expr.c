@@ -63,6 +63,7 @@ static struct rule {
 	{"&&", TK_AND},																					// and
 };
 
+
 #define NR_REGEX ARRLEN(rules)
 
 static regex_t re[NR_REGEX] = {};
