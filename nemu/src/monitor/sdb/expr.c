@@ -341,6 +341,7 @@ uint32_t eval(Token* back_pointer, Token* front_pointer, int* error_message) {
 			case TK_UEQ: return val1 != val2;
 			case TK_AND: return val1 && val2;
 			case DEREF: return paddr_read(val2,4);
+			case NEGTIVE: return -val2;
 			default: {
 				*error_message = ERROR_MESSAGE_UNKNOWN;
 				fprintf(stderr, "Unkown error\nin line : %d and file : %s\n",__LINE__, __FILE__);
