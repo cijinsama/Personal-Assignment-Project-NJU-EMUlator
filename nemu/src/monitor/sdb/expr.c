@@ -147,8 +147,10 @@ static bool make_token(char *e) {
 					default:
 						printf("Unknow expression\n");	
         }
-				tokens[nr_token].type = rules[i].token_type;
-				nr_token++;
+				if (rules[i].token_type != TK_NOTYPE) {
+					tokens[nr_token].type = rules[i].token_type;
+					nr_token++;
+				}
         break;
       }
     }
