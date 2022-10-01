@@ -264,6 +264,7 @@ uint32_t eval(Token* back_pointer, Token* front_pointer, int* error_message) {
 	}
 	else {
 		/*find the main operator, which means the last operator*/
+		/*由于main_op是最后一个运算的符号，因此运算优先级越低成为main_op的优先级越高,即本来优先级高的应该被放在前面，因为最前面的最先被替换掉*/
 		Token* main_op = NULL;
 		int count = 0;	//用 count 作为括号匹配栈
 		uint32_t val1 = 0,val2 = 0;
@@ -278,29 +279,28 @@ uint32_t eval(Token* back_pointer, Token* front_pointer, int* error_message) {
 				else if (back_pointer[i].type == ')') {count--; continue; }
 			}
 			else if (back_pointer[i].type == '(') { count++; continue; }
-			else if (back_pointer[i].type == TK_AND) {
-				main_op = back_pointer + i;	
-			}
-			else if (back_pointer[i].type == TK_EQ || back_pointer[i].type == TK_UEQ) {
-				if (back_pointer[i].type == TK_AND) {
-					continue;
-				}
-				else {
-					main_op = back_pointer + i;
-				}
-			}
-			else if (back_pointer[i].type == '+' || back_pointer[i].type == '-') {
-				if (main_op == NULL || main_op->type == TK_EQ || main_op->type == TK_UEQ || main_op->type == TK_AND ) {
+			else if (back_pointer[i].type == DEREF || back_pointer[i].type == NEGTIVE) {
+				if (main_op == NULL) {
 					main_op = back_pointer + i;
 				}
 			}
 			else if (back_pointer[i].type == '*' || back_pointer[i].type == '/') {
-				if (main_op == NULL || main_op->type == '+' || main_op->type == '-' || main_op->type == TK_AND || main_op->type == TK_EQ || main_op->type == TK_UEQ) {
+				if (main_op == NULL || main_op->type == DEREF || main_op->type == NEGTIVE) {
 					main_op = back_pointer + i;
 				}
 			}
-			else if (back_pointer[i].type == DEREF || back_pointer[i].type == NEGTIVE) {
-				if (main_op == NULL || main_op->type == '+' || main_op->type == '-' || main_op->type == TK_AND || main_op->type == TK_EQ || main_op->type == TK_UEQ || main_op->type == '*' || main_op->type == '/') {
+			else if (back_pointer[i].type == '+' || back_pointer[i].type == '-') {
+				if (main_op == NULL || main_op->type == DEREF || main_op->type == NEGTIVE || main_op->type == '*' || main_op->type == '/') {
+					main_op = back_pointer + i;
+				}
+			}
+			else if (back_pointer[i].type == TK_EQ || back_pointer[i].type == TK_UEQ) {
+				if (main_op == NULL || main_op->type == DEREF || main_op->type == NEGTIVE || main_op->type == '*' || main_op->type == '/' || main_op->type == '+' || main_op->type == '-') {
+					main_op = back_pointer + i;
+				}
+			}
+			else if (back_pointer[i].type == TK_AND) {
+				if (main_op == NULL || main_op->type == DEREF || main_op->type == NEGTIVE || main_op->type == '*' || main_op->type == '/' || main_op->type == '+' || main_op->type == '-' || main_op->type == TK_EQ || main_op->type == TK_UEQ) {
 					main_op = back_pointer + i;
 				}
 			}
