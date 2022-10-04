@@ -33,7 +33,10 @@ void isa_reg_display() {
 word_t isa_reg_str2val(const char *s, bool *success) {
 	int len_s = strlen(s),len_reg;
 	*success = false;
-	for (int i = 0; i < regs_amount; i++) {
+	if (strcmp(s,regs[0]+1) == 0) {
+		return cpu.gpr[0];
+	}
+	for (int i = 1; i < regs_amount; i++) {
 		len_reg = strlen(regs[i]);
 		if (len_reg == len_s) {
 			if (memcmp(s,regs[i],strlen(regs[i]))==0){
