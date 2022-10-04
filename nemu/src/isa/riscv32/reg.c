@@ -33,6 +33,7 @@ void isa_reg_display() {
 word_t isa_reg_str2val(const char *s, bool *success) {
 	int len_s = strlen(s),len_reg;
 	*success = false;
+	printf("%s ()()()\n",s);
 	if (strcmp(s,regs[0]+1) == 0) {
 		return cpu.gpr[0];
 	}
@@ -45,6 +46,5 @@ word_t isa_reg_str2val(const char *s, bool *success) {
 			}
 		}
 	}
-	Assert(false,"error\n");
   return 0;
 }
