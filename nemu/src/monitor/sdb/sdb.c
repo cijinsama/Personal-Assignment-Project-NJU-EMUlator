@@ -136,7 +136,7 @@ static int cmd_p(char *args) {
 		return ERROR_GOON;
 	 }
 	else {
-		printf("%d\n",ans);
+		printf("%u\n",ans);
 		return 0;
 	} 
 	return ERROR_GOON;
