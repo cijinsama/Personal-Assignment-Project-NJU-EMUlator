@@ -57,7 +57,7 @@ static struct rule {
 	//{"[0-9]{32}(?=[0-9])", TK_NUMBER_NOEND},	// number0-9,the non end part
 	//{"[0-9]{1,32}\\(?![0-9]\\)", TK_NUMBER_END},// number0-9,the end part_测试是否可以用32个
 	{"[0-9]+", TK_NUMBER_END},															// number0-9
-	{"\\$[a-zA-Z0-9\\$]+", TK_REG},														// reg_name
+	{"\\$[a-zA-Z0-9]+", TK_REG},														// reg_name
   {"==", TK_EQ},																					// equal
 	{"!=", TK_UEQ},																					// unequal
 	{"&&", TK_AND},																					// and
@@ -143,9 +143,6 @@ static bool make_token(char *e) {
 						}
 						break;
 					case TK_REG:
-						if (*(substr_start+1) == '$') {
-							memcpy(tokens[nr_token].str, substr_start+2,substr_len-1);
-						}
 						memcpy(tokens[nr_token].str, substr_start+1,substr_len-1);
 						break;
 					default:
