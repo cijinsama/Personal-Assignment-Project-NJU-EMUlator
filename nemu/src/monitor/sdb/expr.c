@@ -37,6 +37,7 @@ enum {
   /* TODO: Add more token types */
 };
 
+
 static struct rule {
   const char *regex;
   int token_type;
