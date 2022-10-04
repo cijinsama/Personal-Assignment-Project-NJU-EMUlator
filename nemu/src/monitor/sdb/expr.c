@@ -192,7 +192,8 @@ bool examin_if_make_token(char *e, bool *success) {
 bool check_parentheses(Token* back_pointer, Token* front_pointer) {
 	if (back_pointer->type == '(' && front_pointer->type == ')'){
 		int count = 0;
-		for (int i=0; back_pointer+i <= front_pointer && count >= 0; i++) {
+		int i;
+		for (i=0; back_pointer+i <= front_pointer && count > 0; i++) {
 			if (back_pointer[i].type == '(') {
 				count++;
 			}
@@ -200,7 +201,7 @@ bool check_parentheses(Token* back_pointer, Token* front_pointer) {
 				count--;
 			}
 		}
-		if (count == 0) { return true; }
+		if (count == 0 && (back_pointer+i) > front_pointer) { return true; }
 	}
 	return false;
 }
