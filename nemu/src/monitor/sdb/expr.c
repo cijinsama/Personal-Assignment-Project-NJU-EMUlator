@@ -277,7 +277,7 @@ uint32_t eval(Token* back_pointer, Token* front_pointer, int* error_message) {
 				fprintf(stderr, "Unkown error\nin line : %d and file : %s\n",__LINE__, __FILE__);
 				return 1;	
 			}
-			else if (count >= 0) {
+			else if (count > 0) {
 				if (back_pointer[i].type == '(') {count++; continue; }
 				else if (back_pointer[i].type == ')') {count--; continue; }
 			}
