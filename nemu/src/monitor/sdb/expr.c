@@ -143,6 +143,9 @@ static bool make_token(char *e) {
 						}
 						break;
 					case TK_REG:
+						if (*(substr_start+1) == '$') {
+							memcpy(tokens[nr_token].str, substr_start+2,substr_len-1);
+						}
 						memcpy(tokens[nr_token].str, substr_start+1,substr_len-1);
 						break;
 					default:
