@@ -45,6 +45,6 @@ word_t isa_reg_str2val(const char *s, bool *success) {
 			}
 		}
 	}
-	panic();
+	Assert(false,"error\n");
   return 0;
 }
