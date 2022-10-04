@@ -33,8 +33,8 @@ void isa_reg_display() {
 word_t isa_reg_str2val(const char *s, bool *success) {
 	int len_s = strlen(s),len_reg;
 	*success = false;
-	printf("%s ()()()\n",s);
-	if (strcmp(s,regs[0]+1) == 0) {
+	printf("%s, %lu asasd\n",s,strlen(s));
+	if (*s == '0' && strlen(s) == 1) {
 		return cpu.gpr[0];
 	}
 	for (int i = 1; i < regs_amount; i++) {
