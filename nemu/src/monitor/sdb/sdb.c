@@ -29,7 +29,7 @@ WP* watcher_head = NULL;
 
 
 #define dataset "./test_cmd_p"
-int test_cmd_p() {
+static int test_cmd_p() {
   int counter = 0;
   char buffer[65535];
 	int ans = 0;
@@ -37,6 +37,10 @@ int test_cmd_p() {
   char *expression;
 	int result;
   FILE *fp = fopen(dataset, "r");
+	if (fp == NULL) {
+		fprintf(stderr,"open dataset file error\n");
+		panic();
+	}
   char* input = fgets(buffer, ARRLEN(buffer), fp);
   while (input != NULL){
     input[strlen(input) - 1] = '\0';
