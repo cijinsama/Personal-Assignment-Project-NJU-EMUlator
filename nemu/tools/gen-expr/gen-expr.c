@@ -50,17 +50,17 @@ uint32_t gen_num(){
   char num_buffer[1000];
   num_buffer[0] = '\0';
   uint32_t number;
+	number = rand() % MAX_NUMBER  + 1;
 	switch(choose(4)){
 		case 0:
 		case 1:
 		case 2:
-			number = rand() % MAX_NUMBER  + 1;
+			sprintf(num_buffer ,"%u", number);
 			break;
 		case 3:
-			number = -(rand() % MAX_NUMBER + 1);
+			sprintf(num_buffer ,"-%u", number);
 			break;
 	}
-  sprintf(num_buffer ,"%u", number);
   strcat(buf, num_buffer);
   return number;
 }
