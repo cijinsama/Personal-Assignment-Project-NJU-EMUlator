@@ -47,10 +47,10 @@ static int test_cmd_p() {
     char* ans_text = strtok(input, " ");
     sscanf(ans_text, "%u", &ans);
     expression = input + strlen(ans_text) + 1;
-		printf("%s\n",expression);
 		result = expr(expression, &success);
 		if (result != ans) {
 			printf("error expression \n%s\n",expression);
+			printf("expected: %s\nbut got %u\n",ans_text,result);
 			assert(result == ans);
 		}
     input = fgets(buffer, ARRLEN(buffer), fp);
