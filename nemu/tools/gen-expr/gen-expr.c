@@ -19,19 +19,19 @@
 #include <time.h>
 #include <assert.h>
 #include <string.h>
-#define max_number 99990
+#define max_number 99
 // this should be enough
 static char buf[65536] = {};
+static int tokens_num = 0;
 static char code_buf[65536 + 128] = {}; // a little larger than `buf`
 static char *code_format =
 "#include <stdio.h>\n"
 "int main() { "
-"  unsigned result = %s; "
+"  unsigned result = (%s); "
 "  printf(\"%%u\", result); "
 "  return 0; "
 "}";
 
-static int ind = 0;
 static char operator[] = {'+', '-', '*'};
 
 uint32_t choose(uint32_t n) {
@@ -40,28 +40,36 @@ uint32_t choose(uint32_t n) {
 	return ans;
 }
 void gen(char input) {
-	buf[ind] = input;
-	ind++;
+	char strin[32];
+	sprintf(strin,"%c",input);
+	strcat(buf,strin);
 }
+
+
 void gen_num() {
 	uint32_t ans = rand();
+	char number_char[32];
 	ans = ans % max_number;
 	ans = ans + 1;
-	while (ans != 0) {
-		gen(ans % 10);
-		ans = ans / 10;
-	}
+	sprintf(number_char,"%u",ans);
+	strcat(buf,number_char);
+	tokens_num++;
 }
 void gen_rand_op() {
 	uint32_t ans = rand();
 	ans = ans % (sizeof(operator)/sizeof(operator[0]));
 	gen(operator[ans]);
+	tokens_num++;
 }
+
 void gen_rand_expr() {
 	switch (choose(3)) {
-		case 0: gen_num(); break;
-		case 1: gen('('); gen_rand_expr(); gen(')'); break;
+		case 0: gen_num(); tokens_num++; break;
+		case 1: gen('('); gen_rand_expr(); gen(')'); tokens_num+=2; break;
 		default: gen_rand_expr(); gen_rand_op(); gen_rand_expr(); break;
+	}
+	if (tokens_num >= 32) {
+		return;
 	}
 }
 
