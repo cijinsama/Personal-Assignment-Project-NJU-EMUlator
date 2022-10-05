@@ -31,6 +31,7 @@
 #define ERROR_MESSAGE_BACK_IS_GREATER -5
 #define ERROR_MESSAGE_NUMBER_END -6
 #define MAX_NUMBER_HEX 32
+#define MID_TYPE long long
 
 enum {
   TK_NOTYPE = 256, TK_NUMBER_NOEND = 257, TK_NUMBER_END = 258,TK_HEX = 259,TK_REG = 260, TK_EQ = 261, TK_UEQ = 262, DEREF = 263, NEGTIVE = 264, TK_AND = 265
@@ -226,7 +227,7 @@ uint32_t eval(Token* back_pointer, Token* front_pointer, int* error_message) {
 	/*when expr is number and is the end of it*/
 	else if (back_pointer == front_pointer) {
 		if (back_pointer->type == TK_HEX) {
-			uint32_t single_number = 0;
+			MID_TYPE single_number = 0;
 			char curchar;
 			for (int i=0; i<strlen(back_pointer->str); i++){
 				curchar = back_pointer->str[i];	
@@ -239,7 +240,7 @@ uint32_t eval(Token* back_pointer, Token* front_pointer, int* error_message) {
 		}
 		else if (back_pointer->type == TK_REG) {
 			bool success;
-			uint32_t single_number;
+			MID_TYPE single_number;
 			if (strcmp(back_pointer->str,"pc") == 0) {
 				success = true;
 				single_number = cpu.pc;
@@ -262,7 +263,7 @@ uint32_t eval(Token* back_pointer, Token* front_pointer, int* error_message) {
 			return 1;
 		}
 		else {/*now, the back_pointer to a TK_NUMBER_END, back search for the whole number*/
-			uint32_t single_number = 0;
+			MID_TYPE single_number = 0;
 			/*backforward search for the whole number string*/
 			while (back_pointer->type == TK_NUMBER_NOEND || back_pointer->type == TK_NUMBER_END) { back_pointer--; }
 			/*deal with the nonend part*/
@@ -289,7 +290,7 @@ uint32_t eval(Token* back_pointer, Token* front_pointer, int* error_message) {
 		/*由于main_op是最后一个运算的符号，因此运算优先级越低成为main_op的优先级越高,即本来优先级高的应该被放在前面，因为最前面的最先被替换掉*/
 		Token* main_op = NULL;
 		int count = 0;	//用 count 作为括号匹配栈
-		uint32_t val1 = 0,val2 = 0;
+		MID_TYPE val1 = 0,val2 = 0;
 		for (int i=0; back_pointer+i <= front_pointer; i++) {
 			if (count < 0) {
 				*error_message = ERROR_MESSAGE_UNKNOWN;
@@ -391,7 +392,7 @@ word_t expr(char *e, bool *success) {
 	}
 	
 	/* TODO: Insert codes to evaluate the expression. */		
-	ans = eval(tokens, tokens+nr_token-1, &error_message);
+	ans = (uint32_t) eval(tokens, tokens+nr_token-1, &error_message);
 	if (error_message == 0) {
 		*success = true;
 		return ans;
