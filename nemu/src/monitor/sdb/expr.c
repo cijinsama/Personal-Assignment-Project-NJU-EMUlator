@@ -53,7 +53,7 @@ static struct rule {
 	{"/", '/'},																							// divide
 	{"\\(", '('},																						// quotes_left
 	{"\\)", ')'},																						// quotes_right
-	{"0x[0-9a-f]{1,32}", TK_HEX},								// hexadecimal-number  从{1,MAX_NUMBER_HEX}改成了+
+	{"0x[0-9a-fA-F]{1,32}", TK_HEX},								// hexadecimal-number  从{1,MAX_NUMBER_HEX}改成了+
 	//{"[0-9]{32}(?=[0-9])", TK_NUMBER_NOEND},	// number0-9,the non end part
 	//{"[0-9]{1,32}\\(?![0-9]\\)", TK_NUMBER_END},// number0-9,the end part_测试是否可以用32个
 	{"[0-9]+", TK_NUMBER_END},															// number0-9
@@ -215,6 +215,7 @@ uint32_t eval(Token* back_pointer, Token* front_pointer, int* error_message) {
 	if (back_pointer > front_pointer) {
 		*error_message = ERROR_MESSAGE_BACK_IS_GREATER;
 		fprintf(stderr, "back_pointer is larger than front_pointer\nin line : %d and file : %s\n",__LINE__, __FILE__);
+		Assert(false,"back_pointer is larger\n");
 		return 1;
 	}
 	else if (back_pointer->type == TK_NUMBER_NOEND) {
@@ -228,14 +229,15 @@ uint32_t eval(Token* back_pointer, Token* front_pointer, int* error_message) {
 			for (int i=0; i<strlen(back_pointer->str); i++){
 				curchar = back_pointer->str[i];	
 				if (curchar <= '9' && curchar >= '0') single_number = single_number * 16 + curchar - '0';
-				else single_number = single_number * 16 + curchar - 'a' + 10;
+				else if (curchar <= 'z' && curchar >= 'z') {single_number = single_number * 16 + curchar - 'a' + 10;}
+				else if (curchar <= 'Z' && curchar >= 'A') {single_number = single_number * 16 + curchar - 'A' + 10;}
+				else Assert(false,"false\n");
 			}
 			return single_number;	
 		}
 		else if (back_pointer->type == TK_REG) {
 			bool success;
 			uint32_t single_number;
-			
 			if (strcmp(back_pointer->str,"pc") == 0) {
 				success = true;
 				single_number = cpu.pc;
@@ -248,11 +250,13 @@ uint32_t eval(Token* back_pointer, Token* front_pointer, int* error_message) {
 				return single_number;
 			}
 			*error_message = ERROR_MESSAGE_NUMBER_END;	
+			Assert(false,"register convert error\n");
 			return 1;
 		}
 		else if (back_pointer->type != TK_NUMBER_END) {
 			*error_message = ERROR_MESSAGE_VALUE;
 			fprintf(stderr, "pointer is supposed to point at a number, but got token type %d\nin line : %d and file : %s\n", back_pointer->type,__LINE__, __FILE__);
+			Assert(false,"pointer is supposed to point at a number, but got token type");
 			return 1;
 		}
 		else {/*now, the back_pointer to a TK_NUMBER_END, back search for the whole number*/
@@ -288,6 +292,7 @@ uint32_t eval(Token* back_pointer, Token* front_pointer, int* error_message) {
 			if (count < 0) {
 				*error_message = ERROR_MESSAGE_UNKNOWN;
 				fprintf(stderr, "Unkown error\nin line : %d and file : %s\n",__LINE__, __FILE__);
+				Assert(false,"unknow error\n");
 				return 1;	
 			}
 			else if (count > 0) {
@@ -356,6 +361,7 @@ uint32_t eval(Token* back_pointer, Token* front_pointer, int* error_message) {
 			default: {
 				*error_message = ERROR_MESSAGE_UNKNOWN;
 				fprintf(stderr, "Unkown error\nin line : %d and file : %s\n",__LINE__, __FILE__);
+				Assert(false,"unkonw error\n");
 				return 1;
 			}
 		}
@@ -390,5 +396,6 @@ word_t expr(char *e, bool *success) {
 	}
 	*success = false;
 	printf("error_msg : %d\n", error_message);
+	Assert(false,"error\n");
 	return 0;
 }
