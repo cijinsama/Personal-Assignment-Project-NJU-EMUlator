@@ -6,6 +6,10 @@
 #include <string.h>
 
 #define MAX_NUMBER 10
+#define MAX_DEPTH 5
+
+
+
 // this should be enough
 static char buf[65536] = {};
 static char str_buffer[65536] = {};
@@ -88,7 +92,7 @@ static void gen_rand_blank(){
 }
 
 static void gen_rand_expr(int depth) {
-  if (strlen(buf) > 65536 - 10000 || depth > 15){
+  if (strlen(buf) > 65536 - 10000 || depth > MAX_DEPTH){
     gen('(');
     gen_rand_blank();
     gen_num();
