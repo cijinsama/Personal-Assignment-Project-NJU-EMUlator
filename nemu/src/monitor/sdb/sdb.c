@@ -31,7 +31,7 @@ WP* watcher_head = NULL;
 #define dataset "./test_p"
 static int test_cmd_p() {
   int counter = 0;
-  char buffer[65535];
+  char buffer[100];//65535 -> 100
 	int ans = 0;
 	bool success = false;
   char *expression;
@@ -47,6 +47,7 @@ static int test_cmd_p() {
     char* ans_text = strtok(input, " ");
     sscanf(ans_text, "%u", &ans);
     expression = input + strlen(ans_text) + 1;
+		printf("%s",expression);
 		result = expr(expression, &success);
     assert(result == ans);
     input = fgets(buffer, ARRLEN(buffer), fp);
