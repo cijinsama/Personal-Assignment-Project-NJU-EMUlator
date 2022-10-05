@@ -234,7 +234,16 @@ uint32_t eval(Token* back_pointer, Token* front_pointer, int* error_message) {
 		}
 		else if (back_pointer->type == TK_REG) {
 			bool success;
-			uint32_t single_number = isa_reg_str2val(back_pointer->str, &success);
+			uint32_t single_number;
+			
+			if (strcmp(back_pointer->str,"pc") == 0) {
+				success = true;
+				single_number = cpu.pc;
+			}
+			else {
+				single_number = isa_reg_str2val(back_pointer->str, &success);
+			}
+
 			if (success) {
 				return single_number;
 			}
