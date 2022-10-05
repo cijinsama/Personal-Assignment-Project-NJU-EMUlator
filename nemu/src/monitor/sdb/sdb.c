@@ -47,7 +47,7 @@ static int test_cmd_p() {
     char* ans_text = strtok(input, " ");
     sscanf(ans_text, "%u", &ans);
     expression = input + strlen(ans_text) + 1;
-		printf("%s",expression);
+		printf("%s\n",expression);
 		result = expr(expression, &success);
 		if (result != ans) {
 			printf("error expression \n%s\n",expression);
