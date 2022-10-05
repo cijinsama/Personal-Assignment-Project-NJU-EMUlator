@@ -127,6 +127,22 @@ static int cmd_x(char *args) {
 	return 0;
 }
 
+static int cmd_px(char *args) {
+	bool success;
+	uint32_t ans = 0;
+	ans = expr(args, &success);
+	if (!success) {
+		printf("please retry\n");
+		return ERROR_GOON;
+	 }
+	else {
+		printf("%8x\n",ans);
+		return 0;
+	} 
+	return ERROR_GOON;
+} 
+
+
 static int cmd_p(char *args) {
 	bool success;
 	uint32_t ans = 0;
@@ -183,7 +199,8 @@ static struct {
 	{ "x", "scan the memory for given addr string", cmd_x },
 	{ "p", "evaluate the expr", cmd_p },
 	{ "w", "set a new watcher", cmd_w },
-	{ "d", "del a watcher", cmd_d }
+	{ "d", "del a watcher", cmd_d },
+	{ "px", "evaluate the expr printf 0x***", cmd_px}
   /* TODO: Add more commands */
 
 };

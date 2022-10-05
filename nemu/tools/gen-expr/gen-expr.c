@@ -1,79 +1,127 @@
-/***************************************************************************************
-* Copyright (c) 2014-2022 Zihao Yu, Nanjing University
-*
-* NEMU is licensed under Mulan PSL v2.
-* You can use this software according to the terms and conditions of the Mulan PSL v2.
-* You may obtain a copy of Mulan PSL v2 at:
-*          http://license.coscl.org.cn/MulanPSL2
-*
-* THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
-* EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
-* MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
-*
-* See the Mulan PSL v2 for more details.
-***************************************************************************************/
-
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <assert.h>
 #include <string.h>
-#define max_number 99
+
+#define MAX_NUMBER 10
 // this should be enough
 static char buf[65536] = {};
-static int tokens_num = 0;
+static char str_buffer[65536] = {};
 static char code_buf[65536 + 128] = {}; // a little larger than `buf`
 static char *code_format =
 "#include <stdio.h>\n"
 "int main() { "
-"  unsigned result = (%s); "
+"  unsigned result = %s; "
 "  printf(\"%%u\", result); "
 "  return 0; "
 "}";
 
-static char operator[] = {'+', '-', '*'};
 
-uint32_t choose(uint32_t n) {
-	uint32_t ans = rand();
-	ans = ans % n;
-	return ans;
-}
-void gen(char input) {
-	char strin[32];
-	sprintf(strin,"%c",input);
-	strcat(buf,strin);
+uint32_t choose(uint32_t  n){
+  return rand() % n;
 }
 
-
-void gen_num() {
-	uint32_t ans = rand();
-	char number_char[32];
-	ans = ans % max_number;
-	ans = ans + 1;
-	sprintf(number_char,"%u",ans);
-	strcat(buf,number_char);
-	tokens_num++;
-}
-void gen_rand_op() {
-	uint32_t ans = rand();
-	ans = ans % (sizeof(operator)/sizeof(operator[0]));
-	gen(operator[ans]);
-	tokens_num++;
+void gen(char c){
+  char cha_buffer[2] = {c, '\0'};
+  strcat(buf, cha_buffer);
 }
 
-void gen_rand_expr() {
-	switch (choose(3)) {
-		case 0: gen_num(); tokens_num++; break;
-		case 1: gen('('); gen_rand_expr(); gen(')'); tokens_num+=2; break;
-		default: gen_rand_expr(); gen_rand_op(); gen_rand_expr(); break;
+char gen_rand_op(){
+  switch (choose(4)){
+    case 0:
+      gen('+');
+      return '+';
+    case 1:
+      gen('-');
+      return '-';
+    case 2:
+      gen('*');
+      return '*';
+    case 3:
+      gen('/');
+      return '/';
+  }
+  return ' ';
+}
+
+uint32_t gen_num(){
+  char num_buffer[1000];
+  num_buffer[0] = '\0';
+  uint32_t number;
+	switch(choose(4)){
+		case 0:
+		case 1:
+		case 2:
+			number = rand() % MAX_NUMBER  + 1;
+			break;
+		case 3:
+			number = -(rand() % MAX_NUMBER + 1);
+			break;
 	}
-	if (tokens_num >= 32) {
-		return;
-	}
+  sprintf(num_buffer ,"%u", number);
+  strcat(buf, num_buffer);
+  return number;
+}
+
+void generate_output(){
+  int j = 0;
+  for (int i = 0; buf[i] != '\0'; ++i){
+    if (buf[i] != 'u'){
+      str_buffer[j++] = buf[i];
+    }
+  }
+  str_buffer[j] = '\0';
+}
+
+static void gen_rand_blank(){
+  switch (choose(3))
+  { 
+  case 0:
+    strcat(buf, " ");
+    break;
+  case 1:
+  case 2:
+    break;
+  }
+}
+
+static void gen_rand_expr(int depth) {
+  if (strlen(buf) > 65536 - 10000 || depth > 15){
+    gen('(');
+    gen_rand_blank();
+    gen_num();
+    gen_rand_blank();
+    gen(')');
+    return ;
+  }
+
+  switch (choose(3)) {
+    case 0: 
+      gen('(');
+      gen_rand_blank();
+      gen_rand_expr(depth + 1);
+      gen_rand_blank();
+      gen(')');
+      break; 
+    case 1:
+      gen_num();
+      gen_rand_blank(); 
+      break;
+    default: {
+      gen_rand_expr(depth + 1);
+      gen_rand_blank();
+      gen_rand_op();
+      gen_rand_blank();
+      gen_rand_expr(depth + 1);
+      break;
+    }
+  }
 }
 
 int main(int argc, char *argv[]) {
+  //stderr = NULL;
   int seed = time(0);
   srand(seed);
   int loop = 1;
@@ -82,28 +130,34 @@ int main(int argc, char *argv[]) {
   }
   int i;
   for (i = 0; i < loop; i ++) {
-    gen_rand_expr();
+    buf[0] = '\0';
+    gen_rand_expr(0);
+    generate_output();
+    
     sprintf(code_buf, code_format, buf);
-
     FILE *fp = fopen("/tmp/.code.c", "w");
     assert(fp != NULL);
     fputs(code_buf, fp);
     fclose(fp);
 
-    int ret = system("gcc /tmp/.code.c -o /tmp/.expr");
-    if (ret != 0) continue;
+    int ret = system("gcc /tmp/.code.c -o /tmp/.expr -Werror 2> /tmp/.error.txt");
+    if (ret != 0){ 
+      i--;
+      continue;
+    }
 
     fp = popen("/tmp/.expr", "r");
     assert(fp != NULL);
 
-    int result;
-		int temp = 1, temp2 = 2;
-		temp = temp2 + temp;
-		temp2 = temp + temp2;
-    temp = fscanf(fp, "%d", &result);
+    uint32_t result = 0u;
+    int b = fscanf(fp, "%u", &result);
     pclose(fp);
+    if (b != 1){
+      i--;
+      continue;
+    }
 
-    printf("%u %s\n", result, buf);
+    printf("%u %s\n", result, str_buffer);
   }
   return 0;
 }
