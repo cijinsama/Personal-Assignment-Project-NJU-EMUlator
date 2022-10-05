@@ -56,10 +56,10 @@ static int test_cmd_p() {
     input = fgets(buffer, ARRLEN(buffer), fp);
     counter++;
 		if (counter %10 == 0) {
-			printf("%d/unknown",counter);
+			printf("%d/unknown\n",counter);
 		}
   }
-	printf("passed %d",counter);
+	printf("\npassed %d\n",counter);
 	return 0;
 }
 
