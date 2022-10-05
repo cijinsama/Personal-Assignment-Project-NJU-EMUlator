@@ -28,6 +28,30 @@ void init_wp_pool();
 WP* watcher_head = NULL;
 
 
+#define dataset "./test_cmd_p"
+int test_cmd_p() {
+  int counter = 0;
+  char buffer[65535];
+	int ans = 0;
+	bool success = false;
+  char *expression;
+	int result;
+  FILE *fp = fopen(dataset, "r");
+  char* input = fgets(buffer, ARRLEN(buffer), fp);
+  while (input != NULL){
+    input[strlen(input) - 1] = '\0';
+    char* ans_text = strtok(input, " ");
+    sscanf(ans_text, "%u", &ans);
+    expression = input + strlen(ans_text) + 1;
+		result = expr(expression, &success);
+    assert(result == ans);
+    input = fgets(buffer, ARRLEN(buffer), fp);
+    counter++;
+  }
+	printf("passed %d",counter);
+	return 0;
+}
+
 
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 static char* rl_gets() {
@@ -200,7 +224,9 @@ static struct {
 	{ "p", "evaluate the expr", cmd_p },
 	{ "w", "set a new watcher", cmd_w },
 	{ "d", "del a watcher", cmd_d },
-	{ "px", "evaluate the expr printf 0x***", cmd_px}
+	{ "px", "evaluate the expr printf 0x***", cmd_px},
+	{ "test_cmd_p", "test_cmd_p", test_cmd_p}
+
   /* TODO: Add more commands */
 
 };
