@@ -28,7 +28,7 @@ void init_wp_pool();
 WP* watcher_head = NULL;
 
 
-#define dataset "./test_cmd_p"
+#define dataset "./test_p"
 static int test_cmd_p() {
   int counter = 0;
   char buffer[65535];
