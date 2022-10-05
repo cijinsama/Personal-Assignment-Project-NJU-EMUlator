@@ -49,7 +49,10 @@ static int test_cmd_p() {
     expression = input + strlen(ans_text) + 1;
 		printf("%s",expression);
 		result = expr(expression, &success);
-    assert(result == ans);
+		if (result != ans) {
+			printf("error expression \n%s\n",expression);
+			assert(result == ans);
+		}
     input = fgets(buffer, ARRLEN(buffer), fp);
     counter++;
 		if (counter %10 == 0) {
