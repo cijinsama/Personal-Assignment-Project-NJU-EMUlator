@@ -31,7 +31,7 @@ WP* watcher_head = NULL;
 #define dataset "./test_p"
 static int test_cmd_p() {
   int counter = 0;
-  char buffer[100];//65535 -> 100
+  char buffer[65535];//65535 -> 100
 	int ans = 0;
 	bool success = false;
   char *expression;
