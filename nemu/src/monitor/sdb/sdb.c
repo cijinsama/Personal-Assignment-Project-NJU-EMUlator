@@ -51,6 +51,9 @@ static int test_cmd_p() {
     assert(result == ans);
     input = fgets(buffer, ARRLEN(buffer), fp);
     counter++;
+		if (counter %10 == 0) {
+			printf("%d/unknown",counter);
+		}
   }
 	printf("passed %d",counter);
 	return 0;
