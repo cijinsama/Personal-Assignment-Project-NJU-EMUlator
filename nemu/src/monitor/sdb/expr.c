@@ -227,7 +227,7 @@ uint32_t eval(Token* back_pointer, Token* front_pointer, int* error_message) {
 			char curchar;
 			for (int i=0; i<strlen(back_pointer->str); i++){
 				curchar = back_pointer->str[i];	
-				if (curchar <= 9 && curchar >= 0) single_number = single_number * 16 + curchar - '0';
+				if (curchar <= '9' && curchar >= '0') single_number = single_number * 16 + curchar - '0';
 				else single_number = single_number * 16 + curchar - 'a' + 10;
 			}
 			return single_number;	
