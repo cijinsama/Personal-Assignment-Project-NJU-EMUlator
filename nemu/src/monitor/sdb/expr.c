@@ -132,6 +132,7 @@ static bool make_token(char *e) {
 					case TK_NUMBER_NOEND:
 					case TK_NUMBER_END:
 						memcpy(tokens[nr_token].str, substr_start,substr_len);
+						tokens[nr_token].str[substr_len]='\0';
 						break;
 					case TK_HEX:
 						if (substr_len > MAX_NUMBER_HEX){
@@ -140,10 +141,12 @@ static bool make_token(char *e) {
 						}
 						else{
 							memcpy(tokens[nr_token].str,substr_start+2,substr_len-2);
+							tokens[nr_token].str[substr_len-2]='\0';
 						}
 						break;
 					case TK_REG:
 						memcpy(tokens[nr_token].str, substr_start+1,substr_len-1);
+						tokens[nr_token].str[substr_len-1]='\0';
 						break;
 					default:
 						printf("Unknow expression\n");	
