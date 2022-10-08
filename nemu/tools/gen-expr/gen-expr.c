@@ -9,11 +9,10 @@
 #define MAX_DEPTH 5
 
 
-
-// this should be enough
-static char buf[65536] = {};
-static char str_buffer[65536] = {};
-static char code_buf[65536 + 128] = {}; // a little larger than `buf`
+static char buf[70000] = {};
+static char str_buffer[70000] = {};
+static char code_buffer[100000] = {};
+static int ans = 0;
 static char *code_format =
 "#include <stdio.h>\n"
 "int main() { "
@@ -23,37 +22,43 @@ static char *code_format =
 "}";
 
 
-uint32_t choose(uint32_t  n){
+int choose(int  n){
+	if (n < 0) {
+		assert(0);
+	}
   return rand() % n;
 }
 
-void gen(char c){
-  char cha_buffer[2] = {c, '\0'};
+bool gen(char expr){
+  char cha_buffer[2];
+	cha_buffer[0] = c;
+	cha_buffer[1] = '\0';
   strcat(buf, cha_buffer);
+	return true;
 }
 
-char gen_rand_op(){
+bool gen_rand_op(){
   switch (choose(4)){
     case 0:
-      gen('+');
-      return '+';
-    case 1:
-      gen('-');
-      return '-';
-    case 2:
       gen('*');
-      return '*';
-    case 3:
+			break;
+    case 1:
       gen('/');
-      return '/';
+			break;
+    case 2:
+      gen('-');
+			break;
+    case 3:
+      gen('+');
+			break;
   }
-  return ' ';
+  return true;
 }
 
-uint32_t gen_num(){
+int gen_num(){
   char num_buffer[1000];
   num_buffer[0] = '\0';
-  uint32_t number;
+  int number;
 	number = rand() % MAX_NUMBER  + 1;
 	switch(choose(4)){
 		case 0:
@@ -79,45 +84,27 @@ void generate_output(){
   str_buffer[j] = '\0';
 }
 
-static void gen_rand_blank(){
-  switch (choose(3))
-  { 
-  case 0:
-    strcat(buf, " ");
-    break;
-  case 1:
-  case 2:
-    break;
-  }
-}
 
 static void gen_rand_expr(int depth) {
-  if (strlen(buf) > 65536 - 10000 || depth > MAX_DEPTH){
+  if (strlen(buf) > 65000 || depth > MAX_DEPTH){
     gen('(');
-    gen_rand_blank();
     gen_num();
-    gen_rand_blank();
     gen(')');
     return ;
   }
 
   switch (choose(3)) {
     case 0: 
-      gen('(');
-      gen_rand_blank();
-      gen_rand_expr(depth + 1);
-      gen_rand_blank();
-      gen(')');
+      gen_num();
       break; 
     case 1:
-      gen_num();
-      gen_rand_blank(); 
+      gen('(');
+      gen_rand_expr(depth + 1);
+      gen(')');
       break;
     default: {
       gen_rand_expr(depth + 1);
-      gen_rand_blank();
       gen_rand_op();
-      gen_rand_blank();
       gen_rand_expr(depth + 1);
       break;
     }
@@ -138,10 +125,10 @@ int main(int argc, char *argv[]) {
     gen_rand_expr(0);
     generate_output();
     
-    sprintf(code_buf, code_format, buf);
+    sprintf(code_buffer, code_format, buf);
     FILE *fp = fopen("/tmp/.code.c", "w");
     assert(fp != NULL);
-    fputs(code_buf, fp);
+    fputs(code_buffer, fp);
     fclose(fp);
 
     int ret = system("gcc /tmp/.code.c -o /tmp/.expr -Werror 2> /tmp/.error.txt");
