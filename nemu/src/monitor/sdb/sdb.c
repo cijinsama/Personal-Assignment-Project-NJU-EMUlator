@@ -99,6 +99,10 @@ static int cmd_si(char *args) {
 }
 
 static int cmd_info(char *args) {
+	if (args == NULL) {
+		printf("please input 'r' or 'w'\n");
+		return ERROR_GOON;
+	}
 	if (strlen(args) != 1) {
 		printf("args error\n");
 		return ERROR_GOON;
