@@ -237,9 +237,6 @@ static struct {
 	{ "d", "del a watcher", cmd_d },
 	{ "px", "evaluate the expr printf 0x***", cmd_px},
 	{ "test_cmd_p", "test_cmd_p", test_cmd_p}
-
-  /* TODO: Add more commands */
-
 };
 
 #define NR_CMD ARRLEN(cmd_table)

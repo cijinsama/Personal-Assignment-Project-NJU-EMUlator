@@ -166,30 +166,6 @@ static bool make_token(char *e) {
 
   return true;
 }
-#if 1==0
-bool examin_if_make_token(char *e, bool *success) {
-  if (!make_token(e)) {
-    *success = false;
-    return false;
-   }
-  /* TODO: Insert codes to evaluate the expression. */
-	char new_e[10000];
-	int position_new = 0;
-	int position = 0;
-	while (tokens[position].type != 0) {
-		/*如果被填满了，就全部复制过去，要不然用strlen获得储存的字符串长度，并复制过去*/
-		if (tokens[position].str[32] != 0) {
-			memcpy(&new_e[position_new], tokens[position].str,32);
-		}
-		else {
-			memcpy(&new_e[position_new], tokens[position].str,strlen(tokens[position].str)-1);
-		}
-	}
-	int ret = memcmp(new_e, e, strlen(e));	
-	if (ret == 0) return true;
-  return false;
-}
-#endif
 
 bool check_parentheses(Token* back_pointer, Token* front_pointer) {
 	if (back_pointer->type == '(' && front_pointer->type == ')'){
@@ -373,6 +349,10 @@ uint32_t eval(Token* back_pointer, Token* front_pointer, int* error_message) {
 
 
 word_t expr(char *e, bool *success) {
+	if (success == NULL) {
+		*success = false;
+		return 0;
+	}
   if (!make_token(e)) {
     *success = false;
     return 0;
