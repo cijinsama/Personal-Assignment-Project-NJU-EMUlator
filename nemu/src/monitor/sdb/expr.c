@@ -349,7 +349,7 @@ uint32_t eval(Token* back_pointer, Token* front_pointer, int* error_message) {
 
 
 word_t expr(char *e, bool *success) {
-	if (success == NULL) {
+	if (e == NULL) {
 		*success = false;
 		return 0;
 	}
