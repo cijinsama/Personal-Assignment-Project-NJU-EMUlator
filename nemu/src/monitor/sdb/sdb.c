@@ -148,7 +148,7 @@ static int cmd_x(char *args) {
 		else {printf("input args error\n"); return ERROR_GOON;}
 	}
 	
-	paddr_t addr= 0;
+	vaddr_t addr= 0;
 	/*解析地址：将string转换成paddr_t */	
 	for (i=2; i<strlen(exp); i++) {
 		tem = exp[i];
@@ -159,7 +159,7 @@ static int cmd_x(char *args) {
 
 	/* 输出地址对应的数据  */
 	for (i=0; i< num; i++, addr+=4) {
-		printf("0x%08x\n",(uint32_t)vaddr_read(addr ,4));
+		printf("0x%08x\n",vaddr_read(addr ,4));
 	} 
 	printf("\n");	
 	return 0;
@@ -248,7 +248,7 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
 	{ "si", "Execute n steps of the program then stop", cmd_si },
 	{ "info", "Print status", cmd_info },
-	{ "x", "scan the memory for given addr string,\nused as 'x 4 80000000'", cmd_x },
+	{ "x", "scan the memory for given addr string,\nused as 'x 4 0x80000000',\nthe first arg stands for how many word you want, the second arg stands for the first of the addrs", cmd_x },
 	{ "p", "evaluate the expr", cmd_p },
 	{ "w", "set a new watcher", cmd_w },
 	{ "d", "del a watcher", cmd_d },
