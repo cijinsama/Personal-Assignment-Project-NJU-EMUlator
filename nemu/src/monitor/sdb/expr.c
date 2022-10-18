@@ -20,7 +20,7 @@
  */
 #include <regex.h>
 #include <math.h>
-#include <memory/paddr.h>
+#include <memory/vaddr.h>
 
 #define MAX_NUMBER_BUFFER 32
 #define MAX_NUMBER_SINGAL 32
@@ -334,7 +334,7 @@ uint32_t eval(Token* back_pointer, Token* front_pointer, int* error_message) {
 			case TK_EQ: return val1 == val2;
 			case TK_UEQ: return val1 != val2;
 			case TK_AND: return val1 && val2;
-			case DEREF: return paddr_read(val2,4);
+			case DEREF: return vaddr_read(val2,4);
 			case NEGTIVE: return -val2;
 			default: {
 				*error_message = ERROR_MESSAGE_UNKNOWN;

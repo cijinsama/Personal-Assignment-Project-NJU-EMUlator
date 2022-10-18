@@ -17,7 +17,7 @@
 #include <cpu/cpu.h>
 #include <readline/readline.h>
 #include <readline/history.h>
-#include <memory/paddr.h>
+#include <memory/vaddr.h>
 #include "sdb.h"
 #define ERROR_GOON 1
 static int is_batch_mode = false;
@@ -159,7 +159,7 @@ static int cmd_x(char *args) {
 
 	/* 输出地址对应的数据  */
 	for (i=0; i< num; i++, addr+=4) {
-		printf("0x%08x\n",(uint32_t)paddr_read(addr ,4));
+		printf("0x%08x\n",(uint32_t)vaddr_read(addr ,4));
 	} 
 	printf("\n");	
 	return 0;
@@ -196,17 +196,17 @@ static int cmd_p(char *args) {
 	return ERROR_GOON;
 } 
 
+static void print_pc(int i, char *out_str) {
+	sprintf(out_str, "0x%08x", vaddr_read(cpu.pc - i, 4));
+	if (i == 0) printf("     %s\n",out_str);
+	else				printf("---> %s\n",out_str);
+	return;
+}
+
 static int cmd_list(char *args) {
 	char out_str[30];
-	for(int i = 1; i < 3; i++) {
-		sprintf(out_str, "0x%08x",cpu.pc - i);
-		printf("     %s\n",out_str);
-	}
-	sprintf(out_str, "0x%08x",cpu.pc);
-	printf("---> %s\n",out_str);
-	for(int i = 1; i < 3; i++) {
-		sprintf(out_str, "0x%08x",cpu.pc + i);
-		printf("     %s\n",out_str);
+	for(int i = -3; i <= 3; i++) {
+		print_pc(i,out_str);
 	}
 	return 0;
 }
