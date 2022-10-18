@@ -197,6 +197,9 @@ static int cmd_p(char *args) {
 } 
 
 static void print_pc(int i, char *out_str) {
+	if (cpu.pc + i * 4 < 0x80000000) {
+		return;
+	}
 	sprintf(out_str, "0x%08x", vaddr_read(cpu.pc + i*4, 4));
 	if (i == 0) printf("---> 0x%08x : %s\n",cpu.pc + i*4, out_str);
 	else				printf("     0x%08x : %s\n",cpu.pc + i*4, out_str);
