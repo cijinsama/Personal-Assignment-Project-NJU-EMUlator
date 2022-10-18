@@ -248,7 +248,7 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
 	{ "si", "Execute n steps of the program then stop", cmd_si },
 	{ "info", "Print status", cmd_info },
-	{ "x", "scan the memory for given addr string", cmd_x },
+	{ "x", "scan the memory for given addr string,\nused as 'x 4 80000000'", cmd_x },
 	{ "p", "evaluate the expr", cmd_p },
 	{ "w", "set a new watcher", cmd_w },
 	{ "d", "del a watcher", cmd_d },
