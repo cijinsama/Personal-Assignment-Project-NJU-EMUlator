@@ -197,9 +197,9 @@ static int cmd_p(char *args) {
 } 
 
 static void print_pc(int i, char *out_str) {
-	sprintf(out_str, "0x%08x", vaddr_read(cpu.pc - i, 4));
-	if (i == 0) printf("---> %s\n",out_str);
-	else				printf("     %s\n",out_str);
+	sprintf(out_str, "0x%08x", vaddr_read(cpu.pc + i, 4));
+	if (i == 0) printf("---> 0x%08x : %s\n",cpu.pc + i, out_str);
+	else				printf("     0x%08x : %s\n",cpu.pc + i, out_str);
 	return;
 }
 
