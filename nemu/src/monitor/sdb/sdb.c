@@ -159,7 +159,6 @@ static int cmd_x(char *args) {
 
 	/* 输出地址对应的数据  */
 	for (i=0; i< num; i++, addr+=4) {
-		//printf("%08x",(uint32_t)paddr_read(addr ,4));
 		printf("0x%08x\n",(uint32_t)paddr_read(addr ,4));
 	} 
 	printf("\n");	
@@ -197,6 +196,20 @@ static int cmd_p(char *args) {
 	return ERROR_GOON;
 } 
 
+static int cmd_list(char *args) {
+	char out_str[30];
+	for(int i = 1; i < 3; i++) {
+		sprintf(out_str, "0x%08x",cpu.pc - i);
+		printf("     %s\n",out_str);
+	}
+	sprintf(out_str, "0x%08x",cpu.pc);
+	printf("---> %s\n",out_str);
+	for(int i = 1; i < 3; i++) {
+		sprintf(out_str, "0x%08x",cpu.pc + i);
+		printf("     %s\n",out_str);
+	}
+	return 0;
+}
 
 static int cmd_w(char *args) {
 	watcher_head = new_wp( args ); 
@@ -240,7 +253,8 @@ static struct {
 	{ "w", "set a new watcher", cmd_w },
 	{ "d", "del a watcher", cmd_d },
 	{ "px", "evaluate the expr printf 0x***", cmd_px},
-	{ "test_cmd_p", "test_cmd_p", test_cmd_p}
+	{ "test_cmd_p", "test_cmd_p", test_cmd_p},
+	{ "list", "list the code around current pc", cmd_list}
 };
 
 #define NR_CMD ARRLEN(cmd_table)
