@@ -147,8 +147,7 @@ static int cmd_info(char *args) {
 		WP* temp = watcher_head;
 		while (temp != NULL){
 			printf("Hardware watchpoint %d : %s\n", temp->NO, temp->expr);
-			printf("Old value : %d : %08x\n", temp->last_value, temp->last_value);
-			printf("new value :\n");
+			printf("value :\n");
 			cmd_p(temp->expr);
 			cmd_px(temp->expr);
 			temp = temp->next;
