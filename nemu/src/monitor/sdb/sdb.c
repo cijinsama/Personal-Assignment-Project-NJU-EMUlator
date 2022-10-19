@@ -116,6 +116,7 @@ static int cmd_info(char *args) {
 		while (temp != NULL){
 			printf("Hardware watchpoint %d : %s\n", temp->NO, temp->expr);
 			printf("Old value : %d\n", temp->last_value);
+			temp = temp->next;
 		}
 		return 0;
 	}
