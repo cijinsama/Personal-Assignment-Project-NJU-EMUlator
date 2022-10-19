@@ -52,6 +52,7 @@ static int get_jal_value(int imm) {
 	offset += BITS(imm, 8, 8) << 11;
 	offset += BITS(imm, 18, 9) << 1;
 	offset += BITS(imm, 19, 19) << 20;
+	printf("offset %d\n",offset);
 	return offset;
 }
 
