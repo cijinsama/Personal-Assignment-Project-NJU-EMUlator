@@ -23,7 +23,7 @@
 #define Mw vaddr_write
 
 enum {
-  TYPE_I, TYPE_U, TYPE_S,TYPE_J,
+  TYPE_I, TYPE_U, TYPE_S, TYPE_J, TYPE_B, TYPE_R, TYPE_shamt,
   TYPE_N, // none
 };
 #define BITMASK_SELF(high, low) (BITMASK(high) ^ BITMASK(low - 1))
@@ -32,8 +32,9 @@ enum {
 #define immI() do { *imm = SEXT(BITS(i, 31, 20), 12); } while(0)
 #define immU() do { *imm = SEXT(BITS(i, 31, 12), 20) << 12; } while(0)
 #define immS() do { *imm = (SEXT(BITS(i, 31, 25), 7) << 5) | BITS(i, 11, 7); } while(0)
-
-#define immJ() do { *imm = SEXT(BITS(i, 32, 12), 20); *imm = ( (*imm & BITMASK_SELF(32, 20)) | ((*imm >> 9) & BITMASK_SELF(11, 1)) | (*imm & BITMASK_SELF(8, 1)) << 11 | (*imm & BITMASK_SELF(9,9)) << 2) << 1; } while(0)
+#define immJ() do { *imm = ( ((int32_t) SEXT(BITS(i, 31, 31), 1) << 20) | (BITS(i, 30, 21) <<  1) | (BITS(i, 20, 20) << 11) | (BITS(i, 19, 12) << 12) );} while(0)
+#define immB() do { *imm = (( (int32_t) SEXT(BITS(i, 31, 31), 1) << 12 ) | (BITS(i, 7, 7) << 11) | (BITS(i, 30, 25) << 5) | (BITS(i, 11, 8) << 1)); } while(0)
+#define immshamt() do { *imm = BITS(i, 24, 20); } while(0)
 
 static void decode_operand(Decode *s, int *dest, word_t *src1, word_t *src2, word_t *imm, int type) {
   uint32_t i = s->isa.inst.val;
@@ -42,10 +43,13 @@ static void decode_operand(Decode *s, int *dest, word_t *src1, word_t *src2, wor
   int rs2 = BITS(i, 24, 20);
   *dest = rd;
   switch (type) {
-    case TYPE_I: src1R();          immI(); break;
-    case TYPE_U:                   immU(); break;
-    case TYPE_S: src1R(); src2R(); immS(); break;
-		case TYPE_J:									 immJ(); break;
+    case TYPE_I:		src1R();          immI();					 break;
+    case TYPE_U:			                immU();					 break;
+    case TYPE_S:		src1R(); src2R(); immS();					 break;
+		case TYPE_J:											immJ();					 break;
+		case TYPE_B:		src1R(); src2R(); immB();					 break;
+		case TYPE_R:		src1R(); src2R();									 break;
+		case TYPE_shamt:src1R();					immshamt();			 break;
   }
 }
 
@@ -61,16 +65,26 @@ static int decode_exec(Decode *s) {
 }
 
   INSTPAT_START();//INSTPAT左边为高位，右边为低位
+	INSTPAT("0000000 ????? ????? 000 ????? 01100 11", add		 , R, R(dest) = src1 + src2);
 	INSTPAT("??????? ????? ????? 000 ????? 00100 11", addi   , I, src1 += imm, R(dest) = src1);
 	INSTPAT("??????? ????? ????? ??? ????? 00101 11", auipc  , U, R(dest) = s->pc + imm);
-	INSTPAT("0000000 00000 00000 000 00000 11100 11", ebreak , U, assert(0));
+	INSTPAT("??????? ????? ????? 000 ????? 11000 11", beq		 , B, if(src1 == src2){s->dnpc = s->pc + imm;});
+	INSTPAT("??????? ????? ????? 001 ????? 11000 11", bne		 , B, if(src1 != src2){s->dnpc = s->pc + imm;});
+  INSTPAT("0000000 00001 00000 000 00000 11100 11", ebreak , N, NEMUTRAP(s->pc, R(10))); // R(10) is $a0
 	INSTPAT("??????? ????? ????? ??? ????? 11011 11", jal    , J, R(dest) = s->dnpc, s->dnpc = s->pc + imm);								//注意，要求跳转数为2的倍数，并只记录21位的前20位
 	INSTPAT("??????? ????? ????? 000 ????? 11001 11", jalr   , I, R(dest) = s->snpc, s->dnpc = ((src1 + imm) & (~1)));	//注意同上
   INSTPAT("??????? ????? ????? ??? ????? 01101 11", lui    , U, R(dest) = imm);
   INSTPAT("??????? ????? ????? 010 ????? 00000 11", lw     , I, R(dest) = Mr(src1 + imm, 4));
+	INSTPAT("0000000 ????? ????? 110 ????? 01100 11", or		 , R, R(dest) = (src1 | src2));
+	INSTPAT("??????? ????? ????? 110 ????? 00100 11", ori		 , I, R(dest) = (src1 | imm));
+	INSTPAT("000000? ????? ????? 001 ????? 00100 11", slli	 , shamt, R(dest) = src1 << imm);
+	INSTPAT("??????? ????? ????? 010 ????? 00100 11", slti	 , I, R(dest) = ( (int32_t) src1 < (int32_t) imm));
+	INSTPAT("??????? ????? ????? 011 ????? 00100 11", sltiu	 , I, R(dest) = ( (uint32_t) src1 < (uint32_t) imm));
+	INSTPAT("0100000 ????? ????? 000 ????? 01100 11", sub		 , R, R(dest) = src1 - src2);
   INSTPAT("??????? ????? ????? 010 ????? 01000 11", sw     , S, Mw(src1 + imm, 4, src2));
+	INSTPAT("0000000 ????? ????? 100 ????? 01100 11", xor		 , R, R(dest) = (src1 ^ src2));
+	INSTPAT("??????? ????? ????? 100 ????? 00100 11", xori	 , I, R(dest) = (src1 ^ imm));
 
-  INSTPAT("0000000 00001 00000 000 00000 11100 11", ebreak , N, NEMUTRAP(s->pc, R(10))); // R(10) is $a0
   INSTPAT("??????? ????? ????? ??? ????? ????? ??", inv    , N, INV(s->pc));
   INSTPAT_END();
 
