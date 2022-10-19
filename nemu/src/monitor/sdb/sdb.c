@@ -107,7 +107,7 @@ static int cmd_px(char *args) {
 		return ERROR_GOON;
 	 }
 	else {
-		printf("%8x\n",ans);
+		printf("0x%8x\n",ans);
 		return 0;
 	} 
 	return ERROR_GOON;
