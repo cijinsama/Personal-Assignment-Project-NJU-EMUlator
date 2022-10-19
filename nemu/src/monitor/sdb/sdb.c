@@ -98,6 +98,38 @@ static int cmd_si(char *args) {
 	return 0;
 }
 
+static int cmd_px(char *args) {
+	bool success;
+	uint32_t ans = 0;
+	ans = expr(args, &success);
+	if (!success) {
+		printf("please retry\n");
+		return ERROR_GOON;
+	 }
+	else {
+		printf("%8x\n",ans);
+		return 0;
+	} 
+	return ERROR_GOON;
+} 
+
+
+static int cmd_p(char *args) {
+	bool success;
+	uint32_t ans = 0;
+	ans = expr(args, &success);
+	if (!success) {
+		printf("please retry\n");
+		return ERROR_GOON;
+	 }
+	else {
+		printf("%u\n",ans);
+		return 0;
+	} 
+	return ERROR_GOON;
+}
+
+
 static int cmd_info(char *args) {
 	if (args == NULL) {
 		printf("please input 'r' or 'w'\n");
@@ -115,7 +147,10 @@ static int cmd_info(char *args) {
 		WP* temp = watcher_head;
 		while (temp != NULL){
 			printf("Hardware watchpoint %d : %s\n", temp->NO, temp->expr);
-			printf("Old value : %d\n", temp->last_value);
+			printf("Old value : %d : %08x\n", temp->last_value, temp->last_value);
+			printf("new value :\n");
+			cmd_p(temp->expr);
+			cmd_px(temp->expr);
 			temp = temp->next;
 		}
 		return 0;
@@ -166,36 +201,7 @@ static int cmd_x(char *args) {
 	return 0;
 }
 
-static int cmd_px(char *args) {
-	bool success;
-	uint32_t ans = 0;
-	ans = expr(args, &success);
-	if (!success) {
-		printf("please retry\n");
-		return ERROR_GOON;
-	 }
-	else {
-		printf("%8x\n",ans);
-		return 0;
-	} 
-	return ERROR_GOON;
-} 
-
-
-static int cmd_p(char *args) {
-	bool success;
-	uint32_t ans = 0;
-	ans = expr(args, &success);
-	if (!success) {
-		printf("please retry\n");
-		return ERROR_GOON;
-	 }
-	else {
-		printf("%u\n",ans);
-		return 0;
-	} 
-	return ERROR_GOON;
-} 
+ 
 
 static void print_pc(int i, char *out_str) {
 	if (cpu.pc + i * 4 < 0x80000000) {
