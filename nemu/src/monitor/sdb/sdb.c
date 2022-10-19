@@ -90,7 +90,7 @@ static int cmd_si(char *args) {
 	}
 	else if (*point == '-'){ return ERROR_GOON; }
 	else {
-		for (; *point <= '9' && *point >= '0' ; point++){
+		for (; (*point <= '9') && (*point >= '0') ; point++){
 			number = number*10 + *point-'0';
 		}
 	}
