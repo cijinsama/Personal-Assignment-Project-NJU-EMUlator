@@ -23,15 +23,16 @@
 #define Mw vaddr_write
 
 enum {
-  TYPE_I, TYPE_U, TYPE_S,
+  TYPE_I, TYPE_U, TYPE_S,TYPE_J,
   TYPE_N, // none
 };
-
+#define BITMASK_SELF(high, low) (BITMASK(high) ^ BITMASK(low - 1))
 #define src1R() do { *src1 = R(rs1); } while (0)
 #define src2R() do { *src2 = R(rs2); } while (0)
 #define immI() do { *imm = SEXT(BITS(i, 31, 20), 12); } while(0)
 #define immU() do { *imm = SEXT(BITS(i, 31, 12), 20) << 12; } while(0)
 #define immS() do { *imm = (SEXT(BITS(i, 31, 25), 7) << 5) | BITS(i, 11, 7); } while(0)
+#define immJ() do { *imm = SEXT(BITS(i, 32, 12), 20); *imm = ( (*imm & BITMASK_SELF(32, 20)) | ((*imm & BITMASK_SELF(19, 10)) >> 9) | ((*imm & BITMASK_SELF(8, 1)) << 11) | ((*imm & BITMASK_SELF(9,9)) << 2)) << 1; } while(0)
 
 static void decode_operand(Decode *s, int *dest, word_t *src1, word_t *src2, word_t *imm, int type) {
   uint32_t i = s->isa.inst.val;
@@ -43,18 +44,8 @@ static void decode_operand(Decode *s, int *dest, word_t *src1, word_t *src2, wor
     case TYPE_I: src1R();          immI(); break;
     case TYPE_U:                   immU(); break;
     case TYPE_S: src1R(); src2R(); immS(); break;
+		case TYPE_J:									 immJ(); break;
   }
-}
-
-static int get_jal_value(int imm) {
-	int offset = 0;
-	printf("imm : %08x\n",imm);
-	offset += (BITS(imm, 7, 0) << 12);
-	offset += (BITS(imm, 8, 8) << 11);
-	offset += (BITS(imm, 18, 9) << 1);
-	offset += (BITS(imm, 19, 19) << 20);
-	printf("offset %08x\n",offset);
-	return offset;
 }
 
 static int decode_exec(Decode *s) {
@@ -72,7 +63,7 @@ static int decode_exec(Decode *s) {
 	INSTPAT("??????? ????? ????? 000 ????? 00100 11", addi   , I, src1 += imm, R(dest) = src1);
 	INSTPAT("??????? ????? ????? ??? ????? 00101 11", auipc  , U, R(dest) = s->pc + (imm << 12));
 	INSTPAT("0000000 00000 00000 000 00000 11100 11", ebreak , U, assert(0));
-	INSTPAT("??????? ????? ????? ??? ????? 11011 11", jal    , U, R(dest) = s->dnpc, s->dnpc += get_jal_value(imm));								//注意，要求跳转数为2的倍数，并只记录21位的前20位
+	INSTPAT("??????? ????? ????? ??? ????? 11011 11", jal    , U, R(dest) = s->dnpc, s->dnpc += imm);								//注意，要求跳转数为2的倍数，并只记录21位的前20位
 	INSTPAT("??????? ????? ????? 010 ????? 11001 11", jalr   , I, s->dnpc = ((src1 + imm) & (~1)), R(dest) = s->dnpc + 4);	//注意同上
   INSTPAT("??????? ????? ????? ??? ????? 01101 11", lui    , U, R(dest) = imm);
   INSTPAT("??????? ????? ????? 010 ????? 00000 11", lw     , I, R(dest) = Mr(src1 + imm, 4));
