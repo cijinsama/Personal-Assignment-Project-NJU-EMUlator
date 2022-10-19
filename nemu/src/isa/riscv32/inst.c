@@ -48,12 +48,12 @@ static void decode_operand(Decode *s, int *dest, word_t *src1, word_t *src2, wor
 
 static int get_jal_value(int imm) {
 	int offset = 0;
-	printf("imm : %d\n",imm);
+	printf("imm : %08x\n",imm);
 	offset += (BITS(imm, 7, 0) << 12);
 	offset += (BITS(imm, 8, 8) << 11);
 	offset += (BITS(imm, 18, 9) << 1);
 	offset += (BITS(imm, 19, 19) << 20);
-	printf("offset %d\n",offset);
+	printf("offset %08x\n",offset);
 	return offset;
 }
 
