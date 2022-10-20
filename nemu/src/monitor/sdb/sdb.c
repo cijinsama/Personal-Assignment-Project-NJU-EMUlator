@@ -230,6 +230,18 @@ static int cmd_d(char *args) {
 	for (int i=0; args[i] != '\0'; i++){
 		single_number = single_number*10 + args[i] - '0';
 	}
+	WP* temp_watchpoint_pointer = watcher_head;
+	while(temp_watchpoint_pointer != NULL) {
+		if (temp_watchpoint_pointer->NO == single_number) break;
+		temp_watchpoint_pointer = temp_watchpoint_pointer->next;
+	}	
+	if(temp_watchpoint_pointer != NULL) {
+		free(temp_watchpoint_pointer);
+	}
+	else{
+		printf("does't exist this watchpoint\n");
+	}
+
 	return 0;
 }
 
