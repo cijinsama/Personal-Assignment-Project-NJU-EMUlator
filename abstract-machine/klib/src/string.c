@@ -35,7 +35,7 @@ char *strcat(char *dst, const char *src) {
 	size_t dest_len = strlen(dst);
 	countint i = 0;
 	for(i = 0; src[i] != '\0'; i++)
-	dst[dest_len + i] = src[i];
+		dst[dest_len + i] = src[i];
 	dst[dest_len + i] = '\0';
 	return dst;
 }
@@ -45,52 +45,55 @@ char *strncat(char *dest, const char *src, size_t n)
 	size_t dest_len = strlen(dest);
 	size_t i;
 	for (i = 0 ; i < n && src[i] != '\0' ; i++)
-	dest[dest_len + i] = src[i];
+		dest[dest_len + i] = src[i];
 	dest[dest_len + i] = '\0';
 	return dest;
 }
 
 int strcmp(const char *s1, const char *s2) {
-	char *ps1 = (char *)s1, *ps2 = (char *)s2;
+	unsigned char *ps1 = (unsigned char *)s1, *ps2 = (unsigned char *)s2;
 	while(*ps1 != '\0' && *ps2 != '\0') {
 		if (*ps1 > *ps2){
-			return 1;
+			return *ps1 - *ps2;
 		}
 		else if (*ps1 < *ps2){
-			return -1;
+			return *ps1 - *ps2;
 		}
 		ps1++, ps2++;
 	}
-	if (*ps1 != '\0') {
-		return 1;
-	}
-	else if (*ps2 != '\0'){
-		return -1;
-	}
-	return 0;
+	return *ps1 - *ps2;
+	//if (*ps1 != '\0') {
+	//	return *ps1;
+	//}
+	//else if (*ps2 != '\0'){
+	//	return -*ps2;
+	//}11
+	//return 0;
 }
 
 int strncmp(const char *s1, const char *s2, size_t n) {
-	char *ps1 = (char *)s1, *ps2 = (char *)s2;
-	while(*ps1 != '\0' && *ps2 != '\0' && n>0) {
+	unsigned char *ps1 = (unsigned char *)s1, *ps2 = (unsigned char *)s2;
+	size_t i = 0;
+	while(*ps1 != '\0' && *ps2 != '\0' && i < n) {
 		if (*ps1 > *ps2){
-			return 1;
+			return *ps1 - *ps2;
 		}
 		else if (*ps1 < *ps2){
-			return -1;
+			return *ps1 - *ps2;
 		}
-		ps1++, ps2++, n--;
+		ps1++, ps2++, i++;
 	}
-	if (n == 0){
+	if (i == n){
 		return 0;
 	}
-	else if (*ps1 != '\0') {
-		return 1;
-	}
-	else if (*ps2 != '\0'){
-		return -1;
-	}
-	return 0;
+	return *ps1 - *ps2;
+	//else if (*ps1 != '\0') {
+	//	return *ps1;
+	//}
+	//else if (*ps2 != '\0'){
+	//	return *ps2;
+	//}
+	//return 0;
 }
 
 void *memset(void *s, int c, size_t n) {
@@ -106,7 +109,21 @@ void *memcpy(void *out, const void *in, size_t n) {
 }
 
 int memcmp(const void *s1, const void *s2, size_t n) {
-  panic("Not implemented");
+	unsigned char *ps1 = (unsigned char *)s1, *ps2 = (unsigned char *)s2;
+	size_t i = 0;
+	while(i < n) {
+		if (*ps1 > *ps2){
+			return *ps1 - *ps2;
+		}
+		else if (*ps1 < *ps2){
+			return *ps1 - *ps2;
+		}
+		ps1++, ps2++, i++;
+	}
+	if (i == n){
+		return 0;
+	}
+	return *ps1 - *ps2;
 }
 
 #endif
