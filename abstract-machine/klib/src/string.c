@@ -103,7 +103,7 @@ void *memset(void *s, int c, size_t n) {
 	for (i = 0; i < n; i++) {
 		src[i] = c;
 	}
-	return 0;
+	return s;
 }
 
 void *memmove(void *dst, const void *src, size_t n) {
