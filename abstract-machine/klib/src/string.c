@@ -29,7 +29,22 @@ char *strncpy(char *dst, const char *src, size_t n) {
 }
 
 char *strcat(char *dst, const char *src) {
-  panic("Not implemented");
+	size_t dest_len = strlen(dst);
+	int i = 0;
+	for(i = 0; src[i] != '\0'; i++)
+	dst[dest_len + i] = src[i];
+	dst[dest_len + i] = '\0';
+	return dst;
+}
+
+char *strncat(char *dest, const char *src, size_t n)
+{
+	size_t dest_len = strlen(dest);
+	size_t i;
+	for (i = 0 ; i < n && src[i] != '\0' ; i++)
+	dest[dest_len + i] = src[i];
+	dest[dest_len + i] = '\0';
+	return dest;
 }
 
 int strcmp(const char *s1, const char *s2) {
