@@ -1,6 +1,7 @@
 #include <klib.h>
 #include <klib-macros.h>
 #include <stdint.h>
+#define countint int
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
@@ -9,7 +10,7 @@ size_t strlen(const char *s) {
 }
 
 char *strcpy(char *dst, const char *src) {
-	size_t i;
+	countint i;
 	for(i = 0; src[i] != '\0'; i++) {
 		dst[i] = src[i];
 	}
@@ -30,7 +31,7 @@ char *strncpy(char *dst, const char *src, size_t n) {
 
 char *strcat(char *dst, const char *src) {
 	size_t dest_len = strlen(dst);
-	int i = 0;
+	countint i = 0;
 	for(i = 0; src[i] != '\0'; i++)
 	dst[dest_len + i] = src[i];
 	dst[dest_len + i] = '\0';
