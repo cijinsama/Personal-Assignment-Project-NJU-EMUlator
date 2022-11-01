@@ -65,7 +65,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 //
 }
 #ifdef CONFIG_IRINGBUF
-#define iringbufSIZE 8
+#define iringbufSIZE 4
 typedef struct {
 	vaddr_t pc;
 	vaddr_t snpc;

@@ -152,7 +152,6 @@ config CONFIG_IRINGBUF
 	default "true"
 
 
-
 config DIFFTEST
   depends on TARGET_NATIVE_ELF
   bool "Enable differential testing"
