@@ -38,7 +38,6 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #endif
   if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
-// 自己写的部分
 #ifdef CONFIG_WATCHPOINT
 	uint32_t new_value;
 	bool successful;
@@ -66,9 +65,21 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 //
 }
 #ifdef CONFIG_IRINGBUF
-#define iringbufSIZE 32
-uint8_t iringbuf[iringbufSIZE];
+#define iringbufSIZE 8
+typedef struct {
+	vaddr_t pc;
+	vaddr_t snpc;
+	(uint8_t *) instval;
+} iring;
+iring iringbuf[iringbufSIZE];
 int iringbufcounter = 0;
+void cpiring(Decode *s){
+	iringbuf[iringbufcounter].pc = s->pc;
+	iringbuf[iringbufcounter].snpc = s->snpc;
+	iringbuf[iringbufcounter].instval = (uint8_t *)&s->inst.val;
+	iringbufcounter++;
+	iringbufcounter = iringbufcounter % iringbufSIZE;
+}
 #endif
 
 static void exec_once(Decode *s, vaddr_t pc) {
@@ -77,8 +88,7 @@ static void exec_once(Decode *s, vaddr_t pc) {
   isa_exec_once(s);
   cpu.pc = s->dnpc;
 #ifdef CONFIG_IRINGBUF
-	iringbuf[iringbufcounter++] = (uint8_t)&s->isa.inst.val;
-	iringbufcounter = iringbufcounter % iringbufSIZE;
+	cpiring(s);
 #endif
 #ifdef CONFIG_ITRACE
   char *p = s->logbuf;
@@ -146,8 +156,69 @@ void cpu_exec(uint64_t n) {
 
   switch (nemu_state.state) {
     case NEMU_RUNNING: nemu_state.state = NEMU_STOP; break;
+		case NEMU_ABORT:
+			#ifdef iringbufSIZE
+			char *p;
+			int ilen
+			int i;
+			uint8_t *inst;
+			int ilen_max;
+			int space_len;
+			char logbuf[128];
+			iring *s;
+			for (int j = 0; j < iringbufSIZE - 1; j++) {//输出过去的几个指令
+				p = logbuf;
+				s = iringbuf[(j + iringbufcounter) % iringbufSIZE];
+				if (s.instval == NULL) continue;
+				p += snprintf(p, sizeof(logbuf), FMT_WORD ":", s.pc);
+				ilen = s.snpc - s.pc;
+				i;
+				inst = (uint8_t *)&s.instval;
+				for (i = ilen - 1; i >= 0; i --) {
+					p += snprintf(p, 4, " %02x", inst[i]);
+				}
+				ilen_max = MUXDEF(CONFIG_ISA_x86, 8, 4);
+				space_len = ilen_max - ilen;
+				if (space_len < 0) space_len = 0;
+				space_len = space_len * 3 + 1;
+				memset(p, ' ', space_len);
+				p += space_len;
 
-    case NEMU_END: case NEMU_ABORT:
+				void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
+				disassemble(p, logbuf + sizeof(logbuf) - p,
+					MUXDEF(CONFIG_ISA_x86, s.snpc, s.pc), (uint8_t *)&s.instval, ilen);
+				log_write("    \t")
+				log_write("%s\n", logbuf); 
+			}
+			s = iringbuf[(iringbufSIZE + iringbufcounter) % iringbufSIZE];
+			for (int j = 0; j < iringbufSIZE; j++) {//输出之后的几个指令
+				*p = logbuf;
+				p += snprintf(p, sizeof(logbuf), FMT_WORD ":", s.pc);
+				ilen = s.snpc - s.pc;
+				i;
+				*inst = (uint8_t *)&s.instval;
+				for (i = ilen - 1; i >= 0; i --) {
+					p += snprintf(p, 4, " %02x", inst[i]);
+				}
+				ilen_max = MUXDEF(CONFIG_ISA_x86, 8, 4);
+				space_len = ilen_max - ilen;
+				if (space_len < 0) space_len = 0;
+				space_len = space_len * 3 + 1;
+				memset(p, ' ', space_len);
+				p += space_len;
+
+				void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
+				disassemble(p, logbuf + sizeof(logbuf) - p,
+					MUXDEF(CONFIG_ISA_x86, s.snpc, s.pc), (uint8_t *)&s.instval, ilen);
+				if (j == 0) log_write("===>\t")
+				else log_write("    \t")
+				log_write("%s\n", logbuf); 
+				s.pc++;
+				s.snpc++;
+				s.instval = inst_fetch(&(s.snpc), 4);
+			}
+			#endif
+    case NEMU_END:
       Log("nemu: %s at pc = " FMT_WORD,
           (nemu_state.state == NEMU_ABORT ? ANSI_FMT("ABORT", ANSI_FG_RED) :
            (nemu_state.halt_ret == 0 ? ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN) :
