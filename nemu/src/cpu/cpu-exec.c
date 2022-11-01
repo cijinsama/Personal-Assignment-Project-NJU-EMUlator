@@ -215,7 +215,7 @@ void cpu_exec(uint64_t n) {
 				else log_write("    \t");
 				log_write("%s\n", logbuf); 
 				s.pc = s.snpc;
-				s.isa.inst.val = inst_fetch( &s.snpc, sizeof(s.isa.inst.val));
+				s.isa.inst.val = inst_fetch( &s.snpc, sizeof(s.isa.inst.val));//这个地方要加一个判断是否出界，如果出界就break；
 			}
 			log_write("==========================\n");
 			#endif
