@@ -16,6 +16,7 @@
 #include <cpu/cpu.h>
 #include <cpu/decode.h>
 #include <cpu/difftest.h>
+#include <cpu/ifetch.h>
 #include <locale.h>
 
 /* The assembly code of instructions executed is only output to the screen
@@ -69,14 +70,14 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 typedef struct {
 	vaddr_t pc;
 	vaddr_t snpc;
-	(uint8_t *) instval;
+	ISADecodeInfo isa;
 } iring;
 iring iringbuf[iringbufSIZE];
 int iringbufcounter = 0;
 void cpiring(Decode *s){
 	iringbuf[iringbufcounter].pc = s->pc;
 	iringbuf[iringbufcounter].snpc = s->snpc;
-	iringbuf[iringbufcounter].instval = (uint8_t *)&s->inst.val;
+	iringbuf[iringbufcounter].isa.inst.val = s->isa.inst.val;
 	iringbufcounter++;
 	iringbufcounter = iringbufcounter % iringbufSIZE;
 }
@@ -160,21 +161,20 @@ void cpu_exec(uint64_t n) {
     case NEMU_END:
 			#ifdef CONFIG_IRINGBUF
 			char *p;
-			int ilen
+			int ilen;
 			int i;
 			uint8_t *inst;
 			int ilen_max;
 			int space_len;
 			char logbuf[128];
-			iring *s;
+			iring s;
 			for (int j = 0; j < iringbufSIZE - 1; j++) {//输出过去的几个指令
 				p = logbuf;
 				s = iringbuf[(j + iringbufcounter) % iringbufSIZE];
-				if (s.instval == NULL) continue;
+				if (s.isa.inst.val == 0) continue;
 				p += snprintf(p, sizeof(logbuf), FMT_WORD ":", s.pc);
 				ilen = s.snpc - s.pc;
-				i;
-				inst = (uint8_t *)&s.instval;
+				inst = (uint8_t *)&s.isa.inst.val;
 				for (i = ilen - 1; i >= 0; i --) {
 					p += snprintf(p, 4, " %02x", inst[i]);
 				}
@@ -187,17 +187,16 @@ void cpu_exec(uint64_t n) {
 
 				void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
 				disassemble(p, logbuf + sizeof(logbuf) - p,
-					MUXDEF(CONFIG_ISA_x86, s.snpc, s.pc), (uint8_t *)&s.instval, ilen);
-				log_write("    \t")
+					MUXDEF(CONFIG_ISA_x86, s.snpc, s.pc), (uint8_t *)&s.isa.inst.val, ilen);
+				log_write("    \t");
 				log_write("%s\n", logbuf); 
 			}
 			s = iringbuf[(iringbufSIZE + iringbufcounter) % iringbufSIZE];
 			for (int j = 0; j < iringbufSIZE; j++) {//输出之后的几个指令
-				*p = logbuf;
+				p = logbuf;
 				p += snprintf(p, sizeof(logbuf), FMT_WORD ":", s.pc);
 				ilen = s.snpc - s.pc;
-				i;
-				*inst = (uint8_t *)&s.instval;
+				inst = (uint8_t *)&s.isa.inst.val;
 				for (i = ilen - 1; i >= 0; i --) {
 					p += snprintf(p, 4, " %02x", inst[i]);
 				}
@@ -210,13 +209,12 @@ void cpu_exec(uint64_t n) {
 
 				void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
 				disassemble(p, logbuf + sizeof(logbuf) - p,
-					MUXDEF(CONFIG_ISA_x86, s.snpc, s.pc), (uint8_t *)&s.instval, ilen);
-				if (j == 0) log_write("===>\t")
-				else log_write("    \t")
+					MUXDEF(CONFIG_ISA_x86, s.snpc, s.pc), (uint8_t *)&s.isa.inst.val, ilen);
+				if (j == 0) log_write("===>\t");
+				else log_write("    \t");
 				log_write("%s\n", logbuf); 
-				s.pc++;
-				s.snpc++;
-				s.instval = inst_fetch(&(s.snpc), 4);
+				s.pc = s.snpc;
+				s.isa.inst.val = inst_fetch( &s.snpc, sizeof(s.isa.inst.val));
 			}
 			#endif
     //case NEMU_END:
