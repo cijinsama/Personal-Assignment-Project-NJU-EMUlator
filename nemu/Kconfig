@@ -151,6 +151,10 @@ config CONFIG_IRINGBUF
 	bool "Enable error instructions trace"
 	default y
 
+config iringbufSIZE
+	depends on CONFIG_IRINGBUF
+	int "Set how many instructions will be stored"
+	default 2
 
 config DIFFTEST
   depends on TARGET_NATIVE_ELF
