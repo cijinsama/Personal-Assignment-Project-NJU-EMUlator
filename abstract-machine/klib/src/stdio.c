@@ -26,7 +26,9 @@ int sprintf(char *out, const char *fmt, ...) {
 			fmt++;
 		}
 		else {
-			if (*fmt == '%') switch (*fmt++) {//每个分支自己管理out的变化，统一管理fmt的变化
+			if (*fmt == '%'){
+				fmt++;
+			 	switch (*fmt++) {//每个分支自己管理out的变化，统一管理fmt的变化
 				case 's':              /* string */
 					s = va_arg(ap, char *);
 					strcpy(out, s);
@@ -51,6 +53,7 @@ int sprintf(char *out, const char *fmt, ...) {
 					break;
 				default :
 					panic("uncompleted\n");
+				}
 			}
 			else *out = *fmt++;
 		}
