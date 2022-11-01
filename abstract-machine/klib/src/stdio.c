@@ -13,7 +13,9 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
   panic("Not implemented");
 }
 
+
 int sprintf(char *out, const char *fmt, ...) {
+	char buffer[32];
 	va_list ap;
 	int d;
 	char c;
@@ -35,14 +37,17 @@ int sprintf(char *out, const char *fmt, ...) {
 					out += strlen(s);
 					break;
 				case 'd':              /* int */
+					//这里应该倒序输出！！！
 					d = va_arg(ap, int);
 					if (d == 0) *out++ = '0';
 					else {
-						if (d < 0) *out++ = '-';
+						if (d < 0) *out++ = '-', d = -d;
+						int i = 0;
 						while(d != 0) {
-							*out++ = d%10 + '0';
+							buffer[i++] = d%10 + '0';
 							d = d/10;
 						}
+						while(i-- != 0) *out++ = buffer[i];
 					}
 					break;
 				case 'c':             /* char */
