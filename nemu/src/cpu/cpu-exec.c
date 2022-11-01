@@ -168,6 +168,7 @@ void cpu_exec(uint64_t n) {
 			int space_len;
 			char logbuf[128];
 			iring s;
+			log_write("==========================\n");
 			for (int j = 0; j < iringbufSIZE - 1; j++) {//输出过去的几个指令
 				p = logbuf;
 				s = iringbuf[(j + iringbufcounter) % iringbufSIZE];
@@ -216,6 +217,7 @@ void cpu_exec(uint64_t n) {
 				s.pc = s.snpc;
 				s.isa.inst.val = inst_fetch( &s.snpc, sizeof(s.isa.inst.val));
 			}
+			log_write("==========================\n");
 			#endif
     //case NEMU_END:
       Log("nemu: %s at pc = " FMT_WORD,
