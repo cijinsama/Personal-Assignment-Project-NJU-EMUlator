@@ -147,7 +147,6 @@ config ITRACE_COND
   default "true"
 
 config CONFIG_IRINGBUF
-	depends on TRACE && TARGET_NATIVE_ELF && ENGINE_INTERPRETER
 	bool "Enable error instructions trace"
 	default y
 
