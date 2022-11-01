@@ -60,7 +60,7 @@ int sprintf(char *out, const char *fmt, ...) {
 					panic("uncompleted\n");
 				}
 			}
-			else *out = *fmt++;
+			else *out++ = *fmt++;
 		}
 	}
 	*out = '\0';
