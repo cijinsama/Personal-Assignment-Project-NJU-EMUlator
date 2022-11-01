@@ -146,12 +146,13 @@ config ITRACE_COND
   string "Only trace instructions when the condition is true"
   default "true"
 
-config CONFIG_IRINGBUF
+config IRINGBUF
+  depends on TRACE && TARGET_NATIVE_ELF && ENGINE_INTERPRETER
 	bool "Enable error instructions trace"
 	default y
 
 config iringbufSIZE
-	depends on CONFIG_IRINGBUF
+	depends on IRINGBUF
 	int "Set how many instructions will be stored"
 	default 2
 
@@ -164,7 +165,7 @@ config DIFFTEST
     Note that this will significantly reduce the performance of NEMU.
 
 
-config CONFIG_WATCHPOINT
+config WATCHPOINT
 	bool "Enable the watchpoint to check difference each period of cpu time"
 	default n
 
