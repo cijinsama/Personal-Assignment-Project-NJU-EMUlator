@@ -47,7 +47,7 @@ int sprintf(char *out, const char *fmt, ...) {
 							buffer[i++] = d%10 + '0';
 							d = d/10;
 						}
-						while(i-- != 0) *out++ = buffer[i];
+						while(--i >= 0) *out++ = buffer[i];
 					}
 					break;
 				case 'c':             /* char */
