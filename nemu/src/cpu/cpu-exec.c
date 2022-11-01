@@ -73,8 +73,8 @@ typedef struct {
 	ISADecodeInfo isa;
 } iring;
 iring iringbuf[iringbufSIZE];
-int iringbufcounter = 0;
-void cpiring(Decode *s){
+static int iringbufcounter = 0;
+static void cpiring(Decode *s){
 	iringbuf[iringbufcounter].pc = s->pc;
 	iringbuf[iringbufcounter].snpc = s->snpc;
 	iringbuf[iringbufcounter].isa.inst.val = s->isa.inst.val;
@@ -115,8 +115,7 @@ static void exec_once(Decode *s, vaddr_t pc) {
 
 static void execute(uint64_t n) {
   Decode s;
-  for (;n > 0; n --) {
-    exec_once(&s, cpu.pc);
+  for (;n > 0; n --) { exec_once(&s, cpu.pc);
     g_nr_guest_inst ++;
     trace_and_difftest(&s, cpu.pc);
     if (nemu_state.state != NEMU_RUNNING) break;
@@ -167,9 +166,10 @@ void cpu_exec(uint64_t n) {
 			int ilen_max;
 			int space_len;
 			char logbuf[128];
+			int j;
 			iring s;
 			log_write("==========================\n");
-			for (int j = 0; j < iringbufSIZE - 1; j++) {//输出过去的几个指令
+			for (j = 0; j < iringbufSIZE - 1; j++) {//输出过去的几个指令
 				p = logbuf;
 				s = iringbuf[(j + iringbufcounter) % iringbufSIZE];
 				if (s.isa.inst.val == 0) continue;
@@ -192,8 +192,8 @@ void cpu_exec(uint64_t n) {
 				log_write("    \t");
 				log_write("%s\n", logbuf); 
 			}
-			s = iringbuf[(iringbufSIZE + iringbufcounter) % iringbufSIZE];
-			for (int j = 0; j < iringbufSIZE; j++) {//输出之后的几个指令
+			s = iringbuf[(j + iringbufcounter) % iringbufSIZE];
+			for (j = 0; j < iringbufSIZE; j++) {//输出之后的几个指令
 				p = logbuf;
 				p += snprintf(p, sizeof(logbuf), FMT_WORD ":", s.pc);
 				ilen = s.snpc - s.pc;
