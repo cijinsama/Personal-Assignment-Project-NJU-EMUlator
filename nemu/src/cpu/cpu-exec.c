@@ -66,20 +66,20 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 //
 }
 #ifdef CONFIG_IRINGBUF
-#define iringbufSIZE 4
+#define IRINGBUFSIZE 4
 typedef struct {
 	vaddr_t pc;
 	vaddr_t snpc;
 	ISADecodeInfo isa;
 } iring;
-iring iringbuf[iringbufSIZE];
+iring iringbuf[IRINGBUFSIZE];
 static int iringbufcounter = 0;
 static void cpiring(Decode *s){
 	iringbuf[iringbufcounter].pc = s->pc;
 	iringbuf[iringbufcounter].snpc = s->snpc;
 	iringbuf[iringbufcounter].isa.inst.val = s->isa.inst.val;
 	iringbufcounter++;
-	iringbufcounter = iringbufcounter % iringbufSIZE;
+	iringbufcounter = iringbufcounter % IRINGBUFSIZE;
 }
 #endif
 
@@ -169,9 +169,9 @@ void cpu_exec(uint64_t n) {
 			int j;
 			iring s;
 			log_write("==========================\n");
-			for (j = 0; j < iringbufSIZE - 1; j++) {//输出过去的几个指令
+			for (j = 0; j < IRINGBUFSIZE - 1; j++) {//输出过去的几个指令
 				p = logbuf;
-				s = iringbuf[(j + iringbufcounter) % iringbufSIZE];
+				s = iringbuf[(j + iringbufcounter) % IRINGBUFSIZE];
 				if (s.isa.inst.val == 0) continue;
 				p += snprintf(p, sizeof(logbuf), FMT_WORD ":", s.pc);
 				ilen = s.snpc - s.pc;
@@ -192,8 +192,8 @@ void cpu_exec(uint64_t n) {
 				log_write("    \t");
 				log_write("%s\n", logbuf); 
 			}
-			s = iringbuf[(j + iringbufcounter) % iringbufSIZE];
-			for (j = 0; j < iringbufSIZE; j++) {//输出之后的几个指令
+			s = iringbuf[(j + iringbufcounter) % IRINGBUFSIZE];
+			for (j = 0; j < IRINGBUFSIZE; j++) {//输出之后的几个指令
 				p = logbuf;
 				p += snprintf(p, sizeof(logbuf), FMT_WORD ":", s.pc);
 				ilen = s.snpc - s.pc;

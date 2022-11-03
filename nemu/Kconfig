@@ -151,10 +151,15 @@ config IRINGBUF
 	bool "Enable error instructions trace"
 	default y
 
-config iringbufSIZE
+config IRINGBUFSIZE
 	depends on IRINGBUF
 	int "Set how many instructions will be stored"
 	default 2
+
+config MTRACE
+  depends on TRACE && TARGET_NATIVE_ELF && ENGINE_INTERPRETER
+	bool "Enable memory tracer"
+	default n
 
 config DIFFTEST
   depends on TARGET_NATIVE_ELF
