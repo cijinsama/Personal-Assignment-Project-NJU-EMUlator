@@ -31,7 +31,7 @@ CPU_state cpu = {};
 uint64_t g_nr_guest_inst = 0;
 static uint64_t g_timer = 0; // unit: us
 static bool g_print_step = false;
-#ifdef FTRACE
+#ifdef CONFIG_FTRACE
 uint64_t func_stack = 0;
 #endif
 
@@ -91,7 +91,7 @@ static void exec_once(Decode *s, vaddr_t pc) {
   s->pc = pc;
   s->snpc = pc;
   isa_exec_once(s);
-#ifdef FTRACE
+#ifdef CONFIG_FTRACE
 	for (int i = 0; i < func_table_size; i++){
 		if (s->dnpc == func_table[i].min) {
 			func_stack++;
@@ -102,8 +102,9 @@ static void exec_once(Decode *s, vaddr_t pc) {
 		if (s->dnpc == func_table[i].max) {
 			func_stack--;
 			log_write("%08x:",s->pc);
-			for (int j = 0; j < func_stack; ++) log_write("\t");
+			for (int j = 0; j < func_stack; j++) log_write("\t");
 			log_write("ret  [%s@%08x]", func_table[i].name, s->dnpc);
+		}
 	}
 #endif
   cpu.pc = s->dnpc;

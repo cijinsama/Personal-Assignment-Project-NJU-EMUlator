@@ -7,7 +7,7 @@ void ReadFile(FILE* fp, int offset, void* dst, unsigned long size,int number);
 void ReadElfHeader(FILE *fp, Elf32_Ehdr *elfheader);
 void ReadSectionName(FILE *fp, Elf32_Shdr shstrtab_sect_header, Elf32_Shdr section, char* name);
 void ReadString(FILE *fp, Elf32_Shdr shstrtab_sect_header, Elf32_Off string_offset, char* dst);
-#ifdef FTRACE
+#ifdef CONFIG_FTRACE
 func_add func_table[128];
 #else
 func_add func_table[0];
@@ -15,7 +15,7 @@ func_add func_table[0];
 int func_table_size = 0;
 
 int ini_func_table(char *file){
-#ifdef FTRACE
+#ifdef CONFIG_FTRACE
 	FILE *fp = NULL;
 	Elf32_Ehdr elf_header;
 	Elf32_Shdr sect_header;
