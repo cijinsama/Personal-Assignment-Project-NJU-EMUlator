@@ -57,14 +57,37 @@ void init_mem() {
 }
 
 word_t paddr_read(paddr_t addr, int len) {
-  if (likely(in_pmem(addr))) return pmem_read(addr, len);
+#ifdef MTRACE
+	log_write("[Memory:Read]\tfrom:%08x\tlen:%d\t", addr, len);
+#endif
+  if (likely(in_pmem(addr))) {
+		#ifdef MTRACE
+		log_write("successful\n");
+		#endif
+		return pmem_read(addr, len);
+	}
+	#ifdef MTRACE
+	log_write("error\n");
+	#endif
   IFDEF(CONFIG_DEVICE, return mmio_read(addr, len));
   out_of_bound(addr);
   return 0;
 }
 
 void paddr_write(paddr_t addr, int len, word_t data) {
-  if (likely(in_pmem(addr))) { pmem_write(addr, len, data); return; }
+#ifdef MTRACE
+	log_write("[Memory:Write]\tfrom:%08x\tlen:%d\tvalue:%016x\t", addr, len, data);
+#endif
+  if (likely(in_pmem(addr))) {
+		#ifdef MTRACE
+		log_write("successful\n");
+		#endif
+	 	pmem_write(addr, len, data); 
+		return; 
+	}
+	#ifdef MTRACE
+	log_write("error\n");
+	#endif
   IFDEF(CONFIG_DEVICE, mmio_write(addr, len, data); return);
   out_of_bound(addr);
 }
