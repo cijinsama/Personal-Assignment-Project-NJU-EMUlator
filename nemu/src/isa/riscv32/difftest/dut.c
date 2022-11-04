@@ -24,7 +24,7 @@ bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc) {
 			assert(0);
 		}
 	}
-	if ( pc != ref_r->pc){
+	if ( cpu.pc != ref_r->pc){
 		Log("pc uncompared\t the nemu is %08x, the ref is %08x\n", cpu.pc, ref_r->pc);
 		assert(0);
 	}
