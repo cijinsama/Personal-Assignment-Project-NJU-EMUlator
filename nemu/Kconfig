@@ -154,7 +154,7 @@ config IRINGBUF
 config IRINGBUFSIZE
 	depends on IRINGBUF
 	int "Set how many instructions will be stored"
-	default 2
+	default 4
 
 config MTRACE
   depends on TRACE && TARGET_NATIVE_ELF && ENGINE_INTERPRETER
