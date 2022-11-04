@@ -34,7 +34,7 @@ static bool g_print_step = false;
 #ifdef CONFIG_FTRACE
 int func_stack = 0;
 int last_pc_in_which_func = 0;
-char func_stack_container[512];
+unsigned char func_stack_container[512];
 #endif
 
 void device_update();
@@ -110,8 +110,8 @@ static void exec_once(Decode *s, vaddr_t pc) {
 				assert(0);
 			}
 			log_write("0x%08x:",s->pc);
-			for (int j = 0; j < func_stack; j++) log_write("\t");
-			log_write("ret  [%s@0x%08x]\n", func_table[i].name, s->dnpc);
+			for (int j = -1; j < func_stack; j++) log_write("\t");
+			log_write("ret  [%s@0x%08x]\n", func_table[(int) func_stack_container[func_stack]].name, s->dnpc);
 		}
 	}
 #endif
