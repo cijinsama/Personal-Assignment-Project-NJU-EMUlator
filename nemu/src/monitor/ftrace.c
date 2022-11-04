@@ -25,7 +25,10 @@ int ini_func_table(char *file){
 	Elf32_Off section_header_table_off;
 	char name[64];
 	fp = fopen(file, "rb");
-	if (fp == NULL) printf("error\n");
+	if (fp == NULL) {
+		printf("error\n");
+		assert(0);
+	}
 	else {
 		//read elf header and get section header table offset
 		ReadElfHeader(fp, &elf_header);
