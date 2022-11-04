@@ -97,16 +97,16 @@ static void exec_once(Decode *s, vaddr_t pc) {
 			func_stack++;
 			log_write("%08x:",s->pc);
 			for (int j = 0; j < func_stack; j++) log_write("\t");
-			log_write("call [%s@%08x]", func_table[i].name, s->dnpc);
+			log_write("call [%s@%08x]\n", func_table[i].name, s->dnpc);
 		}
-		if (s->dnpc == func_table[i].max) {
+		else if (s->dnpc == func_table[i].max) {
 			func_stack--;
 			if (func_stack < 0){
 				assert(0);
 			}
 			log_write("%08x:",s->pc);
 			for (int j = 0; j < func_stack; j++) log_write("\t");
-			log_write("ret  [%s@%08x]", func_table[i].name, s->dnpc);
+			log_write("ret  [%s@%08x]\n", func_table[i].name, s->dnpc);
 		}
 	}
 #endif
