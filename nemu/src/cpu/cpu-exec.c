@@ -105,7 +105,7 @@ static void exec_once(Decode *s, vaddr_t pc) {
 		}
 		else if (s->dnpc > func_table[i].min && s->dnpc < func_table[i].max && i != last_pc_in_which_func) {
 			func_stack--;
-			last_pc_in_which_func = func_stack_container[func_stack];
+			if (func_stack > 0) last_pc_in_which_func = func_stack_container[func_stack-1];
 			if (func_stack < 0){
 				assert(0);
 			}
