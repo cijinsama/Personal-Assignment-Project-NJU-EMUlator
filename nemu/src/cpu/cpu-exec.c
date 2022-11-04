@@ -32,8 +32,9 @@ uint64_t g_nr_guest_inst = 0;
 static uint64_t g_timer = 0; // unit: us
 static bool g_print_step = false;
 #ifdef CONFIG_FTRACE
-int func_stack = 1;
+int func_stack = 0;
 int last_pc_in_which_func = 0;
+char func_stack_container[512];
 #endif
 
 void device_update();
@@ -95,6 +96,7 @@ static void exec_once(Decode *s, vaddr_t pc) {
 #ifdef CONFIG_FTRACE
 	for (int i = 0; i < func_table_size; i++){
 		if (s->dnpc == func_table[i].min) {
+			func_stack_container[func_stack] = i;
 			func_stack++;
 			log_write("0x%08x:",s->pc);
 			last_pc_in_which_func = i;
@@ -103,6 +105,7 @@ static void exec_once(Decode *s, vaddr_t pc) {
 		}
 		else if (s->dnpc > func_table[i].min && s->dnpc < func_table[i].max && i != last_pc_in_which_func) {
 			func_stack--;
+			last_pc_in_which_func = func_stack_container[func_stack];
 			if (func_stack < 0){
 				assert(0);
 			}
