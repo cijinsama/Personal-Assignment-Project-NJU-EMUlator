@@ -7,7 +7,7 @@
 
 int printf(const char *fmt, ...) {
 	va_list ap;
-	char temp[1024];
+	char temp[512];
 	va_start(ap, fmt);
 	
 	sprintf(temp, fmt, ap);
