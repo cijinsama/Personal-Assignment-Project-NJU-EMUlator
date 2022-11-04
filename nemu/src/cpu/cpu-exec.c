@@ -33,6 +33,7 @@ static uint64_t g_timer = 0; // unit: us
 static bool g_print_step = false;
 #ifdef CONFIG_FTRACE
 int func_stack = 0;
+int last_pc_in_which_func = 0;
 #endif
 
 void device_update();
@@ -94,20 +95,21 @@ static void exec_once(Decode *s, vaddr_t pc) {
 #ifdef CONFIG_FTRACE
 	for (int i = 0; i < func_table_size; i++){
 		if (s->dnpc == func_table[i].min) {
-// 			func_stack++;
+			func_stack++;
 			log_write("0x%08x:",s->pc);
-// 			for (int j = 0; j < func_stack; j++) log_write("\t");
+			last_pc_in_which_func = i;
+			for (int j = 0; j < func_stack; j++) log_write("\t");
 			log_write("call [%s@0x%08x]\n", func_table[i].name, s->dnpc);
 		}
-// 		if (s->dnpc == func_table[i].max) {
-// 			func_stack--;
-// 			if (func_stack < 0){
-// 				assert(0);
-// 			}
-// 			log_write("0x%08x:",s->pc);
-// 			for (int j = 0; j < func_stack; j++) log_write("\t");
-// 			log_write("ret  [%s@0x%08x]\n", func_table[i].name, s->dnpc);
-// 		}
+		else if (s->dnpc > func_table[i].min && s->dnpc < func_table[i].max && i != last_pc_in_which_func) {
+			func_stack--;
+			if (func_stack < 0){
+				assert(0);
+			}
+			log_write("0x%08x:",s->pc);
+			for (int j = 0; j < func_stack; j++) log_write("\t");
+			log_write("ret  [%s@0x%08x]\n", func_table[i].name, s->dnpc);
+		}
 	}
 #endif
   cpu.pc = s->dnpc;
