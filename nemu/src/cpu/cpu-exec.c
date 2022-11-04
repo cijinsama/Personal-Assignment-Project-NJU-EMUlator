@@ -94,20 +94,20 @@ static void exec_once(Decode *s, vaddr_t pc) {
 #ifdef CONFIG_FTRACE
 	for (int i = 0; i < func_table_size; i++){
 		if (s->dnpc == func_table[i].min) {
-			func_stack++;
+// 			func_stack++;
 			log_write("0x%08x:",s->pc);
-			for (int j = 0; j < func_stack; j++) log_write("\t");
+// 			for (int j = 0; j < func_stack; j++) log_write("\t");
 			log_write("call [%s@0x%08x]\n", func_table[i].name, s->dnpc);
 		}
-		if (s->dnpc == func_table[i].max) {
-			func_stack--;
-			if (func_stack < 0){
-				assert(0);
-			}
-			log_write("0x%08x:",s->pc);
-			for (int j = 0; j < func_stack; j++) log_write("\t");
-			log_write("ret  [%s@0x%08x]\n", func_table[i].name, s->dnpc);
-		}
+// 		if (s->dnpc == func_table[i].max) {
+// 			func_stack--;
+// 			if (func_stack < 0){
+// 				assert(0);
+// 			}
+// 			log_write("0x%08x:",s->pc);
+// 			for (int j = 0; j < func_stack; j++) log_write("\t");
+// 			log_write("ret  [%s@0x%08x]\n", func_table[i].name, s->dnpc);
+// 		}
 	}
 #endif
   cpu.pc = s->dnpc;
