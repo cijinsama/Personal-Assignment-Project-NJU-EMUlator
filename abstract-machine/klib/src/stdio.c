@@ -18,13 +18,43 @@ int printf(const char *fmt, ...) {
 	//注意，这里没有实现错误的时候返回负数
 }
 
-int vsprintf(char *out, const char *fmt, va_list ap) {
+
+static int PairAInt(const char **fmt){
+	int i = 0;
+	while(**fmt <= '9' && **fmt >= '0'){
+		i = i*10 + **fmt - '0';
+		(*fmt)++;
+	}
+	return i;
+}
+static void PutAInt(int d, char **out, int zeros_padding_num){
+	int i = 0;
 	char buffer[32];
-	int d;
+	if (d == 0) {
+		*(*out++) = '0';
+		i++;
+		while(i++ < zeros_padding_num) *(*out)++ = '0';
+	}
+	else {
+		if (d < 0) *(*out)++ = '-', d = -d, i++;
+		while(d != 0) {
+			buffer[i++] = d%10 + '0';
+			d = d/10;
+		}
+		while(i < zeros_padding_num) buffer[i++] = '0';
+		while(--i >= 0) *(*out)++ = buffer[i];
+	}
+	return;
+}
+
+int vsprintf(char *out, const char *fmt, va_list ap) {
+	int int_num;
 	char c;
 	char *s;
 	char *record_out = out;
+	int zeros_padding_num = 0;
 	while (*fmt) {
+		zeros_padding_num = 0;
 		if (*fmt == '\\') {
 			*out++ = *++fmt;
 			fmt++;
@@ -32,6 +62,10 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
 		else {
 			if (*fmt == '%'){
 				fmt++;
+
+				if (*fmt == '0') fmt++;
+				zeros_padding_num = PairAInt(&fmt);
+
 			 	switch (*fmt++) {//每个分支自己管理out的变化，统一管理fmt的变化
 				case 's':              /* string */
 					s = va_arg(ap, char *);
@@ -40,17 +74,8 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
 					break;
 				case 'd':              /* int */
 					//这里应该倒序输出！！！
-					d = va_arg(ap, int);
-					if (d == 0) *out++ = '0';
-					else {
-						if (d < 0) *out++ = '-', d = -d;
-						int i = 0;
-						while(d != 0) {
-							buffer[i++] = d%10 + '0';
-							d = d/10;
-						}
-						while(--i >= 0) *out++ = buffer[i];
-					}
+					int_num = va_arg(ap, int);
+					PutAInt(int_num, &out, zeros_padding_num);
 					break;
 				case 'c':             /* char */
 															/* need a cast here since va_arg only
@@ -59,13 +84,14 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
 					*out++ = c;
 					break;
 				default :
-					panic("uncompleted received args\n");
+					panic("vsprintf uncompleted received args, please go to compelete it!!\n");
 				}
 			}
 			else *out++ = *fmt++;
 		}
 	}
 	*out = '\0';
+	//注意，这里没有实现错误的时候返回负数
 	return out - record_out;
 }
 
