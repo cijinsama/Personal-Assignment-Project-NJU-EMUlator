@@ -36,7 +36,7 @@ static void PutAInt(int d, char **out, int zeros_padding_num){
 		while(i++ < zeros_padding_num) *(*out)++ = '0';
 	}
 	else {
-		if (d < 0) *(*out)++ = '-', d = -d, i++;
+		if (d < 0) *(*out)++ = '-', d = -d, zeros_padding_num--;
 		while(d != 0) {
 			buffer[i++] = d%10 + '0';
 			d = d/10;
@@ -73,7 +73,6 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
 					out += strlen(s);
 					break;
 				case 'd':              /* int */
-					//这里应该倒序输出！！！
 					int_num = va_arg(ap, int);
 					PutAInt(int_num, &out, zeros_padding_num);
 					break;
