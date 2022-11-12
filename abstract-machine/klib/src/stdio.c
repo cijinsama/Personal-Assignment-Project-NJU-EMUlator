@@ -8,29 +8,22 @@
 int printf(const char *fmt, ...) {
 	va_list ap;
 	char temp[512];
-	va_start(ap, fmt);
 	
-	sprintf(temp, fmt, ap);
-	putstr(temp);
-
+	va_start(ap, fmt);
+	vsprintf(temp, fmt, ap);
 	va_end(ap);
+
+	putstr(temp);
 	return strlen(temp);
 	//注意，这里没有实现错误的时候返回负数
 }
 
 int vsprintf(char *out, const char *fmt, va_list ap) {
-  panic("Not implemented");
-}
-
-
-int sprintf(char *out, const char *fmt, ...) {
 	char buffer[32];
-	va_list ap;
 	int d;
 	char c;
 	char *s;
 	char *record_out = out;
-	va_start(ap, fmt);
 	while (*fmt) {
 		if (*fmt == '\\') {
 			*out++ = *++fmt;
@@ -73,8 +66,16 @@ int sprintf(char *out, const char *fmt, ...) {
 		}
 	}
 	*out = '\0';
-	va_end(ap);
 	return out - record_out;
+}
+
+
+int sprintf(char *out, const char *fmt, ...) {
+	va_list ap;
+	va_start(ap, fmt);
+	int ret = vsprintf(out, fmt, ap);
+	va_end(ap);
+	return ret;
 }
 
 
