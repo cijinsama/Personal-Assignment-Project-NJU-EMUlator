@@ -66,7 +66,7 @@ int sprintf(char *out, const char *fmt, ...) {
 					*out++ = c;
 					break;
 				default :
-					panic("uncompleted\n");
+					panic("uncompleted received args\n");
 				}
 			}
 			else *out++ = *fmt++;
