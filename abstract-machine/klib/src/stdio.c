@@ -31,7 +31,7 @@ static void PutAInt(int d, char **out, int zeros_padding_num){
 	int i = 0;
 	char buffer[32];
 	if (d == 0) {
-		*(*out++) = '0';
+		*((*out)++) = '0';
 		i++;
 		while(i++ < zeros_padding_num) *(*out)++ = '0';
 	}
