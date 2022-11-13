@@ -7,7 +7,7 @@ void __am_gpu_init() {
 	int i;
 	gpu_texturedesc decoder = *((gpu_texturedesc *)VGACTL_ADDR);
 	int w = decoder.w;
-	int h = decoder.h;
+	int h = decoder.w;
 	uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
 	for (i = 0; i < w * h; i ++) fb[i] = i;
 	outl(SYNC_ADDR, 1);
@@ -24,7 +24,7 @@ void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
 	gpu_texturedesc decoder = *((gpu_texturedesc *)VGACTL_ADDR);
   *cfg = (AM_GPU_CONFIG_T) {
     .present = true, .has_accel = false,
-    .width = decoder.w, .height = decoder.h,
+    .width = decoder.w, .height = decoder.w,
     .vmemsz = 0
   };
 
