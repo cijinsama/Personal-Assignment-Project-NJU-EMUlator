@@ -6,8 +6,8 @@
 void __am_gpu_init() {
 	int i;
 	gpu_texturedesc decoder = *((gpu_texturedesc *)VGACTL_ADDR);
-	int w = decoder.w;
-	int h = decoder.h;
+	int w = decoder.h;
+	int h = decoder.w;
 	uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
 	for (i = 0; i < w * h; i ++) fb[i] = i;
 	outl(SYNC_ADDR, 1);
@@ -37,10 +37,9 @@ void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
 	gpu_texturedesc decoder = *((gpu_texturedesc *)VGACTL_ADDR);
 	for (int i = 0; i < ctl->h; i++){
 		for (int j = 0;j < ctl->w; j++){
-			fb [(ctl->y + i) * decoder.h + ctl->x + j] = pixels[i * ctl->w + j];
+			fb[(ctl->y + i) * decoder.h + ctl->x + j] = pixels[i * ctl->w + j];
 		}
 	}
-
   if (ctl->sync) {
     outl(SYNC_ADDR, 1);
   }
