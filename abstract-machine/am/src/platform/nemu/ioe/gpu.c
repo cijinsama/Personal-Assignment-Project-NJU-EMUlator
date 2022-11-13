@@ -1,6 +1,5 @@
 #include <am.h>
 #include <nemu.h>
-#include <stdio.h>
 
 #define SYNC_ADDR (VGACTL_ADDR + 4)
 
@@ -23,7 +22,6 @@ void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
 //     .vmemsz = 0
 //   };
 	gpu_texturedesc decoder = *((gpu_texturedesc *)VGACTL_ADDR);
-	printf("%d, %d\n", decoder.w, decoder.h);
   *cfg = (AM_GPU_CONFIG_T) {
     .present = true, .has_accel = false,
     .width = decoder.w, .height = decoder.h,
