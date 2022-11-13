@@ -1,5 +1,6 @@
 #include <am.h>
 #include <nemu.h>
+#include <stdio.h>
 
 #define SYNC_ADDR (VGACTL_ADDR + 4)
 
@@ -33,11 +34,13 @@ void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
 void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
 	//int width = io_read(AM_GPU_CONFIG).width;
 	gpuptr_t* pixels = ctl->pixels;
-
+	gpuptr_t* fb = (gpuptr_t *)FB_ADDR;
 	gpu_texturedesc decoder = *((gpu_texturedesc *)VGACTL_ADDR);
+
+	printf("width 2333 : %d\n", decoder.w);
 	for (int i = 0; i < ctl->h; i++){
 		for (int j = 0;j < ctl->w; j++){
-			outl(FB_ADDR + (ctl->y + i) * decoder.w + ctl->x + j, pixels[i * ctl->w + j]);
+			fb [(ctl->y + i) * decoder.w + ctl->x + j] = pixels[i * ctl->w + j];
 		}
 	}
 
