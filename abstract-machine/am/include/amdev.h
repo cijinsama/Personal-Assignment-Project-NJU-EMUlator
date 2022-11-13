@@ -62,6 +62,9 @@ struct gpu_texturedesc {
   gpuptr_t pixels;
 } __attribute__((packed));
 
+
+typedef struct gpu_texturedesc gpu_texturedesc;
+
 struct gpu_canvas {
   uint16_t type, w, h, x1, y1, w1, h1;
   gpuptr_t sibling;

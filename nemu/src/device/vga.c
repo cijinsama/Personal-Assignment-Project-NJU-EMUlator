@@ -19,11 +19,11 @@
 #define SCREEN_W (MUXDEF(CONFIG_VGA_SIZE_800x600, 800, 400))
 #define SCREEN_H (MUXDEF(CONFIG_VGA_SIZE_800x600, 600, 300))
 
-static uint32_t screen_width() {
+uint32_t screen_width() {
   return MUXDEF(CONFIG_TARGET_AM, io_read(AM_GPU_CONFIG).width, SCREEN_W);
 }
 
-static uint32_t screen_height() {
+uint32_t screen_height() {
   return MUXDEF(CONFIG_TARGET_AM, io_read(AM_GPU_CONFIG).height, SCREEN_H);
 }
 
@@ -69,10 +69,11 @@ static inline void update_screen() {
 }
 #endif
 #endif
-
 void vga_update_screen() {
-  // TODO: call `update_screen()` when the sync register is non-zero,
-  // then zero out the sync register
+	if(vgactl_port_base[1]){
+		update_screen();
+		vgactl_port_base[1] = 0;
+	}
 }
 
 void init_vga() {
