@@ -111,7 +111,12 @@ void *memmove(void *dst, const void *src, size_t n) {
 }
 
 void *memcpy(void *out, const void *in, size_t n) {
-  panic("Not implemented");
+	size_t *out_ptr = out;
+	const size_t *in_ptr = in;
+	for (size_t i = 0; i < n; i++) {
+		out_ptr[i] = in_ptr[i];
+	}
+	return out;
 }
 
 int memcmp(const void *s1, const void *s2, size_t n) {
