@@ -25,7 +25,7 @@ void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
 	gpu_texturedesc decoder = *((gpu_texturedesc *)VGACTL_ADDR);
   *cfg = (AM_GPU_CONFIG_T) {
     .present = true, .has_accel = false,
-    .width = decoder.w, .height = decoder.h,
+    .width = decoder.h, .height = decoder.w,
     .vmemsz = 0
   };
 
@@ -37,10 +37,10 @@ void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
 	gpuptr_t* fb = (gpuptr_t *)FB_ADDR;
 	gpu_texturedesc decoder = *((gpu_texturedesc *)VGACTL_ADDR);
 
-	printf("width 2333 : %d\n", decoder.w);
+	printf("width 2333 : %d\n", decoder.h);
 	for (int i = 0; i < ctl->h; i++){
 		for (int j = 0;j < ctl->w; j++){
-			fb [(ctl->y + i) * decoder.w + ctl->x + j] = pixels[i * ctl->w + j];
+			fb [(ctl->y + i) * decoder.h + ctl->x + j] = pixels[i * ctl->w + j];
 		}
 	}
 
