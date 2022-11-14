@@ -59,11 +59,7 @@ int ini_func_table(char *file){
 			if (ELF32_ST_TYPE(symbo.st_info) == STT_FUNC) {
 				strcpy(func_table[func_table_size].name, name);
 				func_table[func_table_size].min = symbo.st_value;
-				if (strcmp(name, "_start") == 0) {
-					func_table[func_table_size].max = symbo.st_value + 0xffffff;
-					printf("%08x,%s\n", func_table[func_table_size].max, name);
-				}
-				else func_table[func_table_size].max = symbo.st_value + symbo.st_size;
+				func_table[func_table_size].max = symbo.st_value + symbo.st_size;
 				func_table_size++;
 			}
 		}
