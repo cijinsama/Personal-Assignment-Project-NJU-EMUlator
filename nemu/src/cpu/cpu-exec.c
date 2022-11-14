@@ -93,8 +93,17 @@ static void exec_once(Decode *s, vaddr_t pc) {
   s->pc = pc;
   s->snpc = pc;
   isa_exec_once(s);
+	int i = 0;
 #ifdef CONFIG_FTRACE
-	for (int i = 0; i < func_table_size; i++){
+	if (func_stack == 0) {
+		func_stack_container[func_stack] = i;
+		func_stack++;
+		log_write("0x%08x:",s->pc);
+		last_pc_in_which_func = i;
+		for (int j = 0; j < func_stack; j++) log_write("\t");
+		log_write("call [%s@0x%08x]\n", func_table[i].name, s->dnpc);
+	}
+	else for (i = 0; i < func_table_size; i++){
 		if (s->dnpc == func_table[i].min) {
 			func_stack_container[func_stack] = i;
 			func_stack++;
@@ -123,7 +132,6 @@ static void exec_once(Decode *s, vaddr_t pc) {
   char *p = s->logbuf;
   p += snprintf(p, sizeof(s->logbuf), FMT_WORD ":", s->pc);
   int ilen = s->snpc - s->pc;
-  int i;
   uint8_t *inst = (uint8_t *)&s->isa.inst.val;
    for (i = ilen - 1; i >= 0; i --) {
     p += snprintf(p, 4, " %02x", inst[i]);
