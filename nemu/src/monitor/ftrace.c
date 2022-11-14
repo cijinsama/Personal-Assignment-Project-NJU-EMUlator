@@ -61,7 +61,6 @@ int ini_func_table(char *file){
 				func_table[func_table_size].min = symbo.st_value;
 				func_table[func_table_size].max = symbo.st_value + symbo.st_size;
 				func_table_size++;
-				printf("name:%s\n",name);//2222222222
 			}
 		}
 	}
