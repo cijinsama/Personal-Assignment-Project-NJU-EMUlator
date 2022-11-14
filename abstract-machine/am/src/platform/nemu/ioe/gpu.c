@@ -31,7 +31,6 @@ void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
 }
 
 void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
-	panic("errpr\n\n\n");
 	//int width = io_read(AM_GPU_CONFIG).width;
 	gpuptr_t* pixels = ctl->pixels;
 	gpuptr_t* fb = (gpuptr_t *)FB_ADDR;
