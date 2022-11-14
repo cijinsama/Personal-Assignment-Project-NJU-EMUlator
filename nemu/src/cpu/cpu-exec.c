@@ -95,24 +95,16 @@ static void exec_once(Decode *s, vaddr_t pc) {
   isa_exec_once(s);
 	int i = 0;
 #ifdef CONFIG_FTRACE
-	if (func_stack == 0) {
-		func_stack_container[func_stack] = i;
-		func_stack++;
-		log_write("0x%08x:",s->pc);
-		last_pc_in_which_func = i;
-		for (int j = 0; j < func_stack; j++) log_write("\t");
-		log_write("call [%s@0x%08x]\n", func_table[i].name, s->dnpc);
-	}
-	else for (i = 0; i < func_table_size; i++){
-		if (s->dnpc == func_table[i].min) {
+	for (i = 0; i < func_table_size; i++){
+		if (s->pc == func_table[i].min) {
 			func_stack_container[func_stack] = i;
 			func_stack++;
 			log_write("0x%08x:",s->pc);
 			last_pc_in_which_func = i;
 			for (int j = 0; j < func_stack; j++) log_write("\t");
-			log_write("call [%s@0x%08x]\n", func_table[i].name, s->dnpc);
+			log_write("call [%s@0x%08x]\n", func_table[i].name, s->pc);
 		}
-		else if (s->dnpc > func_table[i].min && s->dnpc < func_table[i].max && i != last_pc_in_which_func) {
+		else if (s->pc > func_table[i].min && s->pc < func_table[i].max && i != last_pc_in_which_func) {
 			func_stack--;
 			if (func_stack > 0) last_pc_in_which_func = func_stack_container[func_stack-1];
 			if (func_stack < 0){
@@ -120,7 +112,7 @@ static void exec_once(Decode *s, vaddr_t pc) {
 			}
 			log_write("0x%08x:",s->pc);
 			for (int j = -1; j < func_stack; j++) log_write("\t");
-			log_write("ret  [%s@0x%08x]\n", func_table[(int) func_stack_container[func_stack]].name, s->dnpc);
+			log_write("ret  [%s@0x%08x]\n", func_table[(int) func_stack_container[func_stack]].name, s->pc);
 		}
 	}
 #endif
