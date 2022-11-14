@@ -93,7 +93,9 @@ static void exec_once(Decode *s, vaddr_t pc) {
   s->pc = pc;
   s->snpc = pc;
   isa_exec_once(s);
+#ifdef CONFIG_TRACE
 	int i = 0;
+#endif
 #ifdef CONFIG_FTRACE
 	for (i = 0; i < func_table_size; i++){
 		if (s->dnpc == func_table[i].min) {
