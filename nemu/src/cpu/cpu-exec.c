@@ -33,7 +33,7 @@ static uint64_t g_timer = 0; // unit: us
 static bool g_print_step = false;
 #ifdef CONFIG_FTRACE
 int func_stack = 0;
-int last_pc_in_which_func = 0;
+int last_pc_in_which_func = -1;
 unsigned char func_stack_container[512];
 #endif
 
@@ -104,7 +104,7 @@ static void exec_once(Decode *s, vaddr_t pc) {
 			for (int j = 0; j < func_stack; j++) log_write("\t");
 			log_write("call [%s@0x%08x]\n", func_table[i].name, s->dnpc);
 		}
-		else if (s->dnpc > func_table[i].min && s->dnpc < func_table[i].max && i != last_pc_in_which_func) {
+		else if (last_pc_in_which_func != -1 && s->dnpc > func_table[i].min && s->dnpc < func_table[i].max && i != last_pc_in_which_func) {
 			func_stack--;
 			if (func_stack > 0) last_pc_in_which_func = func_stack_container[func_stack-1];
 			if (func_stack < 0){
