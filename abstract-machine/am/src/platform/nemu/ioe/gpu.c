@@ -8,10 +8,10 @@ void __am_gpu_init() {
 	gpu_texturedesc decoder = *((gpu_texturedesc *)VGACTL_ADDR);
 	int w = decoder.h;
 	int h = decoder.w;
-	panic("errpr\n\n\n");
 	uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
 	for (i = 0; i < w * h; i ++) fb[i] = i;
 	outl(SYNC_ADDR, 1);
+	panic("errpr\n\n\n");
 }
 
 void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
