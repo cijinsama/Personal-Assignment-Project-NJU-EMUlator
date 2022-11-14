@@ -59,6 +59,7 @@ int ini_func_table(char *file){
 			if (ELF32_ST_TYPE(symbo.st_info) == STT_FUNC) {
 				strcpy(func_table[func_table_size].name, name);
 				func_table[func_table_size].min = symbo.st_value;
+				printf("%s\n",name);
 				if (strcmp(name, "_start")) func_table[func_table_size].max = -1;
 				else func_table[func_table_size].max = symbo.st_value + symbo.st_size;
 				func_table_size++;
