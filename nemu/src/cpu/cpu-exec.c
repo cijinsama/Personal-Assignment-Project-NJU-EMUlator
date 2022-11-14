@@ -105,7 +105,7 @@ static void exec_once(Decode *s, vaddr_t pc) {
 			log_write("call [%s@0x%08x]\n", func_table[i].name, s->dnpc);
 		}
 		else if (last_pc_in_which_func != -1 && s->dnpc > func_table[i].min && s->dnpc < func_table[i].max && i != last_pc_in_which_func) {
-			log_write("ret: %d, %d\n", func_table[i].min, func_table[i].max);
+			log_write("ret: %08x, %08x\n", func_table[i].min, func_table[i].max);
 			func_stack--;
 			if (func_stack > 0) last_pc_in_which_func = func_stack_container[func_stack-1];
 			if (func_stack < 0){
