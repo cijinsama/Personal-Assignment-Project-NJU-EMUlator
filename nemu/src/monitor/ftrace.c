@@ -61,7 +61,7 @@ int ini_func_table(char *file){
 				func_table[func_table_size].min = symbo.st_value;
 				if (strcmp(name, "_start") == 0) {
 					func_table[func_table_size].max = symbo.st_value + 0xffffffff;
-					printf("%d,%s\n", func_table[func_table_size].max, name);
+					printf("%08x,%s\n", func_table[func_table_size].max, name);
 				}
 				else func_table[func_table_size].max = symbo.st_value + symbo.st_size;
 				func_table_size++;
