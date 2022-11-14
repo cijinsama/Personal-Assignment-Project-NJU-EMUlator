@@ -111,8 +111,8 @@ void *memmove(void *dst, const void *src, size_t n) {
 }
 
 void *memcpy(void *out, const void *in, size_t n) {
-	size_t *out_ptr = out;
-	const size_t *in_ptr = in;
+	char *out_ptr = out;
+	const char *in_ptr = in;
 	for (size_t i = 0; i < n; i++) {
 		out_ptr[i] = in_ptr[i];
 	}
