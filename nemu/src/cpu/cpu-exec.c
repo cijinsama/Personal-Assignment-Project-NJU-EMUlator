@@ -33,7 +33,7 @@ static uint64_t g_timer = 0; // unit: us
 static bool g_print_step = false;
 
 
-CSR_state csr = {.mstatus.val = 0x1800};
+CSR_state csr = {.mstatus.val = 0x1800, .mcause = 0xb};
 
 #ifdef CONFIG_FTRACE
 int func_stack = 0;
