@@ -156,8 +156,8 @@ static void execute(uint64_t n) {
     if (nemu_state.state != NEMU_RUNNING) break;
     IFDEF(CONFIG_DEVICE, device_update());
 		if (csr.mstatus.decode.MIE){
+			printf("!!!!!!!!!!!!!\n\n\n");
 			isa_raise_intr(isa_query_intr(), cpu.pc);
-// 			unset_IF();
 		}
   }
 }
