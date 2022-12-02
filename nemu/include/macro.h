@@ -97,6 +97,11 @@
 #define unlikely(cond) __builtin_expect(cond, 0)
 #endif
 
+// self macro
+#define get_IF() BITS(cpu.flags, 9, 9)
+#define set_IF() cpu.flags = cpu.flags | (1u << 9)
+#define unset_IF() cpu.flags = cpu.flags & (~(1u << 9))
+
 // for AM IOE
 #define io_read(reg) \
   ({ reg##_T __io_param; \

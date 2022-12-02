@@ -37,12 +37,15 @@ enum {
 #define immB() do { *imm = (( (int32_t) SEXT(BITS(i, 31, 31), 1) << 12 ) | (BITS(i, 7, 7) << 11) | (BITS(i, 30, 25) << 5) | (BITS(i, 11, 8) << 1)); } while(0)
 #define immshamt() do { *imm = BITS(i, 24, 20); } while(0)
 
+
+
 inline static word_t get_csr(word_t csr_num){
 	word_t ret;
 	switch (csr_num) {
 		case 0x0341: ret = csr.mepc;										break;
 		case 0x0300: ret = csr.mstatus.val;							break;
 		case 0x0342: ret = csr.mcause;									break;
+		case 0x0305: ret = csr.mtvec;										break;
 		default : Log("Unknown csr register\n"); panic("please complete\n");
 	}
 	return ret;
@@ -53,6 +56,7 @@ inline static void set_csr(word_t csr_num, word_t imm){
 		case 0x0341: csr.mepc = imm;													break;
 		case 0x0300: csr.mstatus.val = imm;										break;
 		case 0x0342: csr.mcause = imm;												break;
+		case 0x0305: csr.mtvec = imm;													break;
 		default : Log("Unknown csr register\n"); panic("please complete\n");
 	}
 }
@@ -62,6 +66,7 @@ inline static void and_csr(word_t csr_num, word_t imm){
 		case 0x0341: csr.mepc = csr.mepc | imm;											break;
 		case 0x0300: csr.mstatus.val = csr.mstatus.val | imm;				break;
 		case 0x0342: csr.mcause = csr.mcause | imm;									break;
+		case 0x0305: csr.mtvec = csr.mtvec | imm;										break;
 		default : Log("Unknown csr register\n"); panic("please complete\n");
 	}
 }
@@ -114,8 +119,7 @@ static int decode_exec(Decode *s) {
 	INSTPAT("0000001 ????? ????? 100 ????? 01100 11", div		 , R, R(dest) = (int32_t) src1 / (int32_t) src2);
 	INSTPAT("0000001 ????? ????? 101 ????? 01100 11", divu	 , R, R(dest) = (uint32_t) src1 / (uint32_t) src2);
   INSTPAT("0000000 00001 00000 000 00000 11100 11", ebreak , N, NEMUTRAP(s->pc, R(10))); // R(10) is $a0
-//   INSTPAT("0000000 00000 00000 000 00000 11100 11",	ecall	 , N, csr.mstatus.decode.MPIE = csr.mstatus.decode.MIE, csr.mstatus.decode.MIE = 1);
-  INSTPAT("0000000 00000 00000 000 00000 11100 11",	ecall	 , N, csr.interupting = true, csr.mcause = INTR_Environment);
+  INSTPAT("0000000 00000 00000 000 00000 11100 11",	ecall	 , N, csr.mstatus.decode.MPIE = csr.mstatus.decode.MIE, csr.mstatus.decode.MIE = 1);
 	INSTPAT("??????? ????? ????? ??? ????? 11011 11", jal    , J, R(dest) = s->dnpc, s->dnpc = s->pc + imm);								//注意，要求跳转数为2的倍数，并只记录21位的前20位
 	INSTPAT("??????? ????? ????? 000 ????? 11001 11", jalr   , I, R(dest) = s->snpc, s->dnpc = ((src1 + imm) & (~1)));	//注意同上
 	INSTPAT("??????? ????? ????? 000 ????? 00000 11", lb		 , I, R(dest) = SEXT(Mr(src1 + imm, 1), 8));

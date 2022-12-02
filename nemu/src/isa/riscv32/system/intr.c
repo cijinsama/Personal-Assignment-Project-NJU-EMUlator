@@ -19,20 +19,18 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   /* TODO: Trigger an interrupt/exception with ``NO''.
    * Then return the address of the interrupt/exception vector.
    */
-	csr.mepc = epc;
-	if(BITS(NO,31,31) == 1){
-		
-	}
 	//中断时记录下一位，异常时记录本位
-	csr.mstatus.val = NO;
-
+	if(BITS(NO,31,31) == 1){
+		csr.mepc = epc + 4;
+	}
+	else {
+		csr.mepc = epc;
+	}
+	csr.mcause = NO;
+	cpu.pc = csr.mtvec;
   return 0;
 }
 
 word_t isa_query_intr() {
-	if (csr.interupting){
-		csr.interupting = false;
-		return csr.mcause;
-	}
   return INTR_EMPTY;
 }

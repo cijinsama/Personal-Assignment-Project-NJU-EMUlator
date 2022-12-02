@@ -20,6 +20,7 @@
 
 typedef struct {
   word_t gpr[32];
+//	word_t flags;
   vaddr_t pc;
 } riscv32_CPU_state;
 
@@ -34,6 +35,7 @@ typedef struct {
 typedef struct {
   word_t mepc;
   word_t mcause;
+	word_t mtvec;
   union {
     struct{
       word_t UIE    : 1;
@@ -60,7 +62,6 @@ typedef struct {
     } decode;
     word_t val;
   } mstatus;
-	bool interupting;
 } riscv32_CSR_state;
 
 
