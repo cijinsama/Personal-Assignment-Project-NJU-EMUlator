@@ -50,14 +50,17 @@ static void PutAInt(int d, char **out, int zeros_padding_num){
 static void PutAddress(uintptr_t d, char **out){
 	int i = 0;
 	char buffer[32];
+	char temp;
 	if (d == 0) {
 		*((*out)++) = '0';
 		i++;
 	}
 	else {
 		while(d != 0) {
-			buffer[i++] = d%10 + '0';
-			d = d/10;
+			temp = d%16;
+			if(temp < 10) buffer[i++] = temp + '0';
+			else buffer[i++] = temp - 10 + 'a';
+			d = d/16;
 		}
 		while(--i >= 0) *(*out)++ = buffer[i];
 	}
@@ -100,7 +103,9 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
 					*out++ = c;
 					break;
 				case 'p':
-// 					s = va_arg(ap, uintptr_t);
+					PutAddress(va_arg(ap, uintptr_t), &out);
+					break;
+				case 'x':
 					PutAddress(va_arg(ap, uintptr_t), &out);
 					break;
 				default :
