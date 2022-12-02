@@ -15,13 +15,10 @@ int main() {
 
   init_mm();
 
-  Log("complete mm");
   init_device();
 
-  Log("complete device");
   init_ramdisk();
 
-  Log("complete ramdisk");
 #ifdef HAS_CTE
   init_irq();
 #endif
