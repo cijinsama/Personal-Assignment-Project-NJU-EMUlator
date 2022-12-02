@@ -61,6 +61,8 @@ inline static void set_csr(word_t csr_num, word_t imm){
 		case 0x0305: csr.mtvec = imm;													break;
 		default : Log("Unknown csr register\n"); panic("please complete\n");
 	}
+	printf("set csr mtvec = %08x\n", csr.mtvec);
+	printf("set imm = %08x\n", imm);
 }
 
 inline static void and_csr(word_t csr_num, word_t imm){
