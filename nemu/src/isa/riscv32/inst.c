@@ -24,7 +24,7 @@
 #define Mw vaddr_write
 
 enum {
-  TYPE_I, TYPE_U, TYPE_S, TYPE_J, TYPE_B, TYPE_R, TYPE_shamt,
+  TYPE_I, TYPE_U, TYPE_S, TYPE_J, TYPE_B, TYPE_R, TYPE_shamt, TYPE_P,
   TYPE_N, // none
 };
 #define BITMASK_SELF(high, low) (BITMASK(high) ^ BITMASK(low - 1))
@@ -36,6 +36,35 @@ enum {
 #define immJ() do { *imm = ( ((int32_t) SEXT(BITS(i, 31, 31), 1) << 20) | (BITS(i, 30, 21) <<  1) | (BITS(i, 20, 20) << 11) | (BITS(i, 19, 12) << 12) );} while(0)
 #define immB() do { *imm = (( (int32_t) SEXT(BITS(i, 31, 31), 1) << 12 ) | (BITS(i, 7, 7) << 11) | (BITS(i, 30, 25) << 5) | (BITS(i, 11, 8) << 1)); } while(0)
 #define immshamt() do { *imm = BITS(i, 24, 20); } while(0)
+
+inline static word_t get_csr(word_t csr_num){
+	word_t ret;
+	switch (csr_num) {
+		case 0x0341: ret = csr.mepc;										break;
+		case 0x0300: ret = csr.mstatus.val;							break;
+		case 0x0342: ret = csr.mcause;									break;
+		default : Log("Unknown csr register\n"); panic("please complete\n");
+	}
+	return ret;
+}
+
+inline static void set_csr(word_t csr_num, word_t imm){
+	switch (csr_num) {
+		case 0x0341: csr.mepc = imm;													break;
+		case 0x0300: csr.mstatus.val = imm;										break;
+		case 0x0342: csr.mcause = imm;												break;
+		default : Log("Unknown csr register\n"); panic("please complete\n");
+	}
+}
+
+inline static void and_csr(word_t csr_num, word_t imm){
+	switch (csr_num) {
+		case 0x0341: csr.mepc = csr.mepc | imm;											break;
+		case 0x0300: csr.mstatus.val = csr.mstatus.val | imm;				break;
+		case 0x0342: csr.mcause = csr.mcause | imm;									break;
+		default : Log("Unknown csr register\n"); panic("please complete\n");
+	}
+}
 
 static void decode_operand(Decode *s, int *dest, word_t *src1, word_t *src2, word_t *imm, int type) {
   uint32_t i = s->isa.inst.val;
@@ -51,6 +80,9 @@ static void decode_operand(Decode *s, int *dest, word_t *src1, word_t *src2, wor
 		case TYPE_B:		src1R(); src2R(); immB();					 break;
 		case TYPE_R:		src1R(); src2R();									 break;
 		case TYPE_shamt:src1R();					immshamt();			 break;
+		case TYPE_P:											immI();					 break;//自己用的
+		case TYPE_N:																			 break;
+		default: panic("Unknown instruction type\n");
   }
 }
 
@@ -77,9 +109,13 @@ static int decode_exec(Decode *s) {
 	INSTPAT("??????? ????? ????? 100 ????? 11000 11", blt		 , B, if((int32_t) src1 < (int32_t) src2){s->dnpc = s->pc + imm;});
 	INSTPAT("??????? ????? ????? 110 ????? 11000 11", bltu	 , B, if((uint32_t) src1 < (uint32_t) src2){s->dnpc = s->pc + imm;});
 	INSTPAT("??????? ????? ????? 001 ????? 11000 11", bne		 , B, if(src1 != src2){s->dnpc = s->pc + imm;});
+	INSTPAT("??????? ????? ????? 010 ????? 11100 11", csrrs	 , P, R(dest) = get_csr(imm), and_csr(imm, src1));
+	INSTPAT("??????? ????? ????? 001 ????? 11100 11", csrrw	 , P, R(dest) = get_csr(imm), set_csr(imm, src1));
 	INSTPAT("0000001 ????? ????? 100 ????? 01100 11", div		 , R, R(dest) = (int32_t) src1 / (int32_t) src2);
 	INSTPAT("0000001 ????? ????? 101 ????? 01100 11", divu	 , R, R(dest) = (uint32_t) src1 / (uint32_t) src2);
   INSTPAT("0000000 00001 00000 000 00000 11100 11", ebreak , N, NEMUTRAP(s->pc, R(10))); // R(10) is $a0
+//   INSTPAT("0000000 00000 00000 000 00000 11100 11",	ecall	 , N, csr.mstatus.decode.MPIE = csr.mstatus.decode.MIE, csr.mstatus.decode.MIE = 1);
+  INSTPAT("0000000 00000 00000 000 00000 11100 11",	ecall	 , N, csr.interupting = true, csr.mcause = INTR_Environment);
 	INSTPAT("??????? ????? ????? ??? ????? 11011 11", jal    , J, R(dest) = s->dnpc, s->dnpc = s->pc + imm);								//注意，要求跳转数为2的倍数，并只记录21位的前20位
 	INSTPAT("??????? ????? ????? 000 ????? 11001 11", jalr   , I, R(dest) = s->snpc, s->dnpc = ((src1 + imm) & (~1)));	//注意同上
 	INSTPAT("??????? ????? ????? 000 ????? 00000 11", lb		 , I, R(dest) = SEXT(Mr(src1 + imm, 1), 8));
@@ -88,6 +124,7 @@ static int decode_exec(Decode *s) {
 	INSTPAT("??????? ????? ????? 101 ????? 00000 11", lhu		 , I, R(dest) = Mr(src1 + imm, 2));
   INSTPAT("??????? ????? ????? ??? ????? 01101 11", lui    , U, R(dest) = imm);
   INSTPAT("??????? ????? ????? 010 ????? 00000 11", lw     , I, R(dest) = Mr(src1 + imm, 4));
+  INSTPAT("0011000 00010 00000 000 00000 11100 11", mret   , N, s->dnpc = csr.mepc, csr.mstatus.decode.MIE = csr.mstatus.decode.MPIE, csr.mstatus.decode.MPIE = 1);
 	INSTPAT("0000001 ????? ????? 000 ????? 01100 11", mul		 , R, R(dest) = src1 * src2);
 	INSTPAT("0000001 ????? ????? 001 ????? 01100 11", mulh	 , R, R(dest) = ((SEXT(src1, 32)) * (SEXT(src2, 32))) >> 32);
 	INSTPAT("0000000 ????? ????? 110 ????? 01100 11", or		 , R, R(dest) = (src1 | src2));

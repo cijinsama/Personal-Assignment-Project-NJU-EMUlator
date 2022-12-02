@@ -30,6 +30,40 @@ typedef struct {
   } inst;
 } riscv32_ISADecodeInfo;
 
+// regiter
+typedef struct {
+  word_t mepc;
+  word_t mcause;
+  union {
+    struct{
+      word_t UIE    : 1;
+      word_t SIE    : 1;
+      word_t WPRI_0 : 1;
+      word_t MIE    : 1;
+      word_t UPIE   : 1;
+      word_t SPIE   : 1;
+      word_t WPRI   : 1;
+      word_t MPIE   : 1;
+      word_t SPP    : 1;
+      word_t WPRI_1_2 : 2;
+      word_t MPP    : 2;
+      word_t FS     : 2;
+      word_t XS     : 2;
+      word_t MPRV   : 1;
+      word_t SUM    : 1;
+      word_t MXR    : 1;
+      word_t TVM    : 1;
+      word_t TW     : 1;
+      word_t TSR    : 1;
+      word_t WPRI_3_10 : 8;
+      word_t SD     : 1;
+    } decode;
+    word_t val;
+  } mstatus;
+	bool interupting;
+} riscv32_CSR_state;
+
+
 #define isa_mmu_check(vaddr, len, type) (MMU_DIRECT)
 
 #endif

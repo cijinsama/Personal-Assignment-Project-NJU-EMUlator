@@ -31,6 +31,10 @@ CPU_state cpu = {};
 uint64_t g_nr_guest_inst = 0;
 static uint64_t g_timer = 0; // unit: us
 static bool g_print_step = false;
+
+
+CSR_state csr = {.mstatus.val = 0x1800};
+
 #ifdef CONFIG_FTRACE
 int func_stack = 0;
 int last_pc_in_which_func = -1;
@@ -151,6 +155,10 @@ static void execute(uint64_t n) {
     trace_and_difftest(&s, cpu.pc);
     if (nemu_state.state != NEMU_RUNNING) break;
     IFDEF(CONFIG_DEVICE, device_update());
+		word_t no = isa_query_intr();
+		if (no != INTR_EMPTY){
+			isa_raise_intr(no, cpu.pc);
+		}
   }
 }
 
