@@ -53,7 +53,7 @@ inline static word_t get_csr(word_t csr_num){
 }
 
 inline static void set_csr(word_t csr_num, word_t imm){
-// 	printf("set csr_num = %04x\n", csr_num);
+	printf("set csr_num = %04x\n", csr_num);
 	switch (csr_num) {
 		case 0x0341: csr.mepc = imm;													break;
 		case 0x0300: csr.mstatus.val = imm;										break;
@@ -61,8 +61,8 @@ inline static void set_csr(word_t csr_num, word_t imm){
 		case 0x0305: csr.mtvec = imm;													break;
 		default : Log("Unknown csr register\n"); panic("please complete\n");
 	}
-// 	printf("set csr mtvec = %08x\n", csr.mtvec);
-// 	printf("set imm = %08x\n", imm);
+	printf("set csr mtvec = %08x\n", csr.mtvec);
+	printf("set imm = %08x\n", imm);
 }
 
 inline static void and_csr(word_t csr_num, word_t imm){
