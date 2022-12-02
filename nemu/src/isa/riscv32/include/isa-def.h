@@ -20,7 +20,6 @@
 
 typedef struct {
   word_t gpr[32];
-//	word_t flags;
   vaddr_t pc;
 } riscv32_CPU_state;
 
