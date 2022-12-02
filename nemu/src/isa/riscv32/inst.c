@@ -41,7 +41,7 @@ enum {
 
 inline static word_t get_csr(word_t csr_num){
 	word_t ret;
-	printf("csr_num = %d\n", csr_num);
+	printf("csr_num = %04x\n", csr_num);
 	switch (csr_num) {
 		case 0x0341: ret = csr.mepc;										break;
 		case 0x0300: ret = csr.mstatus.val;							break;
