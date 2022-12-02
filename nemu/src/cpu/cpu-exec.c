@@ -146,11 +146,16 @@ static void exec_once(Decode *s, vaddr_t pc) {
   disassemble(p, s->logbuf + sizeof(s->logbuf) - p,
       MUXDEF(CONFIG_ISA_x86, s->snpc, s->pc), (uint8_t *)&s->isa.inst.val, ilen);
 #endif
+	if (csr.mstatus.decode.MIE == 1){
+		printf("?????????????????\n\n\n");
+		isa_raise_intr(isa_query_intr(), cpu.pc);
+	}
 }
 
 static void execute(uint64_t n) {
   Decode s;
-  for (;n > 0; n --) { exec_once(&s, cpu.pc);
+  for (;n > 0; n --) { 
+		exec_once(&s, cpu.pc);
     g_nr_guest_inst ++;
     trace_and_difftest(&s, cpu.pc);
     if (nemu_state.state != NEMU_RUNNING) break;
