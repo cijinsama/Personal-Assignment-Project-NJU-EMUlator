@@ -47,6 +47,23 @@ static void PutAInt(int d, char **out, int zeros_padding_num){
 	return;
 }
 
+static void PutAddress(uintptr_t d, char **out){
+	int i = 0;
+	char buffer[32];
+	if (d == 0) {
+		*((*out)++) = '0';
+		i++;
+	}
+	else {
+		while(d != 0) {
+			buffer[i++] = d%10 + '0';
+			d = d/10;
+		}
+		while(--i >= 0) *(*out)++ = buffer[i];
+	}
+	return;
+}
+
 int vsprintf(char *out, const char *fmt, va_list ap) {
 	int int_num;
 	char c;
@@ -81,6 +98,10 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
 															*   takes fully promoted types */
 					c = (char) va_arg(ap, int);
 					*out++ = c;
+					break;
+				case 'p':
+// 					s = va_arg(ap, uintptr_t);
+					PutAddress(va_arg(ap, uintptr_t), &out);
 					break;
 				default :
 					panic("vsprintf uncompleted received args, please go to compelete it!!\n");
