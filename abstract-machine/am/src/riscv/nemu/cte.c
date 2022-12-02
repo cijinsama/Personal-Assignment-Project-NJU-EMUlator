@@ -22,7 +22,7 @@ extern void __am_asm_trap(void);
 
 bool cte_init(Context*(*handler)(Event, Context*)) {
   // initialize exception entry
-	printf("%p", __am_asm_trap);
+	printf("debug yong de : __am_asm_trap:%08x\n", __am_asm_trap);
   asm volatile("csrw mtvec, %0" : : "r"(__am_asm_trap));
 
   // register event handler
