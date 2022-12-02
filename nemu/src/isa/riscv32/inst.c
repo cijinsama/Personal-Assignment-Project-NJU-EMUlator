@@ -53,7 +53,7 @@ inline static word_t get_csr(word_t csr_num){
 }
 
 inline static void set_csr(word_t csr_num, word_t imm){
-	printf("set csr_num = %04x\n", csr_num);
+// 	printf("set csr_num = %04x\n", csr_num);
 	switch (csr_num) {
 		case 0x0341: csr.mepc = imm;													break;
 		case 0x0300: csr.mstatus.val = imm;										break;
@@ -61,8 +61,8 @@ inline static void set_csr(word_t csr_num, word_t imm){
 		case 0x0305: csr.mtvec = imm;													break;
 		default : Log("Unknown csr register\n"); panic("please complete\n");
 	}
-	printf("set csr mtvec = %08x\n", csr.mtvec);
-	printf("set imm = %08x\n", imm);
+// 	printf("set csr mtvec = %08x\n", csr.mtvec);
+// 	printf("set imm = %08x\n", imm);
 }
 
 inline static void and_csr(word_t csr_num, word_t imm){
@@ -118,7 +118,7 @@ static int decode_exec(Decode *s) {
 	INSTPAT("??????? ????? ????? 100 ????? 11000 11", blt		 , B, if((int32_t) src1 < (int32_t) src2){s->dnpc = s->pc + imm;});
 	INSTPAT("??????? ????? ????? 110 ????? 11000 11", bltu	 , B, if((uint32_t) src1 < (uint32_t) src2){s->dnpc = s->pc + imm;});
 	INSTPAT("??????? ????? ????? 001 ????? 11000 11", bne		 , B, if(src1 != src2){s->dnpc = s->pc + imm;});
-	INSTPAT("??????? ????? ????? 010 ????? 11100 11", csrrs	 , I, R(dest) = get_csr(imm), and_csr(imm, src1));
+	INSTPAT("??????? ????? ????? 010 ????? 11100 11", csrrs	 , I, R(dest) = get_csr(imm), and_csr(imm, src1); Log("csrrs: R(dest) = %x", R(dest)););
 	INSTPAT("??????? ????? ????? 001 ????? 11100 11", csrrw	 , I, R(dest) = get_csr(imm), set_csr(imm, src1));
 	INSTPAT("0000001 ????? ????? 100 ????? 01100 11", div		 , R, R(dest) = (int32_t) src1 / (int32_t) src2);
 	INSTPAT("0000001 ????? ????? 101 ????? 01100 11", divu	 , R, R(dest) = (uint32_t) src1 / (uint32_t) src2);
