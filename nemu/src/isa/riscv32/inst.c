@@ -41,7 +41,7 @@ enum {
 
 inline static word_t get_csr(word_t csr_num){
 	word_t ret;
-	printf("csr_num = %04x\n", csr_num);
+	printf("get csr_num = %04x\n", csr_num);
 	switch (csr_num) {
 		case 0x0341: ret = csr.mepc;										break;
 		case 0x0300: ret = csr.mstatus.val;							break;
@@ -53,6 +53,7 @@ inline static word_t get_csr(word_t csr_num){
 }
 
 inline static void set_csr(word_t csr_num, word_t imm){
+	printf("set csr_num = %04x\n", csr_num);
 	switch (csr_num) {
 		case 0x0341: csr.mepc = imm;													break;
 		case 0x0300: csr.mstatus.val = imm;										break;
@@ -63,6 +64,7 @@ inline static void set_csr(word_t csr_num, word_t imm){
 }
 
 inline static void and_csr(word_t csr_num, word_t imm){
+	printf("and csr_num = %04x\n", csr_num);
 	switch (csr_num) {
 		case 0x0341: csr.mepc = csr.mepc | imm;											break;
 		case 0x0300: csr.mstatus.val = csr.mstatus.val | imm;				break;
