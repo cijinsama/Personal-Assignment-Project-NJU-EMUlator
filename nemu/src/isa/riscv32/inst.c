@@ -119,7 +119,7 @@ static int decode_exec(Decode *s) {
 	INSTPAT("0000001 ????? ????? 100 ????? 01100 11", div		 , R, R(dest) = (int32_t) src1 / (int32_t) src2);
 	INSTPAT("0000001 ????? ????? 101 ????? 01100 11", divu	 , R, R(dest) = (uint32_t) src1 / (uint32_t) src2);
   INSTPAT("0000000 00001 00000 000 00000 11100 11", ebreak , N, NEMUTRAP(s->pc, R(10))); // R(10) is $a0
-  INSTPAT("0000000 00000 00000 000 00000 11100 11",	ecall	 , N, csr.mstatus.decode.MPIE = csr.mstatus.decode.MIE, csr.mstatus.decode.MIE = 1, printf("going to ecal\n"));
+  INSTPAT("0000000 00000 00000 000 00000 11100 11",	ecall	 , N, csr.mstatus.decode.MPIE = csr.mstatus.decode.MIE, csr.mstatus.decode.MIE = 1, printf("going to ecal\n,csr.MIE = %d\n", csr.mstatus.decode.MIE));
 	INSTPAT("??????? ????? ????? ??? ????? 11011 11", jal    , J, R(dest) = s->dnpc, s->dnpc = s->pc + imm);								//注意，要求跳转数为2的倍数，并只记录21位的前20位
 	INSTPAT("??????? ????? ????? 000 ????? 11001 11", jalr   , I, R(dest) = s->snpc, s->dnpc = ((src1 + imm) & (~1)));	//注意同上
 	INSTPAT("??????? ????? ????? 000 ????? 00000 11", lb		 , I, R(dest) = SEXT(Mr(src1 + imm, 1), 8));
