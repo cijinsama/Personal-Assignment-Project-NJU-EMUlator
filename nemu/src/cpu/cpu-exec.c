@@ -157,8 +157,6 @@ static void execute(uint64_t n) {
 			isa_raise_intr(isa_query_intr(), cpu.pc);
 		}
     trace_and_difftest(&s, cpu.pc);
-		//不确定是不是在这给pc+4
-		//
     if (nemu_state.state != NEMU_RUNNING) break;
     IFDEF(CONFIG_DEVICE, device_update());
   }
