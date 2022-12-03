@@ -1,5 +1,4 @@
 #include <common.h>
-// #include <intr.h>
 
 static Context* do_event(Event e, Context* c) {
   switch (e.event) {

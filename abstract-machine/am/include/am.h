@@ -55,10 +55,6 @@ void     ioe_write   (int reg, void *buf);
 #include "amdev.h"
 
 // ---------- CTE: Interrupt Handling and Context Switching ----------
-#define INTR_Machine_software_interrupt		0x80000003
-#define INTR_Machine_timer_interrupt			0x80000007
-#define INTR_Environment									0x80000011
-#define EXCP_Environment									0x0000000b
 bool     cte_init    (Context *(*handler)(Event ev, Context *ctx));
 void     yield       (void);
 bool     ienabled    (void);

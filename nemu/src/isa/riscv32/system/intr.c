@@ -21,11 +21,9 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
    */
 	//中断时记录下一位，异常时记录本位
 	if(BITS(NO,31,31) == 1){
-// 		csr.mepc = epc;
-		csr.mepc = epc + 4;
+		csr.mepc = epc;
 	}
 	else {
-// 		csr.mepc = epc - 4;
 		csr.mepc = epc;
 	}
 	csr.mstatus.decode.MIE = 0;
