@@ -154,13 +154,13 @@ static void execute(uint64_t n) {
   for (;n > 0; n --) { 
 		exec_once(&s, cpu.pc);
     g_nr_guest_inst ++;
-		if (csr.mstatus.decode.MIE == 1){
-			NO = isa_query_intr();
+		NO = isa_query_intr();
+		if (NO != INTR_EMPTY){
 			isa_raise_intr(NO, cpu.pc);
 		}
     trace_and_difftest(&s, cpu.pc);
 		//不确定是不是在这给pc+4
-		if(!BITS(NO,31,31)){
+		if(NO != INTR_EMPTY && !BITS(NO,31,31)){
 			cpu.pc += 4;
 		}
 		//
