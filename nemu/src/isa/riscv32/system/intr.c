@@ -24,7 +24,7 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
 		csr.mepc = epc;
 	}
 	else {
-		csr.mepc = epc;
+		csr.mepc = epc - 4;
 	}
 	csr.mstatus.decode.MIE = 0;
 	csr.mcause = NO;

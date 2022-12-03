@@ -150,13 +150,20 @@ static void exec_once(Decode *s, vaddr_t pc) {
 
 static void execute(uint64_t n) {
   Decode s;
+	uint32_t NO = 0;
   for (;n > 0; n --) { 
 		exec_once(&s, cpu.pc);
     g_nr_guest_inst ++;
 		if (csr.mstatus.decode.MIE == 1){
-			isa_raise_intr(isa_query_intr(), cpu.pc);
+			NO = isa_query_intr();
+			isa_raise_intr(NO, cpu.pc);
 		}
     trace_and_difftest(&s, cpu.pc);
+		//不确定是不是在这给pc+4
+		if(!BITS(NO,31,31)){
+			cpu.pc += 4;
+		}
+		//
     if (nemu_state.state != NEMU_RUNNING) break;
     IFDEF(CONFIG_DEVICE, device_update());
   }
