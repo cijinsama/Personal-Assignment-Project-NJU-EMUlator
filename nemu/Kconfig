@@ -166,6 +166,11 @@ config FTRACE
 	bool "Enable function tracer"
 	default y
 
+config ETRACE
+	depends on TRACE
+	bool "Enable error and iteruption tracer"
+	default y
+
 
 config DIFFTEST
   depends on TARGET_NATIVE_ELF

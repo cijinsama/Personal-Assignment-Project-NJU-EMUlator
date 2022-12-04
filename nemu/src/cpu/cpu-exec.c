@@ -32,7 +32,6 @@ uint64_t g_nr_guest_inst = 0;
 static uint64_t g_timer = 0; // unit: us
 static bool g_print_step = false;
 
-
 CSR_state csr = {.mstatus.val = 0x1800};
 
 #ifdef CONFIG_FTRACE

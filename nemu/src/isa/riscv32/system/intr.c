@@ -20,12 +20,10 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
    * Then return the address of the interrupt/exception vector.
    */
 	//中断时记录下一位，异常时记录本位
-// 	if(BITS(NO,31,31) == 1){
-// 		csr.mepc = epc;
-// 	}
-// 	else {
-		csr.mepc = epc - 4;
-// 	}
+#ifdef CONFIG_ETRACE
+	log_write("Raise intr : %08x", NO);
+#endif
+	csr.mepc = epc - 4;
 	csr.mstatus.decode.MIE = 0;
 	csr.mcause = NO;
 	cpu.pc = csr.mtvec;

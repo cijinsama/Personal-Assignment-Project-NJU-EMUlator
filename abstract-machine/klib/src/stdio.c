@@ -47,13 +47,14 @@ static void PutAInt(int d, char **out, int zeros_padding_num){
 	return;
 }
 
-static void PutAddress(uintptr_t d, char **out){
+static void PutAddress(uintptr_t d, char **out, int zeros_padding_num){
 	int i = 0;
 	char buffer[32];
 	char temp;
 	if (d == 0) {
 		*((*out)++) = '0';
 		i++;
+		while(i++ < zeros_padding_num) *(*out)++ = '0';
 	}
 	else {
 		while(d != 0) {
@@ -103,10 +104,10 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
 					*out++ = c;
 					break;
 				case 'p':
-					PutAddress(va_arg(ap, uintptr_t), &out);
+					PutAddress(va_arg(ap, uintptr_t), &out, zeros_padding_num);
 					break;
 				case 'x':
-					PutAddress(va_arg(ap, uintptr_t), &out);
+					PutAddress(va_arg(ap, uintptr_t), &out, zeros_padding_num);
 					break;
 				default :
 					panic("vsprintf uncompleted received args, please go to compelete it!!\n");
