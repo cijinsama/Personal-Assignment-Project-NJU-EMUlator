@@ -156,7 +156,6 @@ static void execute(uint64_t n) {
 			uint32_t NO = isa_query_intr();
 #ifdef CONFIG_ETRACE
 			log_write("Raise exception : %08x", NO);
-			Log("Raise exception : %08x", NO);
 #endif
 			isa_raise_intr(NO, cpu.pc);
 		}
