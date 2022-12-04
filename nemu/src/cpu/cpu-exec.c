@@ -153,7 +153,11 @@ static void execute(uint64_t n) {
 		exec_once(&s, cpu.pc);
     g_nr_guest_inst ++;
 		if (csr.mstatus.decode.MIE == 1){
-			isa_raise_intr(isa_query_intr(), cpu.pc);
+			uint32_t NO = isa_query_intr();
+#ifdef CONFIG_ETRACE
+			log_write("Raise exception : %08x", NO);
+#endif
+			isa_raise_intr(NO, cpu.pc);
 		}
     trace_and_difftest(&s, cpu.pc);
     if (nemu_state.state != NEMU_RUNNING) break;
