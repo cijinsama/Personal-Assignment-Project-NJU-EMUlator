@@ -53,7 +53,7 @@ __am_asm_trap:
   LOAD t1, OFFSET_STATUS(sp)
   LOAD t2, OFFSET_EPC(sp)
 #我选择在这个地方开始给储存的pc+4
-	addi t2, t2, 4
+# 	addi t2, t2, 4
 #pc + 4
   csrw mstatus, t1
   csrw mepc, t2
