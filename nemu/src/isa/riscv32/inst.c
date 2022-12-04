@@ -37,7 +37,6 @@ enum {
 #define immB() do { *imm = (( (int32_t) SEXT(BITS(i, 31, 31), 1) << 12 ) | (BITS(i, 7, 7) << 11) | (BITS(i, 30, 25) << 5) | (BITS(i, 11, 8) << 1)); } while(0)
 #define immshamt() do { *imm = BITS(i, 24, 20); } while(0)
 
-/*#define is_exception_add_pc() do {if(!BITS(csr.mcause,31,31)) s->dnpc += 4;} while(0)*/
 
 
 inline static word_t get_csr(word_t csr_num){
