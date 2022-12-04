@@ -34,7 +34,6 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
 
 word_t isa_query_intr() {
 	if (csr.mstatus.decode.MIE == 1) {
-		printf("debug: isa query\n");
 		return EXCP_Environment;
 	}
 	return INTR_EMPTY;
