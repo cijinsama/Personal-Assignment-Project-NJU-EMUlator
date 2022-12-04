@@ -21,7 +21,8 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
    */
 	//中断时记录下一位，异常时记录本位
 #ifdef CONFIG_ETRACE
-	log_write("Raise intr : %08x", NO);
+	printf("==============");
+	log_write("Raise exception : %08x", NO);
 #endif
 	csr.mepc = epc - 4;
 	csr.mstatus.decode.MIE = 0;
