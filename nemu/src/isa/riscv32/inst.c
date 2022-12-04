@@ -37,7 +37,7 @@ enum {
 #define immB() do { *imm = (( (int32_t) SEXT(BITS(i, 31, 31), 1) << 12 ) | (BITS(i, 7, 7) << 11) | (BITS(i, 30, 25) << 5) | (BITS(i, 11, 8) << 1)); } while(0)
 #define immshamt() do { *imm = BITS(i, 24, 20); } while(0)
 
-#define is_exception_add_pc() do {if(!BITS(csr.mcause,31,31)) s->dnpc += 4;} while(0)
+/*#define is_exception_add_pc() do {if(!BITS(csr.mcause,31,31)) s->dnpc += 4;} while(0)*/
 
 
 inline static word_t get_csr(word_t csr_num){
@@ -134,7 +134,7 @@ static int decode_exec(Decode *s) {
 	INSTPAT("??????? ????? ????? 101 ????? 00000 11", lhu		 , I, R(dest) = Mr(src1 + imm, 2));
   INSTPAT("??????? ????? ????? ??? ????? 01101 11", lui    , U, R(dest) = imm);
   INSTPAT("??????? ????? ????? 010 ????? 00000 11", lw     , I, R(dest) = Mr(src1 + imm, 4));
-  INSTPAT("0011000 00010 00000 000 00000 11100 11", mret   , N, s->dnpc = csr.mepc; is_exception_add_pc(); csr.mstatus.decode.MIE = csr.mstatus.decode.MPIE, csr.mstatus.decode.MPIE = 1; printf("pc is %x\n",s->dnpc));
+  INSTPAT("0011000 00010 00000 000 00000 11100 11", mret   , N, s->dnpc = csr.mepc, csr.mstatus.decode.MIE = csr.mstatus.decode.MPIE, csr.mstatus.decode.MPIE = 1);
 	INSTPAT("0000001 ????? ????? 000 ????? 01100 11", mul		 , R, R(dest) = src1 * src2);
 	INSTPAT("0000001 ????? ????? 001 ????? 01100 11", mulh	 , R, R(dest) = ((SEXT(src1, 32)) * (SEXT(src2, 32))) >> 32);
 	INSTPAT("0000000 ????? ????? 110 ????? 01100 11", or		 , R, R(dest) = (src1 | src2));
