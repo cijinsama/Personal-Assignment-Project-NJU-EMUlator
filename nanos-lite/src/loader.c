@@ -20,8 +20,6 @@
 
 void ReadFile(int offset, void* dst, unsigned long size,int number);
 void ReadElfHeader(Elf_Ehdr *elfheader);
-void ReadSectionName(Elf_Shdr shstrtab_sect_header, Elf_Shdr section, char* name);
-void ReadString(Elf_Shdr shstrtab_sect_header, Elf_Off string_offset, char* dst);
 void ramdisk2vmem(uintptr_t ramdisk_off, uintptr_t vmemaddr, uint32_t memsize);
 void vmemset(uintptr_t vaddr,uint32_t size, uint32_t value);
 
@@ -75,36 +73,15 @@ void ReadElfHeader(Elf_Ehdr *elf_header){
 	return;
 }
 
-void ReadSectionName(Elf_Shdr shstrtab_sect_header, Elf_Shdr section, char* name){
-	ReadString(shstrtab_sect_header, section.sh_name, name);
-	return;
-}
 
 void ReadFile(int offset, void* dst, unsigned long size,int number){
 	ramdisk_read(dst, offset, size * number);
 	return;
 }
 
-void ReadString(Elf_Shdr shstrtab_sect_header, Elf_Off string_offset, char* dst){
-	int i; 
-	for (i = 0;string_offset + i < shstrtab_sect_header.sh_size;i++){
-		ReadFile(shstrtab_sect_header.sh_offset + string_offset + i, dst + i, sizeof(char), 1);
-		if (dst[i] == '\0') break;
-	}
-	return;
-}
 
 void ramdisk2vmem(uintptr_t ramdisk_off, uintptr_t vmemaddr, uint32_t memsize){
-	uint8_t buffer[128];
-	int this_read_size;
-	for(int readsize = 0; readsize < memsize; readsize+=128){
-		if (readsize + 128 < memsize) this_read_size = 128;
-		else this_read_size = memsize - readsize;
-		ramdisk_read(buffer, ramdisk_off, this_read_size);
-		for (int i = 0; i < 128; i++){
-			*(uint32_t *)(vmemaddr + 4 * i) = buffer[i];
-		}
-	}
+	ramdisk_read((uint8_t *)vmemaddr, ramdisk_off, memsize);
 	return;
 }
 
