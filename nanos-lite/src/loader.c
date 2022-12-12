@@ -59,7 +59,6 @@ void naive_uload(PCB *pcb, const char *filename) {
 
 void ReadElfHeader(Elf_Ehdr *elf_header){
 	ReadFile(0, elf_header, sizeof(Elf_Ehdr), 1);
-	Log("GOT e_ident = %x, expected 0x464c457f", *(uint32_t *)elf_header->e_ident);
 	assert(*(uint32_t *)elf_header->e_ident == 0x464c457f);
 	return;
 }
@@ -72,12 +71,13 @@ void ReadFile(int offset, void* dst, unsigned long size,int number){
 
 
 void ramdisk2vmem(uintptr_t ramdisk_off, uintptr_t vmemaddr, uint32_t memsize){
+	Log("load ramdisk %x to %x", ramdisk_off, vmemaddr);
 	ramdisk_read((uint8_t *)vmemaddr, ramdisk_off, memsize);
 	return;
 }
 
 void vmemset(uint8_t* vaddr,uint32_t size, uint32_t value){
-	Log("memset size%d", size);
+	Log("set mem value %p---%p to %x", vaddr, vaddr + size, value);
 	for (int i = 0; i < size; i++){
 		*(vaddr + i) = value;
 	}
