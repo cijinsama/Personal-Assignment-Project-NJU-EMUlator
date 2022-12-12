@@ -145,20 +145,6 @@ static void exec_once(Decode *s, vaddr_t pc) {
   disassemble(p, s->logbuf + sizeof(s->logbuf) - p,
       MUXDEF(CONFIG_ISA_x86, s->snpc, s->pc), (uint8_t *)&s->isa.inst.val, ilen);
 #endif
-
-
-// 
-// 
-// 	if (s->pc > 0x830003fc) tmtm = 1;
-// 	if (tmtm) {
-// 		Log("now you go : %x",s->pc);
-// 		Log("pc = %x", cpu.pc);
-// 		tmtm = 0;
-// 	}
-// 
-// 
-
-
 }
 
 static void execute(uint64_t n) {
@@ -168,11 +154,6 @@ static void execute(uint64_t n) {
     g_nr_guest_inst ++;
 		if (csr.mstatus.decode.MIE == 1){
 			uint32_t NO = isa_query_intr();
-// #ifdef CONFIG_ETRACE
-// 			log_write("Raise exception : %08x", NO);
-// 			Log("Raise exception : %08x", NO);
-// 			Log("PC : %08x", cpu.pc);
-// #endif
 			isa_raise_intr(NO, cpu.pc);
 		}
     trace_and_difftest(&s, cpu.pc);

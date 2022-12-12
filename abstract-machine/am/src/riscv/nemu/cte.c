@@ -7,12 +7,10 @@ static Context* (*user_handler)(Event, Context*) = NULL;
 Context* __am_irq_handle(Context *c) {
   if (user_handler) {
     Event ev = {0};
-		printf("exception : %p\n%p\n%p\n",c->mcause, c->mepc, c->mstatus);
     switch (c->mcause) {
 			case EXCP_Environment: c->mepc += 4; ev.event = EVENT_YIELD; break;
       default: ev.event = EVENT_ERROR; assert(0); break;
     }
-
     c = user_handler(ev, c);
     assert(c != NULL);
   }

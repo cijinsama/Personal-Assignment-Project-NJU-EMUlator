@@ -25,7 +25,7 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
 	csr.mstatus.decode.MIE = 0;
 	csr.mcause = NO;
 	cpu.pc = csr.mtvec;
-  IFDEF(CONFIG_ETRACE, Log("etrace : raise exception at csr.mepc = %x, csr.mtvec = %x", csr.mepc, csr.mtvec));
+  IFDEF(CONFIG_ETRACE, Log("etrace : raise exception at csr.mepc = %x, csr.mtvec = %x, csr.mstatus = %x, csr.mcause = %x", csr.mepc, csr.mtvec, csr.mstatus.val, csr.mcause));
   return 0;
 }
 
