@@ -155,6 +155,7 @@ static void exec_once(Decode *s, vaddr_t pc) {
 	if (s->pc > 0x830003fc) tmtm = 1;
 	if (tmtm) {
 		Log("now you go : %x",s->pc);
+		Log("pc = %x", cpu.pc);
 		tmtm = 0;
 	}
 
