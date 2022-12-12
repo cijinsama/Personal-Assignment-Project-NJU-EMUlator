@@ -75,7 +75,7 @@ void ramdisk2vmem(uintptr_t ramdisk_off, uintptr_t vmemaddr, uint32_t memsize){
 }
 
 void vmemset(uint8_t* vaddr,uint32_t size, uint32_t value){
-	Log("set mem value %p---%p to %x", vaddr, vaddr + size, value);
+	Log("set Vmem value %p---%p to %x", vaddr, vaddr + size, value);
 	for (int i = 0; i < size; i++){
 		*(vaddr + i) = value;
 	}

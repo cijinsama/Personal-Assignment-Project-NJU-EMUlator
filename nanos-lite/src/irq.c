@@ -5,7 +5,6 @@ static Context* do_event(Event e, Context* c) {
 		case EVENT_YIELD: Log("correcly received interupt environment"); break;
     default: panic("Unhandled event ID = %d", e.event);
   }
-
   return c;
 }
 
