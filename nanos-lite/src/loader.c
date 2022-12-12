@@ -63,8 +63,8 @@ void naive_uload(PCB *pcb, const char *filename) {
 
 void ReadElfHeader(Elf_Ehdr *elf_header){
 	ReadFile(0, elf_header, sizeof(Elf_Ehdr), 1);
-	Log("GOT e_ident = %p, expected 0x7f454c46", elf_header->e_ident);
-	assert(*(uint32_t *)elf_header->e_ident == 0x7f454c46);
+	Log("GOT e_ident = %p, expected 0x464c457f", elf_header->e_ident);
+	assert(*(uint32_t *)elf_header->e_ident == 0x464c457f);
 	return;
 }
 
