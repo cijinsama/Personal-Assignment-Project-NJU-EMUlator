@@ -37,6 +37,8 @@ uintptr_t ini_loader(){
 	program_header_off = elf_header.e_phoff;
 
 	//load ramdisk to v mem and set 0
+	Log("header p num:%d", elf_header.e_phnum);
+	Log("header p entsize:%d", elf_header.e_phentsize);
 	for (int i = 0; i < elf_header.e_phnum; i++, program_header_off += elf_header.e_phentsize){
 		ReadFile(program_header_off, &program_header, sizeof(program_header), 1);
 		if (program_header.p_type == PT_LOAD){
@@ -44,8 +46,8 @@ uintptr_t ini_loader(){
 			vmemset(program_header.p_vaddr+program_header.p_filesz, program_header.p_vaddr+program_header.p_memsz, 0);
 		}
 		Log("flag位:%p",(void *)program_header.p_flags);
-		Log("可执行位:%p",(void *)PF_X);
-		Log("可执行位:%p",(void *)PF_R);
+		Log("可执行位x:%p",(void *)PF_X);
+		Log("可执行位r:%p",(void *)PF_R);
 // 		if (program_header.p_flags
 		ret_addr = program_header.p_vaddr;
 	}
