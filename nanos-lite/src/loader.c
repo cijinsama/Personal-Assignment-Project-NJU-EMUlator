@@ -23,9 +23,10 @@ void ReadElfHeader(Elf_Ehdr *elfheader);
 void ReadSectionName(Elf_Shdr shstrtab_sect_header, Elf_Shdr section, char* name);
 void ReadString(Elf_Shdr shstrtab_sect_header, Elf_Off string_offset, char* dst);
 void ramdisk2vmem(uintptr_t ramdisk_off, uintptr_t vmemaddr, uint32_t memsize);
-
 void vmemset(uintptr_t vaddr,uint32_t size, uint32_t value);
-uintptr_t ini_loader(char *file){
+
+
+uintptr_t ini_loader(){
 	Elf_Ehdr elf_header;
 	Elf_Off program_header_off;
 	Elf_Phdr program_header;
@@ -51,8 +52,7 @@ uintptr_t ini_loader(char *file){
 
 static uintptr_t loader(PCB *pcb, const char *filename) {
 	//需要返回这段程序的首地址
-  TODO();
-  return 0;
+  return ini_loader();
 }
 
 void naive_uload(PCB *pcb, const char *filename) {
@@ -60,7 +60,6 @@ void naive_uload(PCB *pcb, const char *filename) {
   Log("Jump to entry = %p",(void *)entry);
   ((void(*)())entry) ();
 }
-
 
 void ReadElfHeader(Elf_Ehdr *elf_header){
 	ReadFile(0, elf_header, sizeof(Elf_Ehdr), 1);
@@ -95,8 +94,15 @@ void ramdisk2vmem(uintptr_t ramdisk_off, uintptr_t vmemaddr, uint32_t memsize){
 		else this_read_size = memsize - readsize;
 		ramdisk_read(buffer, ramdisk_off, this_read_size);
 		for (int i = 0; i < 128; i++){
-			vaddr_write(vmemaddr, 1, buffer[i]);
+			*(uint32_t *)(vmemaddr + 4 * i) = buffer[i];
 		}
+	}
+	return;
+}
+
+void vmemset(uintptr_t vaddr,uint32_t size, uint32_t value){
+	for (int i = 0; i < size; i++){
+		*(uint32_t *)(vaddr + 4 * i) = value;
 	}
 	return;
 }
