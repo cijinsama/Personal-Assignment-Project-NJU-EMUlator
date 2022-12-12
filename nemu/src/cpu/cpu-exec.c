@@ -97,7 +97,11 @@ static char tmtm = 0;
 
 static void exec_once(Decode *s, vaddr_t pc) {
 	if (s->pc > 0x830003fc) tmtm = 1;
-	if (tmtm) Log("now you go : %x",s->pc);
+	if (tmtm) {
+		Log("now you go : %x",s->pc);
+		tmtm = 0;
+	}
+
 
 
 
