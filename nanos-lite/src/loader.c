@@ -44,7 +44,7 @@ uintptr_t ini_loader(){
 		ReadFile(program_header_off, &program_header, sizeof(program_header), 1);
 		if (program_header.p_type == PT_LOAD){
 			ramdisk2vmem(program_header.p_offset, program_header.p_vaddr, program_header.p_memsz);
-			vmemset((uint8_t *) (program_header.p_vaddr+program_header.p_filesz), program_header.p_vaddr+program_header.p_memsz, 0);
+			vmemset((uint8_t *) (program_header.p_vaddr+program_header.p_filesz), program_header.p_memsz - program_header.p_filesz, 0);
 		}
 		Log("flag位:%p",(void *)program_header.p_flags);
 		Log("可执行位x:%p",(void *)PF_X);
