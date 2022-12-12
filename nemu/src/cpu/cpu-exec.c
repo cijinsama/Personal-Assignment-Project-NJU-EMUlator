@@ -93,7 +93,6 @@ static void cpiring(Decode *s){
 #endif
 
 static void exec_once(Decode *s, vaddr_t pc) {
-	Log("pc : %x", s->pc);
   s->pc = pc;
   s->snpc = pc;
   isa_exec_once(s);
