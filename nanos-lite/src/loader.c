@@ -35,12 +35,7 @@ uintptr_t ini_loader(){
 	program_header_off = elf_header.e_phoff;
 
 	//load ramdisk to v mem and set 0
-	Log("header p num:%d", elf_header.e_phnum);
-	Log("header p entsize:%d", elf_header.e_phentsize);
-	Log("header p entsize:%d", sizeof(program_header));
 	for (int i = 0; i < elf_header.e_phnum; i++, program_header_off += sizeof(program_header)){
-		Log("read file");
-		Log("addr: %x",program_header_off);
 		ReadFile(program_header_off, &program_header, sizeof(program_header), 1);
 		if (program_header.p_type == PT_LOAD){
 			ramdisk2vmem(program_header.p_offset, program_header.p_vaddr, program_header.p_memsz);
