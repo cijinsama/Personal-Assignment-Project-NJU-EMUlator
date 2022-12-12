@@ -45,6 +45,8 @@ void device_update();
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #ifdef CONFIG_ITRACE_COND
   if (ITRACE_COND) { log_write("%s\n", _this->logbuf); }
+	else {Log("error to print");}
+//   log_write("%s\n", _this->logbuf);
 #endif
   if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
@@ -171,11 +173,11 @@ static void execute(uint64_t n) {
     g_nr_guest_inst ++;
 		if (csr.mstatus.decode.MIE == 1){
 			uint32_t NO = isa_query_intr();
-#ifdef CONFIG_ETRACE
-			log_write("Raise exception : %08x", NO);
-			Log("Raise exception : %08x", NO);
-			Log("PC : %08x", cpu.pc);
-#endif
+// #ifdef CONFIG_ETRACE
+// 			log_write("Raise exception : %08x", NO);
+// 			Log("Raise exception : %08x", NO);
+// 			Log("PC : %08x", cpu.pc);
+// #endif
 			isa_raise_intr(NO, cpu.pc);
 		}
     trace_and_difftest(&s, cpu.pc);
