@@ -86,6 +86,7 @@ void ramdisk2vmem(uintptr_t ramdisk_off, uintptr_t vmemaddr, uint32_t memsize){
 }
 
 void vmemset(uint8_t* vaddr,uint32_t size, uint32_t value){
+	Log("memset size%d", size);
 	for (int i = 0; i < size; i++){
 		*(vaddr + i) = value;
 	}
