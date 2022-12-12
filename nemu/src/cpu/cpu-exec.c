@@ -96,15 +96,6 @@ static void cpiring(Decode *s){
 static char tmtm = 0;
 
 static void exec_once(Decode *s, vaddr_t pc) {
-	if (s->pc > 0x830003fc) tmtm = 1;
-	if (tmtm) {
-		Log("now you go : %x",s->pc);
-		tmtm = 0;
-	}
-
-
-
-
   s->pc = pc;
   s->snpc = pc;
   isa_exec_once(s);
@@ -157,6 +148,19 @@ static void exec_once(Decode *s, vaddr_t pc) {
   disassemble(p, s->logbuf + sizeof(s->logbuf) - p,
       MUXDEF(CONFIG_ISA_x86, s->snpc, s->pc), (uint8_t *)&s->isa.inst.val, ilen);
 #endif
+
+
+
+
+	if (s->pc > 0x830003fc) tmtm = 1;
+	if (tmtm) {
+		Log("now you go : %x",s->pc);
+		tmtm = 0;
+	}
+
+
+
+
 }
 
 static void execute(uint64_t n) {
