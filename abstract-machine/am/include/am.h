@@ -48,6 +48,12 @@ extern   Area        heap;
 void     putch       (char ch);
 void     halt        (int code) __attribute__((__noreturn__));
 
+//自己加的
+typedef uint32_t word_t;
+typedef word_t vaddr_t;
+word_t vaddr_read(vaddr_t addr, int len);
+void vaddr_write(vaddr_t addr, int len, word_t data);
+
 // -------------------- IOE: Input/Output Devices --------------------
 bool     ioe_init    (void);
 void     ioe_read    (int reg, void *buf);

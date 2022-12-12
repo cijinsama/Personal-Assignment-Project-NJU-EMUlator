@@ -79,15 +79,15 @@ void paddr_write(paddr_t addr, int len, word_t data) {
 	log_write("[Memory:Write]\tfrom:%08x\tlen:%d\tvalue:%016x\t", addr, len, data);
 #endif
   if (likely(in_pmem(addr))) {
-		#ifdef MTRACE
+#ifdef MTRACE
 		log_write("successful\n");
-		#endif
+#endif
 	 	pmem_write(addr, len, data); 
 		return; 
 	}
-	#ifdef MTRACE
+#ifdef MTRACE
 	log_write("error\n");
-	#endif
+#endif
   IFDEF(CONFIG_DEVICE, mmio_write(addr, len, data); return);
   out_of_bound(addr);
 }
