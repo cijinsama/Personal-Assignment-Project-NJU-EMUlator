@@ -44,6 +44,7 @@ uintptr_t ini_loader(){
 			vmemset(program_header.p_vaddr+program_header.p_filesz, program_header.p_vaddr+program_header.p_memsz, 0);
 		}
 		Log("flag位:%p",(void *)program_header.p_flags);
+		Log("可执行位:%p",(void *)PF_X);
 // 		if (program_header.p_flags
 		ret_addr = program_header.p_vaddr;
 	}
