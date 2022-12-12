@@ -28,7 +28,6 @@ uintptr_t ini_loader(){
 	Elf_Ehdr elf_header;
 	Elf_Off program_header_off;
 	Elf_Phdr program_header;
-	uintptr_t ret_addr = 0;
 
 	//read elf header and get program header table offset
 	ReadElfHeader(&elf_header);
@@ -41,9 +40,8 @@ uintptr_t ini_loader(){
 			ramdisk2vmem(program_header.p_offset, program_header.p_vaddr, program_header.p_memsz);
 			vmemset((uint8_t *) (program_header.p_vaddr+program_header.p_filesz), program_header.p_memsz - program_header.p_filesz, 0);
 		}
-		if (program_header.p_flags == PF_X + PF_R) ret_addr = program_header.p_vaddr;
 	}
-	return ret_addr;
+	return elf_header.e_entry;
 }
 
 static uintptr_t loader(PCB *pcb, const char *filename) {
