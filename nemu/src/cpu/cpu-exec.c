@@ -30,7 +30,7 @@
 CPU_state cpu = {};
 uint64_t g_nr_guest_inst = 0;
 static uint64_t g_timer = 0; // unit: us
-static bool g_print_step = false;
+static bool g_print_step = true;
 
 CSR_state csr = {.mstatus.val = 0x1800};
 
@@ -45,8 +45,6 @@ void device_update();
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #ifdef CONFIG_ITRACE_COND
   if (ITRACE_COND) { log_write("%s\n", _this->logbuf); }
-	else {Log("error to print");}
-//   log_write("%s\n", _this->logbuf);
 #endif
   if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
@@ -93,9 +91,6 @@ static void cpiring(Decode *s){
 	iringbufcounter = iringbufcounter % IRINGBUFSIZE;
 }
 #endif
-
-
-static char tmtm = 0;
 
 static void exec_once(Decode *s, vaddr_t pc) {
   s->pc = pc;
@@ -152,16 +147,16 @@ static void exec_once(Decode *s, vaddr_t pc) {
 #endif
 
 
-
-
-	if (s->pc > 0x830003fc) tmtm = 1;
-	if (tmtm) {
-		Log("now you go : %x",s->pc);
-		Log("pc = %x", cpu.pc);
-		tmtm = 0;
-	}
-
-
+// 
+// 
+// 	if (s->pc > 0x830003fc) tmtm = 1;
+// 	if (tmtm) {
+// 		Log("now you go : %x",s->pc);
+// 		Log("pc = %x", cpu.pc);
+// 		tmtm = 0;
+// 	}
+// 
+// 
 
 
 }
