@@ -31,7 +31,11 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
 
 word_t isa_query_intr() {
 	if (csr.mstatus.decode.MIE == 1) {
-		return EXCP_Environment;
+		switch(csr.mstatus.val){
+			case 0x1800:
+			return EXCP_Environment;
+			default : Log("Uncomplete mstatus, go to complete it !!!"); panic();
+		}
 	}
 	return INTR_EMPTY;
 }
