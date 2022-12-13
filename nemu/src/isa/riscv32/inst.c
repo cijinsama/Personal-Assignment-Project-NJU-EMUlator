@@ -53,8 +53,8 @@ inline static word_t get_csr(word_t csr_num){
 }
 
 inline static void set_csr(word_t csr_num, word_t imm){
-// 	printf("set csr_num = %04x\n", csr_num);
-// 	printf("set imm = %08x\n", imm);
+	Log("set csr_num = %04x\n", csr_num);
+	Log("set imm = %08x\n", imm);
 	switch (csr_num) {
 		case 0x0341: csr.mepc = imm;													break;
 		case 0x0300: csr.mstatus.val = imm;										break;
@@ -65,9 +65,9 @@ inline static void set_csr(word_t csr_num, word_t imm){
 }
 
 inline static void and_csr(word_t csr_num, word_t imm){
-// 	printf("and mcause = %08x\n", csr.mcause);
-// 	printf("and csr_num = %04x\n", csr_num);
-// 	printf("and imm = %08x\n", imm);
+	Log("and mcause = %08x\n", csr.mcause);
+	Log("and csr_num = %04x\n", csr_num);
+	Log("and imm = %08x\n", imm);
 	switch (csr_num) {
 		case 0x0341: csr.mepc = csr.mepc | imm;											break;
 		case 0x0300: csr.mstatus.val = csr.mstatus.val | imm;				break;
