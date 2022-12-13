@@ -54,6 +54,7 @@ inline static word_t get_csr(word_t csr_num){
 
 inline static void set_csr(word_t csr_num, word_t imm){
 	Log("set csr_num = %04x\n", csr_num);
+	Log("mstatus.val = %08x",csr.mstatus.val);
 	Log("set imm = %08x\n", imm);
 	switch (csr_num) {
 		case 0x0341: csr.mepc = imm;													break;
@@ -62,10 +63,10 @@ inline static void set_csr(word_t csr_num, word_t imm){
 		case 0x0305: csr.mtvec = imm;													break;
 		default : Log("Unknown csr register\n"); panic("please complete\n");
 	}
+	Log("mstatus.val = %08x",csr.mstatus.val);
 }
 
 inline static void and_csr(word_t csr_num, word_t imm){
-	Log("and mcause = %08x\n", csr.mcause);
 	Log("and csr_num = %04x\n", csr_num);
 	Log("and imm = %08x\n", imm);
 	switch (csr_num) {
