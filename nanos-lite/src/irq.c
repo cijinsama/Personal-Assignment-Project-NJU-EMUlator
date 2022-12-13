@@ -3,7 +3,8 @@
 
 static Context* do_event(Event e, Context* c) {
   switch (e.event) {
-		case EVENT_YIELD: Log("correcly received interupt environment"); break;
+		case EVENT_YIELD:			Log("correcly received interupt environment"); break;
+		case EVENT_SYSCALL:		do_syscall(c); panic("syscall");
     default: panic("Unhandled event ID = %d", e.event);
   }
   return c;
