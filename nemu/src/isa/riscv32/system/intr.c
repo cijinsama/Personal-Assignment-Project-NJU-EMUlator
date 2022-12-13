@@ -22,10 +22,10 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
    */
 	//中断时记录下一位，异常时记录本位
 	csr.mepc = epc;
-	csr.mstatus.decode.MIE = 0;
 	csr.mcause = NO;
 	cpu.pc = csr.mtvec;
   IFDEF(CONFIG_ETRACE, Log("etrace : raise exception at csr.mepc = %x, csr.mtvec = %x, csr.mstatus = %x, csr.mcause = %x", csr.mepc, csr.mtvec, csr.mstatus.val, csr.mcause));
+	csr.mstatus.decode.MIE = 0;
   return 0;
 }
 
@@ -34,8 +34,8 @@ word_t isa_query_intr() {
 		switch(csr.mstatus.val){
 			case 0x1800:
 				return EXCP_Environment;
-// 			case 0x1808://这个status为syscall
-// 				return EXCP_Environment;
+			case 0x1808://这个status为syscall
+				return EXCP_Environment;
 			default : Log("Uncomplete mstatus, go to complete it !!!\ncsr.mstatus = %04x",csr.mstatus.val);
 				return INTR_EMPTY;
 		}
