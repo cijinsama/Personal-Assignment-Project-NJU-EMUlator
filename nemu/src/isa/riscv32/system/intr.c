@@ -33,8 +33,9 @@ word_t isa_query_intr() {
 	if (csr.mstatus.decode.MIE == 1) {
 		switch(csr.mstatus.val){
 			case 0x1800:
-			return EXCP_Environment;
-			default : Log("Uncomplete mstatus, go to complete it !!!"); panic();
+				return EXCP_Environment;
+			default : Log("Uncomplete mstatus, go to complete it !!!\ncsr.mstatus = %04x",csr.mstatus.val);
+				return INTR_EMPTY;
 		}
 	}
 	return INTR_EMPTY;

@@ -63,7 +63,7 @@ inline static void set_csr(word_t csr_num, word_t imm){
 		case 0x0305: csr.mtvec = imm;													break;
 		default : Log("Unknown csr register\n"); panic("please complete\n");
 	}
-	Log("mstatus.val = %08x",csr.mstatus.val);
+// 	Log("mstatus.val = %08x",csr.mstatus.val);
 }
 
 inline static void and_csr(word_t csr_num, word_t imm){
