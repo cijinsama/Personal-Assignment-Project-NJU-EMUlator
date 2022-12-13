@@ -1,4 +1,5 @@
 #include <common.h>
+#include "syscall.h"
 
 static Context* do_event(Event e, Context* c) {
   switch (e.event) {

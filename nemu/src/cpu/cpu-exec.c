@@ -155,6 +155,7 @@ static void execute(uint64_t n) {
 		if (csr.mstatus.decode.MIE == 1){
 			uint32_t NO = isa_query_intr();
 			isa_raise_intr(NO, cpu.pc);
+			Log("cou.pc = %x, s.pc = %x", cpu.pc, s.pc);
 		}
     trace_and_difftest(&s, cpu.pc);
     if (nemu_state.state != NEMU_RUNNING) break;
