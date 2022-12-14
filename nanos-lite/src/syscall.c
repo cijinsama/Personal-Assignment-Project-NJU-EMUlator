@@ -10,6 +10,7 @@ size_t do_sys_write(int fd, const void *buf, size_t count){
 		case 1: 
 		case 2: 
 			for (int i = 0; i < count; ++i){
+				Log("putchar %c at address %x", *((char *)buf + i), (char *)buf + i);
 				putch(*((char *)buf + i));
 			}
 			break;
