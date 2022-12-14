@@ -107,7 +107,7 @@ static void exec_once(Decode *s, vaddr_t pc) {
 			log_write("0x%08x:",s->pc);
 			last_pc_in_which_func = i;
 			for (int j = 0; j < func_stack; j++) log_write("\t");
-			log_write("call [%s@0x%08x]\n", func_table[i].name, s->dnpc);
+			log_write("[ftrace]: call [%s@0x%08x]\n", func_table[i].name, s->dnpc);
 		}
 		else if (last_pc_in_which_func != -1 && s->dnpc > func_table[i].min && s->dnpc < func_table[i].max && i != last_pc_in_which_func) {
 // 			log_write("function stack pop: %s, %08x, %08x\n",func_table[i].name, func_table[i].min, func_table[i].max);
@@ -118,7 +118,7 @@ static void exec_once(Decode *s, vaddr_t pc) {
 			}
 			log_write("0x%08x:",s->pc);
 			for (int j = -1; j < func_stack; j++) log_write("\t");
-			log_write("ret  [%s@0x%08x]\n", func_table[(int) func_stack_container[func_stack]].name, s->dnpc);
+			log_write("[ftrace]: ret  [%s@0x%08x]\n", func_table[(int) func_stack_container[func_stack]].name, s->dnpc);
 		}
 	}
 #endif
