@@ -15,6 +15,7 @@
 
 #include <isa.h>
 #include <utils.h>
+#include <debug.h>
 
 word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   /* TODO: Trigger an interrupt/exception with ``NO''.
@@ -24,7 +25,7 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
 	csr.mepc = epc;
 	csr.mcause = NO;
 	cpu.pc = csr.mtvec;
-  IFDEF(CONFIG_ETRACE, Log("[etrace]: raise exception at csr.mepc = %x, csr.mtvec = %x, csr.mstatus = %x, csr.mcause = %x", csr.mepc, csr.mtvec, csr.mstatus.val, csr.mcause));
+  IFDEF(CONFIG_ETRACE, Log("[etrace]: raise exception at csr.mepc = %x, csr.mtvec = %x, csr.mstatus = %x, csr.mcause = %x", csr.mepc, csr.mtvec, csr.mstatus.val, csr.mcause); log_write("[etrace]: raise exception at csr.mepc = %x, csr.mtvec = %x, csr.mstatus = %x, csr.mcause = %x", csr.mepc, csr.mtvec, csr.mstatus.val, csr.mcause););
 	csr.mstatus.decode.MIE = 0;
   return 0;
 }
