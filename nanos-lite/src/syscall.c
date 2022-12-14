@@ -10,7 +10,7 @@ size_t do_sys_write(int fd, const void *buf, size_t count){
 		case 1: 
 		case 2: 
 			for (int i = 0; i < count; ++i){
-				Log("putchar %c at address %x", *((char *)buf + i), (char *)buf + i);
+// 				Log("putchar %c at address %x", *((char *)buf + i), (char *)buf + i);
 				putch(*((char *)buf + i));
 			}
 			break;
@@ -31,7 +31,7 @@ void do_syscall(Context *c) {
 		case SYS_exit: halt(0); break;
 		case SYS_yield: yield(); c->GPRx = 0; break;
 		case SYS_write: c->GPRx = do_sys_write(a[1],(void *) a[2], a[3]); break;
-		case SYS_brk:		c->GPRx = (uintptr_t) do_sys_brk(a[0]); break;
+		case SYS_brk:		c->GPRx = (uintptr_t) do_sys_brk(a[1]); break;
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
 	return;
