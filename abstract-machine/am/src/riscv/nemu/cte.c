@@ -6,11 +6,11 @@ static Context* (*user_handler)(Event, Context*) = NULL;
 
 
 void event_for_excp_ecvironment(Event *ev, Context *c){
-	if(c->GPR1 == 1 && c->GPR2 == 0 && c->GPR3 == 0 && c->GPR4 == 0){//10是a0
-		ev->event = EVENT_SYSCALL;
+	if(c->GPR1 == -1){//10是a0
+		ev->event = EVENT_YIELD;
 	}
 	else{
-		ev->event = EVENT_YIELD;
+		ev->event = EVENT_SYSCALL;
 	}
 }
 
