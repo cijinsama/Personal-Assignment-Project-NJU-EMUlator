@@ -26,6 +26,7 @@ int ini_func_table(char *file){
 	Elf32_Off section_header_table_off;
 	char name[64];
 // 	Log("read elf file : %s", file);
+	printf("read from elf file %s", file);
 	fp = fopen(file, "rb");
 	if (fp == NULL) {
 		printf("error\n");
