@@ -171,10 +171,6 @@ config ETRACE
 	bool "Enable error and iteruption tracer"
 	default y
 
-config STRACE
-	depends on TRACE
-	bool "Enable error and system call tracer"
-	default y
 
 config DIFFTEST
   depends on TARGET_NATIVE_ELF
