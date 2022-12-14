@@ -3,9 +3,6 @@
 
 
 size_t do_sys_write(int fd, const void *buf, size_t count){
-	Log("fd = %x", fd);
-	Log("buf = %x", buf);
-	Log("count = %x", count);
 	switch (fd) {
 		case 1: 
 		case 2: 
@@ -25,7 +22,7 @@ void do_syscall(Context *c) {
 	a[1] = c->GPR2;
 	a[2] = c->GPR3;
 	a[3] = c->GPR4;
-	Log("[strace]: system call number: %x, args : %x, %x, %x", a[0], a[1], a[2], a[3]);
+// 	Log("[strace]: system call number: %x, args : %x, %x, %x", a[0], a[1], a[2], a[3]);
   switch (a[0]) {
 		case SYS_exit: halt(0); break;
 		case SYS_yield: yield(); c->GPRx = 0; break;
