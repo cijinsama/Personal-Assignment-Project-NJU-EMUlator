@@ -20,6 +20,7 @@ size_t do_sys_write(int fd, const void *buf, size_t count){
 	return count;
 }
 
+
 void do_syscall(Context *c) {
   uintptr_t a[4];
   a[0] = c->GPR1;
