@@ -34,7 +34,9 @@ word_t isa_query_intr() {
 		switch(csr.mstatus.val){
 			case 0x1800:
 				return EXCP_Environment;
-			case 0x1808://这个status为syscall
+// 			case 0x1808:
+// 				return EXCP_Environment;
+			case 0x21808://这个是syscall
 				return EXCP_Environment;
 			default : Log("Uncomplete mstatus, go to complete it !!!\ncsr.mstatus = %04x",csr.mstatus.val);
 				return INTR_EMPTY;
