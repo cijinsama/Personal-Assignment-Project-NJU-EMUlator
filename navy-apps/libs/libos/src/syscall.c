@@ -70,7 +70,7 @@ extern char end;
 static intptr_t program_break = 0;
 
 void *_sbrk(intptr_t increment) {
-	if (program_break == 0) program_break = end;
+	if (program_break == 0) program_break = (intptr_t) &end;
 	void *ret = (void *)program_break;
 // 	if (_syscall_(SYS_brk, program_break + increment, 0, 0) == 0){
 	if (_syscall_(SYS_brk, program_break + increment, program_break, increment) == 0){
