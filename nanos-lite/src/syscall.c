@@ -17,11 +17,11 @@ void do_syscall(Context *c) {
   switch (a[0]) {
 		case SYS_exit: halt(0); break;
 		case SYS_yield: yield(); c->GPRx = 0; break;
-		case SYS_open: break;
-		case SYS_read: break;
+		case SYS_open: c->GPRx = do_sys_open((char *) a[1], a[2], a[3]); break;
+		case SYS_read: c->GPRx = do_sys_read(a[1],(void *) a[2], a[3]); break;
 		case SYS_write: c->GPRx = do_sys_write(a[1],(void *) a[2], a[3]); break;
-		case SYS_close: break;
-		case SYS_lseek: break;
+		case SYS_close: c->GPRx = do_sys_close(a[1]); break;
+		case SYS_lseek: c->GPRx = do_sys_lseek(a[1], a[2], a[3]); break;
 		case SYS_brk:		c->GPRx = (uintptr_t) do_sys_brk(a[1]); break;
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
