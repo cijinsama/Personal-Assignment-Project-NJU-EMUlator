@@ -35,10 +35,10 @@ static int files_num;
 void init_fs() {
 	files_num = sizeof(file_table) / sizeof(Finfo);
   // TODO: initialize the size of /dev/fb
-	for (int i = 3; i < files_num; i++){
+	for (int i = 2; i < files_num; i++){
 		Log("write : %x", file_table[i].write);
 		Log("%s", file_table[i].name);
-		panic("看看这里输出什么");
+		if (i == 3) panic("看看这里输出什么");
 	}
 }
 
