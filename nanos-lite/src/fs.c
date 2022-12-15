@@ -31,6 +31,49 @@ static Finfo file_table[] __attribute__((used)) = {
 #include "files.h"
 };
 
+static int files_num;
 void init_fs() {
+	files_num = sizeof(file_table) / sizeof(Finfo);
   // TODO: initialize the size of /dev/fb
+	for (int i = 3; i < files_num; i++){
+		Log("write : %x", file_table[i].write);
+		Log("%s", file_table[i].name);
+		panic("看看这里输出什么");
+	}
+}
+
+int do_sys_open(const char *path, int flags, int mode) {
+	for (int i = 0; i < files_num; i++){
+		if (strcmp(file_table[i].name, path) == 0){
+// 			file_table[i].read = 
+			return i;
+		}
+	}
+  return 0;
+}
+
+size_t do_sys_read(int fd, void *buf, size_t count) {
+  return 0;
+}
+
+int do_sys_close(int fd) {
+  return 0;
+}
+
+size_t do_sys_lseek(int fd, size_t offset, int whence) {
+  return 0;
+}
+
+size_t do_sys_write(int fd, const void *buf, size_t count){
+	switch (fd) {
+		case 1: 
+		case 2: 
+			for (int i = 0; i < count; ++i){
+				putch(*((char *)buf + i));
+			}
+			break;
+		default: panic("do_sys_write unfinished fd"); 
+						 return -1;
+	}
+	return count;
 }
