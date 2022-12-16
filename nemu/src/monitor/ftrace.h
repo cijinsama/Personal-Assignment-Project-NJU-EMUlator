@@ -11,3 +11,4 @@ extern func_add func_table[];
 extern int func_table_size;
 
 int ini_func_table(char *file);
+int add_func_table(char *file);

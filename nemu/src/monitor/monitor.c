@@ -85,7 +85,7 @@ static int parse_args(int argc, char *argv[]) {
       case 'l': log_file = optarg; break;
       case 'd': diff_so_file = optarg; break;
 			case 'e': ini_func_table(optarg); break;
-			case 'r': ini_func_table(optarg); break;
+			case 'r': add_func_table(optarg); break;
       case 1: img_file = optarg; return 0;
       default:
         printf("Usage: %s [OPTION...] IMAGE [args]\n\n", argv[0]);
