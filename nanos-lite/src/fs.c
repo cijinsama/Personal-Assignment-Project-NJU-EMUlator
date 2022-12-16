@@ -57,8 +57,9 @@ void init_fs() {
 int do_sys_open(const char *path, int flags, int mode) {
 	for (int i = 0; i < files_num; i++){
 		if (strcmp(file_table[i].name, path) == 0){
-			Log("open file %d", i);
+// 			Log("open file %d", i);
 			file_table[i].read = valid_read;
+			file_table[i].write = valid_write;
 			file_table[i].open_offset = 0;
 			return i;
 		}
@@ -73,14 +74,14 @@ size_t do_sys_read(int fd, void *buf, size_t count) {
 }
 
 int do_sys_close(int fd){
-	Log("close file %d", fd);
+// 	Log("close file %d", fd);
 	file_table[fd].read = invalid_read;
 	file_table[fd].write = invalid_write;
   return 0;
 }
 
 size_t do_sys_lseek(int fd, size_t offset, int whence) {
-	Log("get whence : %x, offset %x", whence, offset);
+// 	Log("get whence : %x, offset %x", whence, offset);
 	switch (whence) {
 		case SEEK_SET:
 			file_table[fd].open_offset = offset;
@@ -96,7 +97,7 @@ size_t do_sys_lseek(int fd, size_t offset, int whence) {
 }
 
 size_t do_sys_write(int fd, const void *buf, size_t count){
-	Log("get write file : %d: %xB at %x", fd,count,file_table[fd].open_offset);
+// 	Log("get write file : %d: %xB at %x", fd,count,file_table[fd].open_offset);
 	size_t ret = count;
 	switch (fd) {
 		case FD_STDIN: 
