@@ -109,3 +109,23 @@ size_t do_sys_write(int fd, const void *buf, size_t count){
 	}
 	return ret;
 }
+
+int fs_open(const char *pathname, int flags, int mode){
+	return do_sys_open(pathname, flags, mode);
+}
+
+size_t fs_read(int fd, void *buf, size_t len){
+	return do_sys_read(fd, buf, len);
+}
+
+size_t fs_write(int fd, const void *buf, size_t len){
+	return do_sys_write(fd, buf, len);
+}
+
+size_t fs_lseek(int fd, size_t offset, int whence){
+	return do_sys_lseek(fd, offset, whence);
+}
+int fs_close(int fd){
+	return do_sys_close(fd);
+}
+
