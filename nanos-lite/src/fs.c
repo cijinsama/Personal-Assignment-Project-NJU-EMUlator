@@ -26,6 +26,7 @@ size_t invalid_write(const void *buf, size_t offset, size_t len) {
 }
 
 size_t valid_read(void *buf, size_t offset, size_t len) {
+	Log("read ramdisk : %x", offset);
 	ramdisk_read(buf, offset, len);
   return len;
 }
