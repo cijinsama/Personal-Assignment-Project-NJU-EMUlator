@@ -87,7 +87,7 @@ void vmemset(uint8_t* vaddr,uint32_t size, uint32_t value){
 	return;
 }
 
-int add_func_table(char *file){
+int add_func_table(const char *file){
 	int fp = -1;
 	Elf32_Ehdr elf_header;
 	Elf32_Shdr sect_header;
