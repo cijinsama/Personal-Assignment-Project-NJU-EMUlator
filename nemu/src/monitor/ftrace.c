@@ -132,6 +132,7 @@ int add_func_table(char *file){
 		assert(0);
 	}
 	for (int i = 0; i < sizeof(file_table)/sizeof(Finfo); i++){
+		if (strcmp(file_table[i].name, "/bin/file-test") != 0) continue;
 		global_offset = file_table[i].disk_offset;
 		//read elf header and get section header table offset
 		ReadElfHeader(fp, &elf_header);
