@@ -86,7 +86,7 @@ void vmemset(uint8_t* vaddr,uint32_t size, uint32_t value){
 	}
 	return;
 }
-// 
+ 
 // int add_func_table(const char *file){
 // 	int fp = -1;
 // 	Elf32_Ehdr elf_header;
@@ -136,6 +136,7 @@ void vmemset(uint8_t* vaddr,uint32_t size, uint32_t value){
 // 	return 0;
 // }
 // 
+
 void ReadString(int fp, Elf32_Shdr shstrtab_sect_header, Elf32_Off string_offset, char* dst){
 	int i; 
 	for (i = 0;string_offset + i < shstrtab_sect_header.sh_size;i++){
