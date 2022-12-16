@@ -100,6 +100,7 @@ int NDL_Init(uint32_t flags) {
 	for (i++; buf[i] != '\0'; i++){
 		screen_h = screen_h * 10 + buf[i] - '0';
 	}
+	printf("[debuf] : w = %d, h = %d\n", screen_w, screen_h);
 	close(fd);
   return 0;
 }
