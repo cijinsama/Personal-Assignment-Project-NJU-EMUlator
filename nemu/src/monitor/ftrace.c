@@ -35,6 +35,9 @@ int ini_func_table(char *file){
 		ReadElfHeader(fp, &elf_header);
 		section_header_table_off = elf_header.e_shoff;
 
+		//检查是否是elf文件
+		assert(*(uint32_t *)elf_header.e_ident == 0x464c457f);
+
 		//read section header table and get section string tab
 		ReadFile(fp, section_header_table_off + elf_header.e_shstrndx * sizeof(sect_header), &shstrtab_sect_header, sizeof(sect_header), 1);
 		
