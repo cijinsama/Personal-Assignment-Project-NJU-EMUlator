@@ -57,11 +57,13 @@ void init_fs() {
 
 int do_sys_open(const char *path, int flags, int mode) {
 	for (int i = 0; i < files_num; i++){
-		if (strcmp(file_table[i].name, path) == 0 && i >= FD_FB){
+		if (strcmp(file_table[i].name, path) == 0){
 // 			Log("open file %d", i);
-			file_table[i].read = valid_read;
-			file_table[i].write = valid_write;
-			file_table[i].open_offset = 0;
+			if (i >= FD_FB){
+				file_table[i].read = valid_read;
+				file_table[i].write = valid_write;
+				file_table[i].open_offset = 0;
+			}
 			return i;
 		}
 	}
