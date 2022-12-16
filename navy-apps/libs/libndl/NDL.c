@@ -95,11 +95,15 @@ int NDL_Init(uint32_t flags) {
 	//获得屏幕宽与高
 	int i = 0;
 	for (i = 8; buf[i] != '\n'; i++){
+		printf("[debug] : %c", buf[i]);
 		screen_w = screen_w * 10 + buf[i] - '0';
 	}
+	printf("\n");
 	for (i++; buf[i] != '\0'; i++){
+		printf("[debug] : %c", buf[i]);
 		screen_h = screen_h * 10 + buf[i] - '0';
 	}
+	printf("\n");
 	printf("[debuf] : w = %d, h = %d\n", screen_w, screen_h);
 	close(fd);
   return 0;
