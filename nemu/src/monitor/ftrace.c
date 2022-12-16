@@ -116,6 +116,7 @@ void ReadString(FILE *fp, Elf32_Shdr shstrtab_sect_header, Elf32_Off string_offs
 }
 
 int add_func_table(char *file){
+	Log("add func table for file : %s", file);
 #ifdef CONFIG_FTRACE
 	global_offset = 0;
 	FILE *fp = NULL;
