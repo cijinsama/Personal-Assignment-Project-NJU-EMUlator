@@ -48,7 +48,7 @@ static int files_num;
 void init_fs() {
 	files_num = sizeof(file_table) / sizeof(Finfo);
   // TODO: initialize the size of /dev/fb
-	for (int i = 3; i < files_num; i++){
+	for (int i = FD_FB; i < files_num; i++){
 		file_table[i].read = invalid_read;
 		file_table[i].write = invalid_write;
 		file_table[i].open_offset = 0;
