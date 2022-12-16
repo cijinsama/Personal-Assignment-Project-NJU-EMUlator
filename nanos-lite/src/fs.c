@@ -58,6 +58,7 @@ void init_fs() {
 int do_sys_open(const char *path, int flags, int mode) {
 	for (int i = 0; i < files_num; i++){
 		if (strcmp(file_table[i].name, path) == 0){
+			Log("配对 file name : %s, path : %s", file_table[i].name, path);
 			file_table[i].read = valid_read;
 			file_table[i].open_offset = 0;
 			return i;
