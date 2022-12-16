@@ -98,7 +98,7 @@ int NDL_Init(uint32_t flags) {
 		screen_w = screen_w * 10 + buf[i] - '0';
 	}
 	printf("\n");
-	while(buf[i] < '0' || buf[i] > 9) i++;
+	while(buf[i] < '0' || buf[i] > '9') i++;
 	for (; buf[i] != '\0'; i++){
 		screen_h = screen_h * 10 + buf[i] - '0';
 	}
