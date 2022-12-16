@@ -73,14 +73,13 @@ void ReadFile(int fd, int offset, void* dst, unsigned long size,int number){
 
 
 void program2vmem(int fd, uintptr_t program_off, uintptr_t vmemaddr, uint32_t memsize){
-	Log("load program to vaddr : %x", vmemaddr);
+// 	Log("load program to vaddr : %x", vmemaddr);
 	ReadFile(fd, program_off, (uint8_t *)vmemaddr, memsize, 1);
-// 	ramdisk_read((uint8_t *)vmemaddr, ramdisk_off, memsize);
 	return;
 }
 
 void vmemset(uint8_t* vaddr,uint32_t size, uint32_t value){
-	Log("set Vmem value %p---%p to %x", vaddr, vaddr + size, value);
+// 	Log("set Vmem value %p---%p to %x", vaddr, vaddr + size, value);
 	for (int i = 0; i < size; i++){
 		*(vaddr + i) = value;
 	}
