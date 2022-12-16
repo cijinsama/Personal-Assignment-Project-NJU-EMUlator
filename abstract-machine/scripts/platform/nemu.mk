@@ -14,8 +14,8 @@ LDFLAGS   += --gc-sections -e _start
 ifeq ($(RAMDISK_FILE_ABS),)
 NEMUFLAGS += -l $(shell dirname $(IMAGE).elf)/nemu-log.txt -e $(IMAGE).elf
 else
-NEMUFLAGS += -l $(shell dirname $(IMAGE).elf)/nemu-log.txt -e $(IMAGE).elf -r $(RAMDISK_FILE_ABS)
-# NEMUFLAGS += -l $(shell dirname $(IMAGE).elf)/nemu-log.txt -e $(IMAGE).elf
+# NEMUFLAGS += -l $(shell dirname $(IMAGE).elf)/nemu-log.txt -e $(IMAGE).elf -r $(RAMDISK_FILE_ABS)
+NEMUFLAGS += -l $(shell dirname $(IMAGE).elf)/nemu-log.txt -e $(IMAGE).elf
 endif
 
 CFLAGS += -DMAINARGS=\"$(mainargs)\"
@@ -28,7 +28,6 @@ image: $(IMAGE).elf
 	@$(OBJCOPY) -S --set-section-flags .bss=alloc,contents -O binary $(IMAGE).elf $(IMAGE).bin
 
 run: image
-	echo $(RAMDISK_FILE_ABS)
 	$(MAKE) -C $(NEMU_HOME) ISA=$(ISA) run ARGS="$(NEMUFLAGS) -b" IMG=$(IMAGE).bin
 
 runmonitor: image
