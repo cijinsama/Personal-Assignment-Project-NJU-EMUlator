@@ -40,7 +40,7 @@ static Finfo file_table[] __attribute__((used)) = {
   [FD_STDIN]  = {"stdin", 0, 0, invalid_read, invalid_write, 0},
   [FD_STDOUT] = {"stdout", 0, 0, invalid_read, serial_write, 0},
   [FD_STDERR] = {"stderr", 0, 0, invalid_read, serial_write, 0},
-	[FD_EVENT] =	{"/dev/event", 0, 0, events_read, invalid_write, 0},
+	[FD_EVENT] =	{"/dev/events", 0, 0, events_read, invalid_write, 0},
 #include "files.h"
 };
 
@@ -65,6 +65,7 @@ int do_sys_open(const char *path, int flags, int mode) {
 			return i;
 		}
 	}
+	Log("Can't find file : %s", path);
   return 0;
 }
 
