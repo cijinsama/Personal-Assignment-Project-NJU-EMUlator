@@ -94,7 +94,7 @@ size_t do_sys_lseek(int fd, size_t offset, int whence) {
 }
 
 size_t do_sys_write(int fd, const void *buf, size_t count){
-	Log("get write : %xB at %x", count,file_table[fd].open_offset);
+	Log("get write file : %d: %xB at %x", fd,count,file_table[fd].open_offset);
 	size_t ret = count;
 	switch (fd) {
 		case FD_STDIN: 
