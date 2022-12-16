@@ -32,6 +32,7 @@ size_t serial_write(const void *buf, size_t offset, size_t len) {
 
 static char buffer_for_key[1024];
 size_t events_read(void *buf, size_t offset, size_t len) {
+	Log("offset = %x, len = %x", offset, len);
 	if (len > 1024) assert(0);
 	AM_INPUT_KEYBRD_T event = io_read(AM_INPUT_KEYBRD);
 	if (event.keycode == AM_KEY_NONE) return 0;
