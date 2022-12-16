@@ -78,6 +78,7 @@ int do_sys_close(int fd){
 }
 
 size_t do_sys_lseek(int fd, size_t offset, int whence) {
+	Log("get whence : %d", whence);
 	switch (whence) {
 		case SEEK_SET:
 			file_table[fd].open_offset = offset;
