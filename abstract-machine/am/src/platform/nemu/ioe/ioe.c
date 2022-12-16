@@ -10,6 +10,7 @@ void __am_timer_uptime(AM_TIMER_UPTIME_T *);
 void __am_gpu_config(AM_GPU_CONFIG_T *);
 void __am_gpu_status(AM_GPU_STATUS_T *);
 void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *);
+void __am_gpu_memcpy(AM_GPU_MEMCPY_T *);
 void __am_audio_config(AM_AUDIO_CONFIG_T *);
 void __am_audio_ctrl(AM_AUDIO_CTRL_T *);
 void __am_audio_status(AM_AUDIO_STATUS_T *);
