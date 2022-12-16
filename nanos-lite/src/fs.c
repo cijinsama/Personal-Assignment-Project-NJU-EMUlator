@@ -68,7 +68,7 @@ int do_sys_open(const char *path, int flags, int mode) {
 size_t do_sys_read(int fd, void *buf, size_t count) {
 	file_table[fd].read(buf, file_table[fd].disk_offset + file_table[fd].open_offset, count);
 	file_table[fd].open_offset += count;
-  return 0;
+  return count;
 }
 
 int do_sys_close(int fd){
@@ -89,7 +89,7 @@ size_t do_sys_lseek(int fd, size_t offset, int whence) {
 			file_table[fd].open_offset = file_table[fd].size + offset;
 			break;
 	}
-  return 0;
+  return file_table[fd].open_offset - file_table[fd].disk_offset;
 }
 
 size_t do_sys_write(int fd, const void *buf, size_t count){
