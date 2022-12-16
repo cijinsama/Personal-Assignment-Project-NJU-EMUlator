@@ -46,7 +46,7 @@ uintptr_t ini_loader(){
 
 static uintptr_t loader(PCB *pcb, const char *filename) {
 	//需要返回这段程序的首地址
-	Log("%s", filename);
+	Log("读取filename : %s", filename);
   return ini_loader();
 }
 
