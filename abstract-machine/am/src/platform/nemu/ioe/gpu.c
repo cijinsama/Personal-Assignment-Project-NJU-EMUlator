@@ -17,11 +17,8 @@ void __am_gpu_init() {
 }
 
 void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
-	gpu_texturedesc decoder = *((gpu_texturedesc *)VGACTL_ADDR);
-	int width = decoder.h;
-	int height = decoder.w;
-// 	uint16_t height = inw(VGACTL_ADDR);
-// 	uint16_t width = inw(VGACTL_ADDR + 2);
+	uint16_t height = inw(VGACTL_ADDR);
+	uint16_t width = inw(VGACTL_ADDR + 2);
   *cfg = (AM_GPU_CONFIG_T) {
     .present = true, .has_accel = false,
     .width = width, .height = height,
