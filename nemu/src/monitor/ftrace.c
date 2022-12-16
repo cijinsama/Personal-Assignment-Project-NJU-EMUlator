@@ -133,7 +133,7 @@ int add_func_table(char *file){
 	}
 	for (int i = 0; i < sizeof(file_table)/sizeof(Finfo); i++){
 		//在这里修改读取文件作为elf
-		if (strcmp(file_table[i].name, "/bin/time-test") != 0) continue;
+		if (strcmp(file_table[i].name, "/bin/timer-test") != 0) continue;
 		global_offset = file_table[i].disk_offset;
 		//read elf header and get section header table offset
 		ReadElfHeader(fp, &elf_header);
