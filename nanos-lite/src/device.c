@@ -63,4 +63,5 @@ void init_device() {
   ioe_init();
   screen_w = io_read(AM_GPU_CONFIG).width;
   screen_h = io_read(AM_GPU_CONFIG).height;
+	Log("[debug]:  screen w = %d, h = %d", screen_w, screen_h);
 }
