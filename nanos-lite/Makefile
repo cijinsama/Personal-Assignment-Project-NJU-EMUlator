@@ -1,6 +1,6 @@
 HAS_NAVY = 1
 RAMDISK_FILE = build/ramdisk.img
-RAMDISK_FILE_ABS = $(shell pwd)/${RAMDISK_FILE}
+RAMDISK_FILE_ABS = $(shell pwd)/$(RAMDISK_FILE)
 
 NAME = nanos-lite
 SRCS = $(shell find -L ./src/ -name "*.c" -o -name "*.cpp" -o -name "*.S")
