@@ -10,15 +10,18 @@ void __am_gpu_init() {
 	gpu_texturedesc decoder = *((gpu_texturedesc *)VGACTL_ADDR);
 	int w = decoder.h;
 	int h = decoder.w;
-	printf("[debug am] : w = %d, h = %d\n", w, h);
+// 	printf("[debug am] : w = %d, h = %d\n", w, h);
 	uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
 	for (i = 0; i < w * h; i ++) fb[i] = i;
 	outl(SYNC_ADDR, 1);
 }
 
 void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
-	uint16_t height = inw(VGACTL_ADDR);
-	uint16_t width = inw(VGACTL_ADDR + 2);
+	gpu_texturedesc decoder = *((gpu_texturedesc *)VGACTL_ADDR);
+	int width = decoder.h;
+	int height = decoder.w;
+// 	uint16_t height = inw(VGACTL_ADDR);
+// 	uint16_t width = inw(VGACTL_ADDR + 2);
   *cfg = (AM_GPU_CONFIG_T) {
     .present = true, .has_accel = false,
     .width = width, .height = height,
