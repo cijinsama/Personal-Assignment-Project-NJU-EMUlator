@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <sys/time.h>
-#include <NDL.h>
+#include "../../libs/libndl/include/NDL.h"
 int main(){
 	NDL_Init(1);
 	uint32_t delta = 0;
