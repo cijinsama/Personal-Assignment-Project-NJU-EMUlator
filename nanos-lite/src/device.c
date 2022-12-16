@@ -47,7 +47,7 @@ size_t events_read(void *buf, size_t offset, size_t len) {
 static int screen_w,screen_h;
 size_t dispinfo_read(void *buf, size_t offset, size_t len) {
 	char buffer[128];
-	sprintf(buffer_for_key, "WIDTH : %d\nHEIGHT:%d", screen_w, screen_h);
+	sprintf(buffer, "WIDTH : %d\nHEIGHT:%d", screen_w, screen_h);
 	Log("[debuf] : w = %d, h = %d", screen_w, screen_h);
 	Log("string : %s", buffer);
 	strcpy(buf, buffer);
