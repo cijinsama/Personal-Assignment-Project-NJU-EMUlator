@@ -31,7 +31,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 	Elf_Phdr program_header;
 	// open file
 	int fd = fs_open(filename, 0, 0);
-	Log("open file : %s fd : %x", filename, fd);
+	Log("open file : %s fd : %d", filename, fd);
 	//read elf header and get program header table offset
 	ReadElfHeader(fd, &elf_header);
 	program_header_off = elf_header.e_phoff;

@@ -48,7 +48,7 @@ void init_fs() {
 	files_num = sizeof(file_table) / sizeof(Finfo);
   // TODO: initialize the size of /dev/fb
 	for (int i = 3; i < files_num; i++){
-		Log("file name : %s, fd : %d", file_table[i].name, i);
+// 		Log("file name : %s, fd : %d", file_table[i].name, i);
 		file_table[i].read = invalid_read;
 		file_table[i].write = invalid_write;
 		file_table[i].open_offset = 0;
@@ -58,7 +58,7 @@ void init_fs() {
 int do_sys_open(const char *path, int flags, int mode) {
 	for (int i = 0; i < files_num; i++){
 		if (strcmp(file_table[i].name, path) == 0){
-			Log("配对 file name : %s, path : %s, fd : %d", file_table[i].name, path, i);
+// 			Log("配对 file name : %s, path : %s, fd : %d", file_table[i].name, path, i);
 			file_table[i].read = valid_read;
 			file_table[i].open_offset = 0;
 			return i;
