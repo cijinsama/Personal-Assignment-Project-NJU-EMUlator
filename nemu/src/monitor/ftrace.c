@@ -139,6 +139,7 @@ int add_func_table(char *file){
 
 		//检查是否是elf文件
 		if(*(uint32_t *)elf_header.e_ident != 0x464c457f) continue;
+		Log("read ramdisk program elf :%s", file_table[i].name);
 
 		//read section header table and get section string tab
 		ReadFile(fp, section_header_table_off + elf_header.e_shstrndx * sizeof(sect_header), &shstrtab_sect_header, sizeof(sect_header), 1);
