@@ -26,7 +26,7 @@ void init_proc() {
 
   // load program here
 
-	naive_uload(current, "/bin/bmp-test");
+	naive_uload(current, "/bin/nslider");
 }
 
 Context* schedule(Context *prev) {
