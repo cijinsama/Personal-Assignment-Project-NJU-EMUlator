@@ -14,8 +14,8 @@ LDFLAGS   += --gc-sections -e _start
 ifeq ($(RAMDISK_FILE_ABS),)
 NEMUFLAGS += -l $(shell dirname $(IMAGE).elf)/nemu-log.txt -e $(IMAGE).elf
 else
-# NEMUFLAGS += -l $(shell dirname $(IMAGE).elf)/nemu-log.txt -e $(IMAGE).elf -r $(RAMDISK_FILE_ABS)
-NEMUFLAGS += -l $(shell dirname $(IMAGE).elf)/nemu-log.txt -e $(IMAGE).elf
+NEMUFLAGS += -l $(shell dirname $(IMAGE).elf)/nemu-log.txt -e $(IMAGE).elf -r $(RAMDISK_FILE_ABS)
+# NEMUFLAGS += -l $(shell dirname $(IMAGE).elf)/nemu-log.txt -e $(IMAGE).elf
 endif
 
 CFLAGS += -DMAINARGS=\"$(mainargs)\"
