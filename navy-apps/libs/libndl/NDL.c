@@ -35,6 +35,7 @@ void NDL_OpenCanvas(int *w, int *h) {
 		canvas_w = screen_w;
 		canvas_h = screen_h;
 	}
+	printf("debug : w = %d, h = %d\n", canvas_w, canvas_h);
 	
   if (getenv("NWM_APP")) {
     int fbctl = 4;
@@ -97,13 +98,10 @@ int NDL_Init(uint32_t flags) {
 	for (i = 8; buf[i] != '\n'; i++){
 		screen_w = screen_w * 10 + buf[i] - '0';
 	}
-	printf("\n");
 	while(buf[i] < '0' || buf[i] > '9') i++;
 	for (; buf[i] != '\0'; i++){
 		screen_h = screen_h * 10 + buf[i] - '0';
 	}
-	printf("\n");
-	printf("[debuf] : w = %d, h = %d\n", screen_w, screen_h);
 	close(fd);
   return 0;
 }
