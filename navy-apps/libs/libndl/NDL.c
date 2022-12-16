@@ -23,7 +23,19 @@ int NDL_PollEvent(char *buf, int len) {
   return read(fp, buf, len);
 }
 
+
+static int canvas_w = 0, canvas_h = 0, canvas_off = 0, canvas_x = 0, canvas_y = 0;
+
 void NDL_OpenCanvas(int *w, int *h) {
+	if (*w | *h) {
+		canvas_w = *w;
+		canvas_h = *h;
+	}
+	else {
+		canvas_w = screen_w;
+		canvas_h = screen_h;
+	}
+	
   if (getenv("NWM_APP")) {
     int fbctl = 4;
     fbdev = 5;
@@ -44,6 +56,14 @@ void NDL_OpenCanvas(int *w, int *h) {
 }
 
 void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
+	uint32_t offset = 0;
+	int fb = open("/dev/fb", O_RDWR);
+	for (int i = 0; i < h; i++){
+		offset = (canvas_off + (i + y) * screen_w + x) * 4;
+		write(fb, pixels + w * i, w * 4);
+	}
+	close(fb);
+	return;
 }
 
 void NDL_OpenAudio(int freq, int channels, int samples) {
@@ -68,6 +88,19 @@ int NDL_Init(uint32_t flags) {
 	struct timeval tv;
 	gettimeofday(&tv, NULL);
 	init_time = tv.tv_sec * 1000 + tv.tv_usec /1000;
+	//初始化screen
+  int fd = open("/proc/dispinfo", O_RDONLY);
+	char buf[128];
+	read(fd, buf, sizeof(buf));
+	//获得屏幕宽与高
+	int i = 0;
+	for (i = 8; buf[i] != '\n'; i++){
+		screen_w = screen_w * 10 + buf[i] - '0';
+	}
+	for (i++; buf[i] != '\0'; i++){
+		screen_h = screen_h * 10 + buf[i] - '0';
+	}
+	close(fd);
   return 0;
 }
 

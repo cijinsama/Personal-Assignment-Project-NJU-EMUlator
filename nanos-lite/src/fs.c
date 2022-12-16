@@ -13,7 +13,7 @@ typedef struct {
 	size_t open_offset;
 } Finfo;
 
-enum {FD_STDIN, FD_STDOUT, FD_STDERR, FD_EVENT, FD_FB};
+enum {FD_STDIN, FD_STDOUT, FD_STDERR, FD_EVENT, FD_DISPINFO, FD_FB, FD_FILE};
 
 size_t invalid_read(void *buf, size_t offset, size_t len) {
   panic("should not reach here");
@@ -41,29 +41,35 @@ static Finfo file_table[] __attribute__((used)) = {
   [FD_STDOUT] = {"stdout", 0, 0, invalid_read, serial_write, 0},
   [FD_STDERR] = {"stderr", 0, 0, invalid_read, serial_write, 0},
 	[FD_EVENT] =	{"/dev/events", 0, 0, events_read, invalid_write, 0},
+	[FD_DISPINFO] = {"/proc/dispinfo", 0, 0, dispinfo_read, invalid_write, 0},
+	[FD_FB] = {"/dev/fb", 0, 0, invalid_read, fb_write, 0},
 #include "files.h"
 };
 
 static int files_num;
 void init_fs() {
 	files_num = sizeof(file_table) / sizeof(Finfo);
-  // TODO: initialize the size of /dev/fb
-	for (int i = FD_FB; i < files_num; i++){
+	for (int i = FD_FILE; i < files_num; i++){
 		file_table[i].read = invalid_read;
 		file_table[i].write = invalid_write;
 		file_table[i].open_offset = 0;
 	}
+  // TODO: initialize the size of /dev/fb
+  int w = io_read(AM_GPU_CONFIG).width;
+  int h = io_read(AM_GPU_CONFIG).height;
+	file_table[FD_FB].size = w * h * 32 / 8;
 }
 
 int do_sys_open(const char *path, int flags, int mode) {
 	for (int i = 0; i < files_num; i++){
 		if (strcmp(file_table[i].name, path) == 0){
 // 			Log("open file %d", i);
-			if (i >= FD_FB){
+			if (i >= FD_FILE){
 				file_table[i].read = valid_read;
 				file_table[i].write = valid_write;
 				file_table[i].open_offset = 0;
 			}
+			if (i == FD_FB) file_table[i].open_offset = 0;
 			return i;
 		}
 	}
@@ -73,13 +79,13 @@ int do_sys_open(const char *path, int flags, int mode) {
 
 size_t do_sys_read(int fd, void *buf, size_t count) {
 	file_table[fd].read(buf, file_table[fd].disk_offset + file_table[fd].open_offset, count);
-	if (fd >= FD_FB) file_table[fd].open_offset += count;
+	if (fd >= FD_FILE) file_table[fd].open_offset += count;
   return count;
 }
 
 int do_sys_close(int fd){
 // 	Log("close file %d", fd);
-	if (fd >= FD_FB){
+	if (fd >= FD_FILE){
 		file_table[fd].read = invalid_read;
 		file_table[fd].write = invalid_write;
 	}
@@ -106,7 +112,7 @@ size_t do_sys_write(int fd, const void *buf, size_t count){
 // 	Log("get write file : %d: %xB at %x", fd,count,file_table[fd].open_offset);
 	size_t ret = count;
 	ret = file_table[fd].write(buf, file_table[fd].disk_offset + file_table[fd].open_offset, count);
-	if (fd >= FD_FB) file_table[fd].open_offset += count;
+	if (fd >= FD_FILE) file_table[fd].open_offset += count;
 	return ret;
 }
 

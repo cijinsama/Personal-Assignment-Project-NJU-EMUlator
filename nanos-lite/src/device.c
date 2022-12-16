@@ -32,7 +32,6 @@ size_t serial_write(const void *buf, size_t offset, size_t len) {
 
 static char buffer_for_key[1024];
 size_t events_read(void *buf, size_t offset, size_t len) {
-	Log("offset = %x, len = %x", offset, len);
 	if (len > 1024) assert(0);
 	AM_INPUT_KEYBRD_T event = io_read(AM_INPUT_KEYBRD);
 	if (event.keycode == AM_KEY_NONE) return 0;
@@ -45,15 +44,23 @@ size_t events_read(void *buf, size_t offset, size_t len) {
 	else return len;
 }
 
+static int screen_w,screen_h;
 size_t dispinfo_read(void *buf, size_t offset, size_t len) {
-  return 0;
+	char buffer[128];
+	sprintf(buffer_for_key, "WIDTH : %d\nHEIGHT:%d", screen_w, screen_h);
+	strcpy(buf, buffer);
+  return strlen(buffer);
 }
 
 size_t fb_write(const void *buf, size_t offset, size_t len) {
-  return 0;
+  io_write(AM_GPU_MEMCPY, offset,(void *) buf, len);
+  io_write(AM_GPU_FBDRAW, 0, 0, NULL, 0, 0, true);
+  return len;
 }
 
 void init_device() {
   Log("Initializing devices...");
   ioe_init();
+  screen_w = io_read(AM_GPU_CONFIG).width;
+  screen_h = io_read(AM_GPU_CONFIG).height;
 }
