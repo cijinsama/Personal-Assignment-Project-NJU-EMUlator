@@ -30,6 +30,7 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
 	uint32_t size_per_pixel = src->format->BitsPerPixel / 8;
 
 	//copy
+	printf("sizeof pixels : %d\n", sizeof(dst->pixels[0]));
 	for (int i = 0; i < srcrect->h; i++) memcpy(dst->pixels + (offset_dst + i * dst->w) * size_per_pixel, src->pixels + (offset_src + i * src->w)* size_per_pixel, src->w * src->h * size_per_pixel);
 }
 
