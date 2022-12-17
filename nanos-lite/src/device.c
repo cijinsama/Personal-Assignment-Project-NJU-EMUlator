@@ -35,6 +35,8 @@ size_t events_read(void *buf, size_t offset, size_t len) {
 	if (len > 1024) assert(0);
 	AM_INPUT_KEYBRD_T event = io_read(AM_INPUT_KEYBRD);
 	memset(buf, 0, len);
+	memset(buffer_for_key, 0, 1024);
+	printf("debug get key code %d\n", event.keycode);
 	if (event.keycode == AM_KEY_NONE) return 0;
 	if (event.keydown) strcpy(buffer_for_key, "kd ");
 	else strcpy(buffer_for_key, "ku ");
