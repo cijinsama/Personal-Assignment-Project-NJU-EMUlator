@@ -6,7 +6,6 @@
 #include <stdint.h>
 #include <stdio.h>
 void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_Rect *dstrect) {
-	printf("debug : 3\n");
   assert(dst && src);
   assert(dst->format->BitsPerPixel == src->format->BitsPerPixel);
 	int32_t offset_dst;
@@ -37,7 +36,6 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
 }
 
 void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
-	printf("debug : 2\n");
 	uint32_t size_per_pixel = dst->format->BitsPerPixel / 8;
 	int32_t offset;
 	if (dstrect == NULL) {
@@ -62,7 +60,6 @@ inline uint32_t get_color(SDL_Palette *palette, int x, int y, SDL_Surface *s){
 
 
 void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
-	printf("debug : 1\n");
 	uint32_t size_per_pixel = s->format->BitsPerPixel / 8;
 	if (size_per_pixel == 1){
 		if (x == 0 && y == 0 && w == 0 && h == 0){
