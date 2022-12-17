@@ -30,7 +30,8 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
 	printf("debug :\n");
 	uint32_t size_per_pixel = src->format->BitsPerPixel / 8;
 
-	printf("debug :\n");
+	printf("debug : offset_dst :%x\n",offset_dst);
+	printf("debug : offset_src :%x\n",offset_src);
 	//copy
 	for (int i = 0; i < srcrect->h; i++) {
 		printf("debug : %d\n", i);
