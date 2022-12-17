@@ -143,8 +143,8 @@ static void display_menu(int n) {
   clear_display();
 	printf("debug : 2\n");
   SDL_Rect rect = { .x = screen->w - logo_sf->w, .y = 0 };
-	printf("debug : rect w = %d, h = %d \n", rect.w, rect.h);
-	printf("debug : log rect w = %d, h = %d \n", logo_sf.w, logo_sf.h);
+	printf("debug : rect w = %d, h = %d \n", rect->w, rect->h);
+	printf("debug : log rect w = %d, h = %d \n", logo_sf->w, logo_sf->h);
   SDL_BlitSurface(logo_sf, NULL, screen, &rect);
   printf("Available applications:\n");
   char buf[80];
