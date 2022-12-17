@@ -8,61 +8,55 @@
 void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_Rect *dstrect) {
   assert(dst && src);
   assert(dst->format->BitsPerPixel == src->format->BitsPerPixel);
-// 	int32_t offset_dst;
-// 	int32_t offset_src;
-// 
-// 	//确定offset
-// 	if (srcrect == NULL){
-// 		SDL_Rect temp;
-// 		temp.x = 0;
-// 		temp.y = 0;
-// 		temp.w = src->w;
-// 		temp.h = src->h;
-// 		srcrect = &temp;
-// 		offset_src = 0;
-// 	}
-// 	else  offset_src = srcrect->y * src->w + srcrect->x;
-// 	
-// 	printf("debug : y :%x\n",dstrect->y);
-// 	printf("debug : x :%x\n",dstrect->x);
-// 	printf("debug : w :%x\n",dst->w);
-// 	if (dstrect == NULL) offset_dst = 0;
-// 	else offset_dst = dstrect->y * dst->w + dstrect->x;
-// 
-// 	//确定每个像素内存大小
-// 	printf("debug :\n");
-// 	uint32_t size_per_pixel = src->format->BitsPerPixel / 8;
-// 
-// 	printf("debug : offset_dst :%x\n",offset_dst);
-// 	printf("debug : offset_src :%x\n",offset_src);
-// 	//copy
-// 	for (int i = 0; i < srcrect->h; i++) {
-// 		printf("debug : %d\n", i);
-// 		memcpy(dst->pixels + (offset_dst + i * dst->w) * size_per_pixel, src->pixels + (offset_src + i * src->w)* size_per_pixel, srcrect->w * size_per_pixel);
-// 	}
+	int32_t offset_dst;
+	int32_t offset_src;
 
-	uint32_t* src_pixels = (uint32_t*)src->pixels;
-	uint32_t* dst_pixels = (uint32_t*)dst->pixels;
-
-	int rect_w, rect_h, src_x, src_y, dst_x, dst_y;
-	if (srcrect){
-		rect_w = srcrect->w; rect_h = srcrect->h;
-		src_x = srcrect->x; src_y = srcrect->y; 
-	}else {
-		rect_w = src->w; rect_h = src->h;
-		src_x = 0; src_y = 0;
+	//确定offset
+	if (srcrect == NULL){
+		SDL_Rect temp;
+		temp.x = 0;
+		temp.y = 0;
+		temp.w = src->w;
+		temp.h = src->h;
+		srcrect = &temp;
+		offset_src = 0;
 	}
-	if (dstrect){
-		dst_x = dstrect->x, dst_y = dstrect->y;
-	}else {
-		dst_x = 0; dst_y = 0;
-	}
+	else  offset_src = srcrect->y * src->w + srcrect->x;
 	
-	for (int i = 0; i < rect_h; ++i){
-		for (int j = 0; j < rect_w; ++j){
-			dst_pixels[(dst_y + i) * dst->w + dst_x + j] = src_pixels[(src_y + i) * src->w + src_x + j];
-		}
+	if (dstrect == NULL) offset_dst = 0;
+	else offset_dst = dstrect->y * dst->w + dstrect->x;
+
+	//确定每个像素内存大小
+	uint32_t size_per_pixel = src->format->BitsPerPixel / 8;
+
+	//copy
+	for (int i = 0; i < srcrect->h; i++) {
+		memcpy(dst->pixels + (offset_dst + i * dst->w) * size_per_pixel, src->pixels + (offset_src + i * src->w)* size_per_pixel, srcrect->w * size_per_pixel);
 	}
+	printf("debug : complete dtaw\n");
+
+// 	uint32_t* src_pixels = (uint32_t*)src->pixels;
+// 	uint32_t* dst_pixels = (uint32_t*)dst->pixels;
+// 
+// 	int rect_w, rect_h, src_x, src_y, dst_x, dst_y;
+// 	if (srcrect){
+// 		rect_w = srcrect->w; rect_h = srcrect->h;
+// 		src_x = srcrect->x; src_y = srcrect->y; 
+// 	}else {
+// 		rect_w = src->w; rect_h = src->h;
+// 		src_x = 0; src_y = 0;
+// 	}
+// 	if (dstrect){
+// 		dst_x = dstrect->x, dst_y = dstrect->y;
+// 	}else {
+// 		dst_x = 0; dst_y = 0;
+// 	}
+// 	
+// 	for (int i = 0; i < rect_h; ++i){
+// 		for (int j = 0; j < rect_w; ++j){
+// 			dst_pixels[(dst_y + i) * dst->w + dst_x + j] = src_pixels[(src_y + i) * src->w + src_x + j];
+// 		}
+// 	}
 }
 
 void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
