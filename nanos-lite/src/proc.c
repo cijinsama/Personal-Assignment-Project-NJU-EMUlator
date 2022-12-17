@@ -26,7 +26,7 @@ void init_proc() {
 
   // load program here
 
-	naive_uload(current, "/bin/event-test");
+	naive_uload(current, "/bin/nterm");
 }
 
 Context* schedule(Context *prev) {
