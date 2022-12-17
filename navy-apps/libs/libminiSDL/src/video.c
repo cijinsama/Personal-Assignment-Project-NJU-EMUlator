@@ -32,9 +32,10 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
 
 	printf("debug :\n");
 	//copy
-	for (int i = 0; i < srcrect->h; i++) 
+	for (int i = 0; i < srcrect->h; i++) {
 		printf("debug : %d\n", i);
 		memcpy(dst->pixels + (offset_dst + i * dst->w) * size_per_pixel, src->pixels + (offset_src + i * src->w)* size_per_pixel, srcrect->w * size_per_pixel);
+	}
 }
 
 void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
