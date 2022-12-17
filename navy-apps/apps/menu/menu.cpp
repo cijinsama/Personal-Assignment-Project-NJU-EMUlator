@@ -64,12 +64,15 @@ static void prev() {
 }
 
 static void clear_display(void) {
+	printf("debug : screen w = %d",screen->w);
   SDL_FillRect(screen, NULL, 0xffffff);
+	printf("debug : screen w = %d",screen->w);
 }
 
 int main(int argc, char *argv[], char *envp[]) {
   SDL_Init(0);
   screen = SDL_SetVideoMode(0, 0, 32, SDL_HWSURFACE);
+	printf("debug : screen w = %d",screen->w);
 
   font = new BDF_Font(font_fname);
   logo_sf = SDL_LoadBMP("/share/pictures/projectn.bmp");
