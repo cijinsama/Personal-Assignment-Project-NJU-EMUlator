@@ -64,26 +64,20 @@ static void prev() {
 }
 
 static void clear_display(void) {
-	printf("debug : screen w = %d",screen->w);
   SDL_FillRect(screen, NULL, 0xffffff);
-	printf("debug : screen w = %d",screen->w);
 }
 
 int main(int argc, char *argv[], char *envp[]) {
   SDL_Init(0);
   screen = SDL_SetVideoMode(0, 0, 32, SDL_HWSURFACE);
-	printf("debug : screen w = %d",screen->w);
 
   font = new BDF_Font(font_fname);
   logo_sf = SDL_LoadBMP("/share/pictures/projectn.bmp");
   assert(logo_sf);
-	printf("debug : 1111111\n");
   set_i_max();
 
-	printf("debug : 222222222\n");
   while (1) {
     display_menu(i_max);
-		printf("debug : 3333333333\n");
     SDL_Event e;
     do {
       SDL_WaitEvent(&e);
@@ -145,12 +139,8 @@ static void draw_text_row(char *s, int r) {
 }
 
 static void display_menu(int n) {
-	printf("debug : @@@@@@@@@\n");
   clear_display();
-	printf("debug : screen w = %x\n", screen->w);
-	printf("debug : log w = %x\n", logo_sf->w);
   SDL_Rect rect = { .x = screen->w - logo_sf->w, .y = 0 };
-	printf("debug : !!!!!!!!!!!\n");
   SDL_BlitSurface(logo_sf, NULL, screen, &rect);
   printf("Available applications:\n");
   char buf[80];

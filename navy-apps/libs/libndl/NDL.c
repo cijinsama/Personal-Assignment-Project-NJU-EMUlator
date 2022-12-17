@@ -27,7 +27,6 @@ int NDL_PollEvent(char *buf, int len) {
 static int canvas_w = 0, canvas_h = 0, canvas_off = 0, canvas_x = 0, canvas_y = 0;
 
 void NDL_OpenCanvas(int *w, int *h) {
-	printf("debug NDL : w = %d, h = %d", *w, *h);
 	if (*w ) canvas_w = *w;
 	else {
 		canvas_w = screen_w;
@@ -56,7 +55,6 @@ void NDL_OpenCanvas(int *w, int *h) {
     }
     close(fbctl);
   }
-	printf("debug NDL : w = %d, h = %d", *w, *h);
 }
 
 void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
