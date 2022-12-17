@@ -57,6 +57,8 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
 	}else {
 		dst_x = 0; dst_y = 0;
 	}
+	printf("&&&&%x\n", (dst_y) * dst->w);
+	printf("*****%x\n", dst_x);
 	
 	for (int i = 0; i < rect_h; ++i){
 		printf("%d\n", i);
