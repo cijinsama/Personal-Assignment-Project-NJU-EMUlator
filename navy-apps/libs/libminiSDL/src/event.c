@@ -16,7 +16,7 @@ int SDL_PushEvent(SDL_Event *ev) {
 
 
 
-#define buffer_for_key_size 128
+#define buffer_for_key_size 16
 static char buffer_for_key[buffer_for_key_size];
 int SDL_PollEvent(SDL_Event *ev) {
 	if (!NDL_PollEvent(buffer_for_key, buffer_for_key_size)) return 0;//把ret个去掉
@@ -24,11 +24,12 @@ int SDL_PollEvent(SDL_Event *ev) {
 		case 'd': ev->type = SDL_KEYDOWN;ev->key.type = SDL_KEYDOWN; break;
 		case 'u': ev->type = SDL_KEYUP;ev->key.type = SDL_KEYUP; break;
 	}
-	printf("debug key %s", buffer_for_key);
-	printf("key:%s:", buffer_for_key + 3);
+	printf("debug key %s\n", buffer_for_key);
+	printf("key:%s:\n", buffer_for_key + 3);
 	//获得按键
 	int keys_num = sizeof(keyname) / sizeof(char *);
 	for (int i = 0; i < keys_num; i++){
+		printf("comp key:%s:\n",keyname[i]);
 		if (strcmp(buffer_for_key + 3, keyname[i]) == 0){
 			printf("debug got key %s", keyname[i]);
 			ev->key.keysym.sym = i;
