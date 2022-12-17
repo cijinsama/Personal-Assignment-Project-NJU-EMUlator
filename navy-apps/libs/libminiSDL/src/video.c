@@ -12,6 +12,8 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
 	int32_t offset_src;
 
 	//确定offset
+	printf("src->x = %d", src->x);
+	printf("src->y = %d", src->y);
 	if (srcrect == NULL){
 		SDL_Rect temp;
 		temp.x = 0;
