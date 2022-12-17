@@ -139,6 +139,7 @@ static void draw_text_row(char *s, int r) {
 }
 
 static void display_menu(int n) {
+	printf("debug : 1\n");
   clear_display();
 	printf("debug : 2\n");
   SDL_Rect rect = { .x = screen->w - logo_sf->w, .y = 0 };
