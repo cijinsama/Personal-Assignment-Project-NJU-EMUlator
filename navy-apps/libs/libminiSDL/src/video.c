@@ -12,8 +12,6 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
 	int32_t offset_src;
 
 	//确定offset
-	printf("debug : src->x = %d", src->x);
-	printf("debug : src->y = %d", src->y);
 	if (srcrect == NULL){
 		SDL_Rect temp;
 		temp.x = 0;
@@ -32,8 +30,7 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
 	uint32_t size_per_pixel = src->format->BitsPerPixel / 8;
 
 	//copy
-	printf("debug : sizeof pixels : %d\n", sizeof(dst->pixels[0]));
-	for (int i = 0; i < srcrect->h; i++) memcpy(dst->pixels + (offset_dst + i * dst->w) * size_per_pixel, src->pixels + (offset_src + i * src->w)* size_per_pixel, src->w * src->h * size_per_pixel);
+	for (int i = 0; i < srcrect->h; i++) memcpy(dst->pixels + (offset_dst + i * dst->w) * size_per_pixel, src->pixels + (offset_src + i * src->w)* size_per_pixel, src->w * size_per_pixel);
 }
 
 void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
