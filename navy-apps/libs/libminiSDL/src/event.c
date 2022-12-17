@@ -29,12 +29,11 @@ int SDL_PollEvent(SDL_Event *ev) {
 	int keys_num = sizeof(keyname) / sizeof(char *);
 	for (int i = 0; i < keys_num; i++){
 		if (strcmp(buffer_for_key + 3, keyname[i]) == 0){
+			printf("debug got key %s", keyname[i]);
 			ev->key.keysym.sym = i;
 			break;
 		}
 	}
-
-
   return 1;
 }
 
