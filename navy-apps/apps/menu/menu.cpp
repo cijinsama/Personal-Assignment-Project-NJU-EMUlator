@@ -144,6 +144,8 @@ static void draw_text_row(char *s, int r) {
 static void display_menu(int n) {
 	printf("debug : @@@@@@@@@\n");
   clear_display();
+	printf("debug : screen w = %x\n", screen->w);
+	printf("debug : log w = %x\n", logo_sf->w);
   SDL_Rect rect = { .x = screen->w - logo_sf->w, .y = 0 };
 	printf("debug : !!!!!!!!!!!\n");
   SDL_BlitSurface(logo_sf, NULL, screen, &rect);
