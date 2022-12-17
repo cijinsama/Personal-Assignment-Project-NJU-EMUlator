@@ -30,8 +30,10 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
 
 	//copy
 	for (int i = 0; i < srcrect->h; i++) {
+		printf("debug : draw i = %d / %d\n", i, srcrect->h);
 		memcpy(dst->pixels + (offset_dst + i * dst->w) * size_per_pixel, src->pixels + (offset_src + i * src->w)* size_per_pixel, srcrect->w * size_per_pixel);
 	}
+	printf("debug : complete dtaw\n");
 
 // 	uint32_t* src_pixels = (uint32_t*)src->pixels;
 // 	uint32_t* dst_pixels = (uint32_t*)dst->pixels;
