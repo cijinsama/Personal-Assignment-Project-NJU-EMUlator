@@ -23,6 +23,8 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
 	}
 	else  offset_src = srcrect->y * src->w + srcrect->x;
 	
+	printf("debug : offset_dstrect y :%x\n",dstrect->y);
+	printf("debug : offset_dst w :%x\n",dst->w);
 	if (dstrect == NULL) offset_dst = 0;
 	else offset_dst = dstrect->y * dst->w + dstrect->x;
 
