@@ -13,8 +13,6 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
 	SDL_Rect temp;
 	//确定offset
 	if (srcrect == NULL){
-		printf("debug srcrect is non\n");
-		printf("debug : src w = %d h = %d\n", src->w , src->h);
 		temp.x = 0;
 		temp.y = 0;
 		temp.w = src->w;
@@ -23,7 +21,6 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
 		offset_src = 0;
 	}
 	else  offset_src = srcrect->y * src->w + srcrect->x;
-	printf("debug : srcrect w = %d h = %d\n", srcrect->w , srcrect->h);
 	
 	if (dstrect == NULL) offset_dst = 0;
 	else offset_dst = dstrect->y * dst->w + dstrect->x;
@@ -33,10 +30,8 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
 
 	//copy
 	for (int i = 0; i < srcrect->h; i++) {
-		printf("debug : draw i = %d / %d\n", i, srcrect->h);
 		memcpy(dst->pixels + (offset_dst + i * dst->w) * size_per_pixel, src->pixels + (offset_src + i * src->w)* size_per_pixel, srcrect->w * size_per_pixel);
 	}
-	printf("debug : complete dtaw\n");
 
 // 	uint32_t* src_pixels = (uint32_t*)src->pixels;
 // 	uint32_t* dst_pixels = (uint32_t*)dst->pixels;
