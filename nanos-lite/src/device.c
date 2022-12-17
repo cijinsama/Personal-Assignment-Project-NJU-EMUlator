@@ -38,6 +38,7 @@ size_t events_read(void *buf, size_t offset, size_t len) {
 	memset(buffer_for_key, 0, 1024);
 	printf("debug get key code %d\n", event.keycode);
 	if (event.keycode == AM_KEY_NONE) return 0;
+	printf("debug get key code!! %d\n", event.keycode);
 	if (event.keydown) strcpy(buffer_for_key, "kd ");
 	else strcpy(buffer_for_key, "ku ");
 	strcat(buffer_for_key, keyname[event.keycode]);

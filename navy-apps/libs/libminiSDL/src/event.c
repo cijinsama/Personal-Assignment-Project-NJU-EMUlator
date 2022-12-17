@@ -20,7 +20,7 @@ int SDL_PushEvent(SDL_Event *ev) {
 static char buffer_for_key[buffer_for_key_size];
 int SDL_PollEvent(SDL_Event *ev) {
 	int ret = NDL_PollEvent(buffer_for_key, buffer_for_key_size);
-	if (!ret) return 0;
+	if (!ret) return 0;//把ret个去掉
 	printf("debug SDL get %d event : %s\n",ret, buffer_for_key);
 	switch (buffer_for_key[1]){
 		case 'd': ev->type = SDL_KEYDOWN;ev->key.type = SDL_KEYDOWN; break;
