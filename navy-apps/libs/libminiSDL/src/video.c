@@ -13,6 +13,8 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
 
 	//确定offset
 	if (srcrect == NULL){
+		printf("debug srcrect is non\n");
+		printf("debug : src w = %d h = %d\n", src->w , src->h);
 		SDL_Rect temp;
 		temp.x = 0;
 		temp.y = 0;
