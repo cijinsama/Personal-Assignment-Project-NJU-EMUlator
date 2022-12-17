@@ -8,9 +8,16 @@
 void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_Rect *dstrect) {
   assert(dst && src);
   assert(dst->format->BitsPerPixel == src->format->BitsPerPixel);
+	int32_t offset_dst = dstrect->y * src->w + dstrect->x;
+	int32_t offset_src = srcrect->y * src->w + srcrect->x;
+	for (int i = 0; i < srcrect->h; i++) memcpy(dst->pixels + offset_dst, src->pixels + offset_src, src->w * src->h * 4);
 }
 
 void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
+	int32_t offset = dstrect->y * dst->w + dstrect->x;
+	for (int i = 0; i < dstrect->h; i++)
+		for (int j = 0; j < dstrect->w; j++)
+			dst->pixels[offset + i * dst->w + j] = color;
 }
 
 void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
