@@ -18,7 +18,7 @@ void do_syscall(Context *c) {
 	Log("[strace]: system call number: %x, args : %x, %x, %x", a[0], a[1], a[2], a[3]);
 #endif
   switch (a[0]) {
-		case SYS_exit: halt(0); break;
+		case SYS_exit: c->GPRx = do_sys_execve("/bin/nterm",(char *const *) a[2],(char *const *) a[3]); break;
 		case SYS_yield: yield(); c->GPRx = 0; break;
 		case SYS_open: c->GPRx = do_sys_open((char *) a[1], a[2], a[3]); break;
 		case SYS_read: c->GPRx = do_sys_read(a[1],(void *) a[2], a[3]); break;
@@ -26,6 +26,7 @@ void do_syscall(Context *c) {
 		case SYS_close: c->GPRx = do_sys_close(a[1]); break;
 		case SYS_lseek: c->GPRx = do_sys_lseek(a[1], a[2], a[3]); break;
 		case SYS_brk:		c->GPRx = (uintptr_t) do_sys_brk(a[1]); break;
+		case SYS_execve: c->GPRx = do_sys_execve((char *) a[1],(char *const *) a[2],(char *const *) a[3]); break;
 		case SYS_gettimeofday: c->GPRx = do_sys_gettimeofday((struct timeval *) a[1], (struct timezone *) a[2]); break;
     default: panic("Unhandled syscall ID = %d", a[0]);
   }

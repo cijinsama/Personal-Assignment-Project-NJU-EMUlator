@@ -27,4 +27,5 @@ size_t do_sys_gettimeofday(struct timeval * tv, struct timezone * tz);
 size_t events_read(void *buf, size_t offset, size_t len);
 size_t dispinfo_read(void *buf, size_t offset, size_t len);
 size_t fb_write(const void *buf, size_t offset, size_t len);
+size_t do_sys_execve(const char * filename, char *const argv[], char *const envp[]);
 #endif
