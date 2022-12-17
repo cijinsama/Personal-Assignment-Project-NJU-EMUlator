@@ -27,13 +27,10 @@ int SDL_PollEvent(SDL_Event *ev) {
 	int temp = 0;
 	for (temp = 0; buffer_for_key[temp] != '\n'; temp++){}
 	buffer_for_key[temp] = '\0';
-	printf("debug key %s\n", buffer_for_key);
-	printf("key:%s:\n", buffer_for_key + 3);
 	//获得按键
 	int keys_num = sizeof(keyname) / sizeof(char *);
 	for (int i = 0; i < keys_num; i++){
 		if (strcmp(buffer_for_key + 3, keyname[i]) == 0){
-			printf("debug got key %s", keyname[i]);
 			ev->key.keysym.sym = i;
 			break;
 		}
