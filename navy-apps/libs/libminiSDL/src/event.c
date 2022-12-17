@@ -1,6 +1,7 @@
 #include <NDL.h>
 #include <SDL.h>
 #include <string.h>
+#include <stdio.h>
 
 #define keyname(k) #k,
 
@@ -18,7 +19,9 @@ int SDL_PushEvent(SDL_Event *ev) {
 #define buffer_for_key_size 128
 static char buffer_for_key[buffer_for_key_size];
 int SDL_PollEvent(SDL_Event *ev) {
-	if (!NDL_PollEvent(buffer_for_key, buffer_for_key_size)) return 0;
+	int ret = NDL_PollEvent(buffer_for_key, buffer_for_key_size);
+	if (!ret) return 0;
+	printf("debug SDL get %d event : %s\n",ret, buffer_for_key);
 	switch (buffer_for_key[1]){
 		case 'd': ev->type = SDL_KEYDOWN;ev->key.type = SDL_KEYDOWN; break;
 		case 'u': ev->type = SDL_KEYUP;ev->key.type = SDL_KEYUP; break;
