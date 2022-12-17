@@ -25,6 +25,7 @@ int SDL_PollEvent(SDL_Event *ev) {
 		case 'u': ev->type = SDL_KEYUP;ev->key.type = SDL_KEYUP; break;
 	}
 	printf("debug key %s", buffer_for_key);
+	printf("key:%s:", buffer_for_key + 3);
 	//获得按键
 	int keys_num = sizeof(keyname) / sizeof(char *);
 	for (int i = 0; i < keys_num; i++){
