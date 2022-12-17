@@ -55,7 +55,7 @@ void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
 }
 
 inline uint32_t get_color(SDL_Palette *palette, int x, int y, SDL_Surface *s){
-	palette->colors[s->pixels[y * s->w + x]]
+	palette->colors[s->pixels[y * s->w + x]];
 }
 
 
