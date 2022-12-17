@@ -32,6 +32,7 @@ void builtin_sh_run() {
 
   while (1) {
     SDL_Event ev;
+		printf("getting event\n");
     if (SDL_PollEvent(&ev)) {
 			printf("getting key\n");
       if (ev.type == SDL_KEYUP || ev.type == SDL_KEYDOWN) {
