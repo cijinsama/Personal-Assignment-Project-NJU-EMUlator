@@ -62,8 +62,8 @@ inline uint32_t get_color(SDL_Palette *palette, int x, int y, SDL_Surface *s){
 void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
 	uint32_t size_per_pixel = s->format->BitsPerPixel / 8;
 	if (size_per_pixel == 1){
-		printf("debug ##1\n");
 		if (x == 0 && y == 0 && w == 0 && h == 0){
+			printf("##1\n");
 			//更新整个屏幕
 			uint32_t *window =(uint32_t *) calloc(s->w * s->h, size_per_pixel);
 			for (int i = 0; i < s->h; ++i){
@@ -72,10 +72,9 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
 				}
 			}
 // 			NDL_DrawRect((uint32_t *)s->pixels, 0, 0, s->w, s->h);
-			printf("debug ##3\n");
 			NDL_DrawRect(window, 0, 0, s->w, s->h);
-			printf("debug ##2\n");
 // 			free(window);
+			printf("##2\n");
 		}
 		else{
 			uint32_t *window =(uint32_t *) calloc(w * h, size_per_pixel);
@@ -89,7 +88,6 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
 			NDL_DrawRect(window, x, y, w, h);
 // 			free(window);
 		}
-		printf("debug ##5\n");
 	}
 	else{
 		if (x == 0 && y == 0 && w == 0 && h == 0){
@@ -215,16 +213,13 @@ void SDL_SoftStretch(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
 }
 
 void SDL_SetPalette(SDL_Surface *s, int flags, SDL_Color *colors, int firstcolor, int ncolors) {
-	printf("debug &&2\n");
   assert(s);
   assert(s->format);
   assert(s->format->palette);
   assert(firstcolor == 0);
-	printf("debug &&3\n");
 
   s->format->palette->ncolors = ncolors;
   memcpy(s->format->palette->colors, colors, sizeof(SDL_Color) * ncolors);
-	printf("debug &&4\n");
 
   if(s->flags & SDL_HWSURFACE) {
     assert(ncolors == 256);
@@ -233,7 +228,6 @@ void SDL_SetPalette(SDL_Surface *s, int flags, SDL_Color *colors, int firstcolor
       uint8_t g = colors[i].g;
       uint8_t b = colors[i].b;
     }
-		printf("debug &&5\n");
     SDL_UpdateRect(s, 0, 0, 0, 0);
   }
 }
