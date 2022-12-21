@@ -62,6 +62,7 @@ inline uint32_t get_color(SDL_Palette *palette, int x, int y, SDL_Surface *s){
 void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
 	uint32_t size_per_pixel = s->format->BitsPerPixel / 8;
 	if (size_per_pixel == 1){
+		printf("debug ##1\n");
 		if (x == 0 && y == 0 && w == 0 && h == 0){
 			//更新整个屏幕
 			uint32_t *window =(uint32_t *) calloc(s->w * s->h, size_per_pixel);
@@ -71,7 +72,9 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
 				}
 			}
 // 			NDL_DrawRect((uint32_t *)s->pixels, 0, 0, s->w, s->h);
+			printf("debug ##3\n");
 			NDL_DrawRect(window, 0, 0, s->w, s->h);
+			printf("debug ##2\n");
 			free(window);
 		}
 		else{
