@@ -68,7 +68,6 @@ static void sh_handle_cmd(const char *input) {
 	char *cmd = strtok(str, " ");
 	if (cmd == NULL) {return;}
 	int last_ind = strlen(cmd) - 1;
-	printf("last word :%d\n",cmd[last_ind]);
 	while(cmd[last_ind] == '\n'||cmd[last_ind] == '\t'||cmd[last_ind] == ' '){
 		cmd[last_ind] = '\0';
 		last_ind--;
@@ -92,7 +91,6 @@ static void sh_handle_cmd(const char *input) {
 	}
 
 	//如果没有匹配，则直接执行指令(即运行对应的程序)
-	printf("execute program : %s\n", cmd);
   execvp(cmd, (char * const*)args);
 	return;
 
