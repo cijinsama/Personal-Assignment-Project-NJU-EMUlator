@@ -209,13 +209,16 @@ void SDL_SoftStretch(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
 }
 
 void SDL_SetPalette(SDL_Surface *s, int flags, SDL_Color *colors, int firstcolor, int ncolors) {
+	printf("debug &&2\n");
   assert(s);
   assert(s->format);
   assert(s->format->palette);
   assert(firstcolor == 0);
+	printf("debug &&3\n");
 
   s->format->palette->ncolors = ncolors;
   memcpy(s->format->palette->colors, colors, sizeof(SDL_Color) * ncolors);
+	printf("debug &&4\n");
 
   if(s->flags & SDL_HWSURFACE) {
     assert(ncolors == 256);
@@ -224,6 +227,7 @@ void SDL_SetPalette(SDL_Surface *s, int flags, SDL_Color *colors, int firstcolor
       uint8_t g = colors[i].g;
       uint8_t b = colors[i].b;
     }
+		printf("debug &&5\n");
     SDL_UpdateRect(s, 0, 0, 0, 0);
   }
 }
