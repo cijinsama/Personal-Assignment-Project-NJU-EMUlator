@@ -75,7 +75,7 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
 			printf("debug ##3\n");
 			NDL_DrawRect(window, 0, 0, s->w, s->h);
 			printf("debug ##2\n");
-			free(window);
+// 			free(window);
 		}
 		else{
 			uint32_t *window =(uint32_t *) calloc(w * h, size_per_pixel);
@@ -87,7 +87,7 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
 			}
 
 			NDL_DrawRect(window, x, y, w, h);
-			free(window);
+// 			free(window);
 		}
 		printf("debug ##5\n");
 	}
@@ -100,7 +100,7 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
 			uint32_t *window =(uint32_t *) calloc(w * h, size_per_pixel);
 			memcpy(window, s->pixels, size_per_pixel * s->w * s->h);
 			NDL_DrawRect(window, x, y, w, h);
-			free(window);
+// 			free(window);
 		}
 	}
 	return;
