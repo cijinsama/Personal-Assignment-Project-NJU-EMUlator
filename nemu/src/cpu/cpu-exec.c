@@ -37,7 +37,7 @@ CSR_state csr = {.mstatus.val = 0x1800};
 #ifdef CONFIG_FTRACE
 int func_stack = 0;
 int last_pc_in_which_func = -1;
-unsigned char func_stack_container[512];
+unsigned char func_stack_container[1024];
 #endif
 
 void device_update();
