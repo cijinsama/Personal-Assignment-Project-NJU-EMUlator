@@ -41,7 +41,6 @@ int SDL_PollEvent(SDL_Event *ev) {
 	}
 	//如果更新按键状态，如果没有更新就返回0
   SDL_SetKeyState(ev);
-	return SDL_SetKeyState(ev);
 	return 1;
 }
 
