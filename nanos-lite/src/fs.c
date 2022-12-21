@@ -16,12 +16,12 @@ typedef struct {
 enum {FD_STDIN, FD_STDOUT, FD_STDERR, FD_EVENT, FD_DISPINFO, FD_FB, FD_FILE};
 
 size_t invalid_read(void *buf, size_t offset, size_t len) {
-  panic("should not reach here");
+	Log("Read None");
   return 0;
 }
 
 size_t invalid_write(const void *buf, size_t offset, size_t len) {
-  panic("should not reach here");
+	Log("Read None");
   return 0;
 }
 
