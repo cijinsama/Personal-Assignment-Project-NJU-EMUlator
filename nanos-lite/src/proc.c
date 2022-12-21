@@ -26,7 +26,7 @@ void init_proc() {
 
   // load program here
 
-	naive_uload(current, "/bin/pal");
+	naive_uload(current, "/bin/hello");
 }
 
 Context* schedule(Context *prev) {
