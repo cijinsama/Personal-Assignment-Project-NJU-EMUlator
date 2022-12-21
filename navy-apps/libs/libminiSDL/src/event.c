@@ -63,7 +63,7 @@ uint8_t* SDL_GetKeyState(int *numkeys) {
 	return NULL;
 }
 int SDL_SetKeyState(SDL_Event *ev) {
-	printf("debug origin : %d, get : %d\n",keyboard_status[ev->key.keysym.sym], ev->key.type);
+	printf("key : %s debug origin : %d, get : %d\n",keyname[ev->key.keysym.sym],keyboard_status[ev->key.keysym.sym], ev->key.type);
 	if(keyboard_status[ev->key.keysym.sym] == ev->key.type) return 0;
 	else{
 		keyboard_status[ev->key.keysym.sym] == ev->key.type;
