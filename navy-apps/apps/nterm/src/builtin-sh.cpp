@@ -85,7 +85,7 @@ static void sh_handle_cmd(const char *input) {
 	}
 
 	//如果没有匹配，则直接执行指令(即运行对应的程序)
-	printf("execute program : %s", cmd);
+	printf("execute program : %s\n", cmd);
   execvp(cmd, (char * const*)args);
 	return;
 
