@@ -40,7 +40,8 @@ int SDL_PollEvent(SDL_Event *ev) {
 		}
 	}
 	//如果更新按键状态，如果没有更新就返回0
-//   return SDL_SetKeyState(ev);
+  int ret = SDL_SetKeyState(ev);
+	printf("debug ret = %d\n", ret);
 	return 1;
 }
 
