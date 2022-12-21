@@ -19,7 +19,7 @@ int SDL_PushEvent(SDL_Event *ev) {
 #define buffer_for_key_size 16
 static char buffer_for_key[buffer_for_key_size];
 int SDL_PollEvent(SDL_Event *ev) {
-	if (!NDL_PollEvent(buffer_for_key, buffer_for_key_size)) return 0;//把ret个去掉
+	if (!NDL_PollEvent(buffer_for_key, buffer_for_key_size)) return 0;
 	switch (buffer_for_key[1]){
 		case 'd': ev->type = SDL_KEYDOWN;ev->key.type = SDL_KEYDOWN; break;
 		case 'u': ev->type = SDL_KEYUP;ev->key.type = SDL_KEYUP; break;
