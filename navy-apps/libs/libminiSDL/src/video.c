@@ -66,6 +66,7 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
 			printf("&&1\n");
 			//更新整个屏幕
 			uint32_t *window =(uint32_t *) malloc(s->w * s->h* size_per_pixel);
+			printf("window : %x\n",window);
 			assert(window);
 			for (int i = 0; i < s->h; ++i){
 				for (int j = 0; j < s->w; ++j){
@@ -75,7 +76,7 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
 			printf("&&2\n");
 // 			NDL_DrawRect((uint32_t *)s->pixels, 0, 0, s->w, s->h);
 			NDL_DrawRect(window, 0, 0, s->w, s->h);
-// 			free(window);
+			free(window);
 			printf("&&3\n");
 		}
 		else{
