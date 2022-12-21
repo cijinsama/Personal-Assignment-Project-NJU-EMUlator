@@ -30,15 +30,17 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
 	}
 	if(size_per_pixel == 1){
 		uint8_t *src_p = src->pixels;
+		uint8_t *dst_p = dst->pixels;
 		for (int i = 0; i < h; ++i){
-				memcpy(src_p + (dst_y + i) * w, src->pixels + (src_y + i) * w, size_per_pixel * w);
+				memcpy(dst_p + (dst_y + i) * w, src_p + (src_y + i) * w, size_per_pixel * w);
 		}
 	}
 
 	else{
 		uint32_t *src_p = (uint32_t *) src->pixels;
+		uint32_t *dst_p = (uint32_t *) dst->pixels;
 		for (int i = 0; i < h; ++i){
-				memcpy(src_p + (dst_y + i) * w, src->pixels + (src_y + i) * w, size_per_pixel * w);
+				memcpy(dst_p + (dst_y + i) * w, src_p + (src_y + i) * w, size_per_pixel * w);
 		}
 	}
 	return;
