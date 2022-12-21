@@ -58,10 +58,8 @@ uint8_t* SDL_GetKeyState(int *numkeys) {
 	//不确定这个实现对不对
   if (numkeys){
 		*numkeys = sizeof(keyname)/sizeof(keyname[0]);
-		return keyboard_status;
 	}
-	assert(0);
-	return NULL;
+	return keyboard_status;
 }
 int SDL_SetKeyState(SDL_Event *ev) {
 	if(keyboard_status[ev->key.keysym.sym] == ev->key.type) return 0;
