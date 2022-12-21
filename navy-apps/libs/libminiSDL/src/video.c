@@ -70,7 +70,9 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
 					window[i * s->w + j] = get_color(s->format->palette, x + j, i + y, s);
 				}
 			}
-			NDL_DrawRect((uint32_t *)s->pixels, 0, 0, s->w, s->h);
+// 			NDL_DrawRect((uint32_t *)s->pixels, 0, 0, s->w, s->h);
+			NDL_DrawRect(window, 0, 0, s->w, s->h);
+			free(window);
 		}
 		else{
 			uint32_t *window =(uint32_t *) calloc(w * h, size_per_pixel);
