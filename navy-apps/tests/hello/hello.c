@@ -10,7 +10,7 @@ int main() {
 	printf("%x\n", a);
 	free(a);
 	i = 3;
-	a = malloc(i);
+	a = malloc(sizeof(int));
 	int *b = malloc(i);
 	printf("%x\n", a);
 	printf("%x\n", b);
