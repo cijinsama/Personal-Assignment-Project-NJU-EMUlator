@@ -40,7 +40,7 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
 		uint32_t *src_p = (uint32_t *) src->pixels;
 		uint32_t *dst_p = (uint32_t *) dst->pixels;
 		for (int i = 0; i < h; ++i){
-				memcpy(dst_p + (dst_y + i) * dst->w, src_p + (src_y + i) * src->w, size_per_pixel * w);
+				memcpy(dst_p + (dst_y + i) * dst->w + dst_x, src_p + (src_y + i) * src->w + src_x, size_per_pixel * w);
 		}
 	}
 	return;
