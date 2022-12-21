@@ -67,6 +67,13 @@ static void sh_handle_cmd(const char *input) {
 	/* extract the first token as the command */
 	char *cmd = strtok(str, " ");
 	if (cmd == NULL) {return;}
+	int last_ind = strlen(cmd) - 1;
+	printf("last word :%d\n",cmd[last_ind]);
+	while(cmd[last_ind] == '\n'||cmd[last_ind] == '\t'||cmd[last_ind] == ' '){
+		cmd[last_ind] = '\0';
+		last_ind--;
+	}
+
 
 	/* treat the remaining string as the arguments,
 	 * which may need further parsing
