@@ -3,7 +3,11 @@
 #include "syscall.h"
 #include <sys/time.h>
 
+
+
+static intptr_t program_break;
 void *do_sys_brk(intptr_t addr){
+	program_break = addr;
 	return 0;
 }
 

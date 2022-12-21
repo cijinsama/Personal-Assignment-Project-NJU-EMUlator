@@ -74,7 +74,8 @@ void *_sbrk(intptr_t increment) {
 		program_break += increment;
 		return ret;
 	}
-	else return (void *) -1;
+	else assert(0);
+	return (void *) -1;
 }
 
 int _read(int fd, void *buf, size_t count) {

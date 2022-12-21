@@ -66,6 +66,7 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
 			printf("&&1\n");
 			//更新整个屏幕
 			uint32_t *window =(uint32_t *) calloc(s->w * s->h, size_per_pixel);
+			assert(window);
 			for (int i = 0; i < s->h; ++i){
 				for (int j = 0; j < s->w; ++j){
 					window[i * s->w + j] = get_color(s->format->palette, x + j, i + y, s);
@@ -80,6 +81,7 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
 		else{
 			uint32_t *window =(uint32_t *) calloc(w * h, size_per_pixel);
 
+			assert(window);
 			for (int i = 0; i < h; ++i){
 				for (int j = 0; j < w; ++j){
 					window[i * w + j] = get_color(s->format->palette, x + j, i + y, s);
