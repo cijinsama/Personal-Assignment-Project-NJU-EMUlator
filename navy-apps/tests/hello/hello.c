@@ -9,8 +9,11 @@ int main() {
 	int *a = malloc(i);
 	printf("%x\n", a);
 	free(a);
+	i = 3;
+	a = malloc(i);
 	int *b = malloc(i);
 	printf("%x\n", b);
+	free(a);
 	free(b);
 
 //   while (1) {
