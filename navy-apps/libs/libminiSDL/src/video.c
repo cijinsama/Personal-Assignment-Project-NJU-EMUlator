@@ -59,15 +59,16 @@ inline uint32_t get_color(SDL_Palette *palette, int x, int y, SDL_Surface *s){
 }
 
 
+static uint32_t window[12000];
 void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
 	uint32_t size_per_pixel = s->format->BitsPerPixel / 8;
 	if (size_per_pixel == 1){
 		if (x == 0 && y == 0 && w == 0 && h == 0){
 			printf("&&1\n");
 			//更新整个屏幕
-			uint32_t *window = malloc(s->w * s->h* size_per_pixel);
-			printf("window : %x\n",window);
-			assert(window);
+// 			uint32_t *window = malloc(s->w * s->h* size_per_pixel);
+// 			printf("window : %x\n",window);
+// 			assert(window);
 			for (int i = 0; i < s->h; ++i){
 				for (int j = 0; j < s->w; ++j){
 					window[i * s->w + j] = get_color(s->format->palette, x + j, i + y, s);
@@ -80,9 +81,9 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
 			printf("&&3\n");
 		}
 		else{
-			uint32_t *window = malloc(w * h* size_per_pixel);
+// 			uint32_t *window = malloc(w * h* size_per_pixel);
 
-			assert(window);
+// 			assert(window);
 			for (int i = 0; i < h; ++i){
 				for (int j = 0; j < w; ++j){
 					window[i * w + j] = get_color(s->format->palette, x + j, i + y, s);
@@ -90,7 +91,7 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
 			}
 
 			NDL_DrawRect(window, x, y, w, h);
-			free(window);
+// 			free(window);
 		}
 	}
 	else{
@@ -99,10 +100,10 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
 			NDL_DrawRect((uint32_t *)s->pixels, 0, 0, s->w, s->h);
 		}
 		else{
-			uint32_t *window =(uint32_t *) malloc(w * h* size_per_pixel);
+// 			uint32_t *window =(uint32_t *) malloc(w * h* size_per_pixel);
 			memcpy(window, s->pixels, size_per_pixel * s->w * s->h);
 			NDL_DrawRect(window, x, y, w, h);
-			free(window);
+// 			free(window);
 		}
 	}
 	return;
