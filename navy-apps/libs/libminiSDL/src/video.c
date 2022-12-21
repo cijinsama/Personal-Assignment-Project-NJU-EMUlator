@@ -89,6 +89,7 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
 			NDL_DrawRect(window, x, y, w, h);
 			free(window);
 		}
+		printf("debug ##5\n");
 	}
 	else{
 		if (x == 0 && y == 0 && w == 0 && h == 0){
