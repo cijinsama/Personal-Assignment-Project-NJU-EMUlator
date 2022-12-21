@@ -56,8 +56,6 @@ int SDL_PeepEvents(SDL_Event *ev, int numevents, int action, uint32_t mask) {
 
 uint8_t* SDL_GetKeyState(int *numkeys) {
 	//不确定这个实现对不对
-	printf("Unkown right 查一下web\n");
-	assert(0);
   if (numkeys){
 		*numkeys = sizeof(keyname)/sizeof(keyname[0]);
 		return keyboard_status;
