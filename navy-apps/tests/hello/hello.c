@@ -7,17 +7,17 @@ int main() {
   int i = 2;
   volatile int j = 0;
 	int *a = malloc(i);
-	printf("%x\n", a);
-	free(a);
-	i = 3;
-	a = malloc(sizeof(int));
 	int *b = malloc(i);
 	int *c = malloc(i+1);
+	int *d = malloc(i+1);
+	a = malloc(sizeof(int));
 	printf("%x\n", a);
 	printf("%x\n", b - a);
-	printf("%x\n", c - a);
+	printf("%x\n", c - b);
+	printf("%x\n", d - c);
 	free(a);
 	free(b);
+	free(c);
 
 //   while (1) {
 //     j ++;
