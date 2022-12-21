@@ -17,13 +17,13 @@ enum {FD_STDIN, FD_STDOUT, FD_STDERR, FD_EVENT, FD_DISPINFO, FD_FB, FD_FILE};
 
 size_t invalid_read(void *buf, size_t offset, size_t len) {
 	Log("Read None");
-	panic("没有找到对应文件");
+	Log("没有找到对应文件");
   return 0;
 }
 
 size_t invalid_write(const void *buf, size_t offset, size_t len) {
 	Log("Read None");
-	panic("没有找到对应文件");
+	Log("没有找到对应文件");
   return 0;
 }
 
@@ -73,18 +73,18 @@ int do_sys_open(const char *path, int flags, int mode) {
 			if (i == FD_FB) file_table[i].open_offset = 0;
 			return i;
 		}
-		if (strcmp(file_table[i].name + strlen(file_table[i].name) - strlen(path), path) == 0){
-			if (i >= FD_FILE){
-				file_table[i].read = valid_read;
-				file_table[i].write = valid_write;
-				file_table[i].open_offset = 0;
-			}
-			if (i == FD_FB) file_table[i].open_offset = 0;
-			return i;
-		}
+		//如果要只搜索后边几个字，就把下面的取消注释
+// 		if (strcmp(file_table[i].name + strlen(file_table[i].name) - strlen(path), path) == 0){
+// 			if (i >= FD_FILE){
+// 				file_table[i].read = valid_read;
+// 				file_table[i].write = valid_write;
+// 				file_table[i].open_offset = 0;
+// 			}
+// 			if (i == FD_FB) file_table[i].open_offset = 0;
+// 			return i;
+// 		}
 	}
 	Log("Can't find file : %s", path);
-	panic("没有找到对应文件");
   return 0;
 }
 
@@ -96,7 +96,6 @@ size_t do_sys_read(int fd, void *buf, size_t count) {
 		}
 		ret = file_table[fd].read(buf, file_table[fd].disk_offset + file_table[fd].open_offset, count);
 		file_table[fd].open_offset += count;
-// 		assert(file_table[fd].open_offset + count <= file_table[fd].size);
 	}
 	else {
 		ret = file_table[fd].read(buf, file_table[fd].disk_offset + file_table[fd].open_offset, count);
