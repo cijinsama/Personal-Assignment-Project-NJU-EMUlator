@@ -15,7 +15,7 @@ typedef struct {
 } Finfo;
 
 static Finfo file_table[] __attribute__((used)) = {
-// #include "files.h"
+#include "files.h"
 };
 
 
@@ -24,7 +24,7 @@ void ReadElfHeader(FILE *fp, Elf32_Ehdr *elfheader);
 void ReadSectionName(FILE *fp, Elf32_Shdr shstrtab_sect_header, Elf32_Shdr section, char* name);
 void ReadString(FILE *fp, Elf32_Shdr shstrtab_sect_header, Elf32_Off string_offset, char* dst);
 #ifdef CONFIG_FTRACE
-func_add func_table[512];
+func_add func_table[1024];
 #else
 func_add func_table[0];
 #endif
