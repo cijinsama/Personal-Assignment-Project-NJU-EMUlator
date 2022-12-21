@@ -103,6 +103,7 @@ void ReadSectionName(int fp, Elf32_Shdr shstrtab_sect_header, Elf32_Shdr section
 
 
 size_t do_sys_execve(const char * filename, char *const argv[], char *const envp[]){
+	Log("loading program : %s", filename);
 	naive_uload(NULL, filename);
 	return 0;
 }
