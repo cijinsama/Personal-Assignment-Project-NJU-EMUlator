@@ -78,9 +78,19 @@ int do_sys_open(const char *path, int flags, int mode) {
 }
 
 size_t do_sys_read(int fd, void *buf, size_t count) {
-	int ret = file_table[fd].read(buf, file_table[fd].disk_offset + file_table[fd].open_offset, count);
-	if (fd >= FD_FILE) file_table[fd].open_offset += count;
-  return ret;
+	size_t ret = 0;
+	if(fd >= FD_FILE) {
+		if(file_table[fd].open_offset + count > file_table[fd].size){
+			count = file_table[fd].size - file_table[fd].open_offset;
+		}
+		ret = file_table[fd].read(buf, file_table[fd].disk_offset + file_table[fd].open_offset, count);
+		file_table[fd].open_offset += count;
+// 		assert(file_table[fd].open_offset + count <= file_table[fd].size);
+	}
+	else {
+		ret = file_table[fd].read(buf, file_table[fd].disk_offset + file_table[fd].open_offset, count);
+	}
+	return ret;
 }
 
 int do_sys_close(int fd){
@@ -110,9 +120,17 @@ size_t do_sys_lseek(int fd, size_t offset, int whence) {
 
 size_t do_sys_write(int fd, const void *buf, size_t count){
 // 	Log("get write file : %d: %xB at %x", fd,count,file_table[fd].open_offset);
-	size_t ret = count;
-	ret = file_table[fd].write(buf, file_table[fd].disk_offset + file_table[fd].open_offset, count);
-	if (fd >= FD_FILE) file_table[fd].open_offset += count;
+	size_t ret = 0;
+	if(fd >= FD_FILE){
+		if(file_table[fd].open_offset + count > file_table[fd].size){
+			count = file_table[fd].size - file_table[fd].open_offset;
+		}
+		ret = file_table[fd].write(buf, file_table[fd].disk_offset + file_table[fd].open_offset, count);
+		file_table[fd].open_offset += count;
+	}
+	else{
+		ret = file_table[fd].write(buf, file_table[fd].disk_offset + file_table[fd].open_offset, count);
+	}
 	return ret;
 }
 
