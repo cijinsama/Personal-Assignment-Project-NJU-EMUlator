@@ -42,8 +42,9 @@ size_t events_read(void *buf, size_t offset, size_t len) {
 	strcat(buffer_for_key, keyname[event.keycode]);
 	strcat(buffer_for_key, "\n");
 	strncpy(buf + offset, buffer_for_key, len);
-	if (strlen(buffer_for_key) < len) return strlen(buffer_for_key);
-	else return len;
+// 	if (strlen(buffer_for_key) < len) return strlen(buffer_for_key);
+// 	else return len;
+	return 1;
 }
 
 static int screen_w,screen_h;

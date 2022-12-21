@@ -40,9 +40,9 @@ int SDL_PollEvent(SDL_Event *ev) {
 		}
 	}
 	//如果更新按键状态，如果没有更新就返回0
-  int ret = SDL_SetKeyState(ev);
-	printf("debug ret = %d\n", ret);
-	return ret;
+  SDL_SetKeyState(ev);
+// 	printf("debug ret = %d\n", ret);
+	return 1;
 }
 
 int SDL_WaitEvent(SDL_Event *event) {
@@ -60,13 +60,14 @@ uint8_t* SDL_GetKeyState(int *numkeys) {
 	printf("Unkown right 查一下web\n");
 	assert(0);
   if (numkeys){
+		*numkeys = sizeof(keyname)/sizeof(keyname[0]);
 		return keyboard_status;
 	}
 	assert(0);
 	return NULL;
 }
 int SDL_SetKeyState(SDL_Event *ev) {
-	printf("key : %s debug origin : %d, get : %d\n",keyname[ev->key.keysym.sym],keyboard_status[ev->key.keysym.sym], ev->key.type);
+// 	printf("key : %s debug origin : %d, get : %d\n",keyname[ev->key.keysym.sym],keyboard_status[ev->key.keysym.sym], ev->key.type);
 	if(keyboard_status[ev->key.keysym.sym] == ev->key.type) return 0;
 	else{
 		keyboard_status[ev->key.keysym.sym] = ev->key.type;
