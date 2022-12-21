@@ -6,20 +6,20 @@ int main() {
   write(1, "Hello World!\n", 13);
   int i = 2;
   volatile int j = 0;
-	int *a = malloc(31);
-	int *b = malloc(32);
-	int *c = malloc(33);
-	int *d = malloc(5);
+	int *a = malloc(127);
+	int *b = malloc(0);
 	printf("%x\n", a);
 	printf("%x\n", b);
 	printf("%x\n", b - a);
-	printf("%x\n", c);
-	printf("%x\n", c - b);
-	printf("%x\n", d);
-	printf("%x\n", d - c);
 	free(a);
 	free(b);
-	free(c);
+	a = malloc(129);
+	b = malloc(0);
+	printf("%x\n", a);
+	printf("%x\n", b);
+	printf("%x\n", b - a);
+	free(a);
+	free(b);
 
 //   while (1) {
 //     j ++;
