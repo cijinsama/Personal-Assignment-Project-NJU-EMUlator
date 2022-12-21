@@ -42,7 +42,7 @@ int SDL_PollEvent(SDL_Event *ev) {
 	//如果更新按键状态，如果没有更新就返回0
   int ret = SDL_SetKeyState(ev);
 	printf("debug ret = %d\n", ret);
-	return 1;
+	return ret;
 }
 
 int SDL_WaitEvent(SDL_Event *event) {
@@ -69,7 +69,7 @@ int SDL_SetKeyState(SDL_Event *ev) {
 	printf("key : %s debug origin : %d, get : %d\n",keyname[ev->key.keysym.sym],keyboard_status[ev->key.keysym.sym], ev->key.type);
 	if(keyboard_status[ev->key.keysym.sym] == ev->key.type) return 0;
 	else{
-		keyboard_status[ev->key.keysym.sym] == ev->key.type;
+		keyboard_status[ev->key.keysym.sym] = ev->key.type;
 		return 1;
 	}
 }
