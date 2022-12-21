@@ -6,10 +6,10 @@ int main() {
   write(1, "Hello World!\n", 13);
   int i = 2;
   volatile int j = 0;
-	int *a = malloc(i);
-	int *b = malloc(i);
-	int *c = malloc(i+1);
-	int *d = malloc(i+1);
+	int *a = malloc(4);
+	int *b = malloc(4);
+	int *c = malloc(5);
+	int *d = malloc(5);
 	printf("%x\n", a);
 	printf("%x\n", b);
 	printf("%x\n", b - a);
