@@ -12,6 +12,7 @@ int main() {
 	i = 3;
 	a = malloc(i);
 	int *b = malloc(i);
+	printf("%x\n", a);
 	printf("%x\n", b);
 	free(a);
 	free(b);
