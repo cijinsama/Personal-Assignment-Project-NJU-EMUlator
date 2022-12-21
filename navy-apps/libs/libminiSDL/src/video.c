@@ -12,6 +12,7 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
 	int32_t offset_src;
 	SDL_Rect temp;
 	//确定offset
+	printf("debug video.c 1\n");
 	if (srcrect == NULL){
 		temp.x = 0;
 		temp.y = 0;

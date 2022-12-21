@@ -15,7 +15,7 @@ typedef struct {
 } Finfo;
 
 static Finfo file_table[] __attribute__((used)) = {
-// #include "files.h"
+#include "files.h"
 };
 
 
