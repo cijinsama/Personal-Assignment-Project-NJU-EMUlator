@@ -12,8 +12,11 @@ int main() {
 	int *d = malloc(i+1);
 	a = malloc(sizeof(int));
 	printf("%x\n", a);
+	printf("%x\n", b);
 	printf("%x\n", b - a);
+	printf("%x\n", c);
 	printf("%x\n", c - b);
+	printf("%x\n", d);
 	printf("%x\n", d - c);
 	free(a);
 	free(b);
