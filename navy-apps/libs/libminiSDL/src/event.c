@@ -13,6 +13,7 @@ static const char *keyname[] = {
 };
 
 int SDL_PushEvent(SDL_Event *ev) {
+	assert(0);
   return 0;
 }
 
@@ -39,7 +40,8 @@ int SDL_PollEvent(SDL_Event *ev) {
 		}
 	}
 	//如果更新按键状态，如果没有更新就返回0
-  return SDL_SetKeyState(ev);
+//   return SDL_SetKeyState(ev);
+	return 1;
 }
 
 int SDL_WaitEvent(SDL_Event *event) {
