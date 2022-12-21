@@ -6,9 +6,9 @@ int main() {
   write(1, "Hello World!\n", 13);
   int i = 2;
   volatile int j = 0;
-	int *a = malloc(4);
-	int *b = malloc(4);
-	int *c = malloc(5);
+	int *a = malloc(31);
+	int *b = malloc(32);
+	int *c = malloc(33);
 	int *d = malloc(5);
 	printf("%x\n", a);
 	printf("%x\n", b);
