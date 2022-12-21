@@ -10,7 +10,6 @@ int main() {
 	int *b = malloc(i);
 	int *c = malloc(i+1);
 	int *d = malloc(i+1);
-	a = malloc(sizeof(int));
 	printf("%x\n", a);
 	printf("%x\n", b);
 	printf("%x\n", b - a);
