@@ -17,11 +17,13 @@ enum {FD_STDIN, FD_STDOUT, FD_STDERR, FD_EVENT, FD_DISPINFO, FD_FB, FD_FILE};
 
 size_t invalid_read(void *buf, size_t offset, size_t len) {
 	Log("Read None");
+	panic("没有找到对应文件");
   return 0;
 }
 
 size_t invalid_write(const void *buf, size_t offset, size_t len) {
 	Log("Read None");
+	panic("没有找到对应文件");
   return 0;
 }
 
@@ -82,6 +84,7 @@ int do_sys_open(const char *path, int flags, int mode) {
 		}
 	}
 	Log("Can't find file : %s", path);
+	panic("没有找到对应文件");
   return 0;
 }
 
