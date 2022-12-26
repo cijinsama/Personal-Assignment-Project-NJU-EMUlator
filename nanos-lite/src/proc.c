@@ -36,8 +36,9 @@ void init_proc() {
   Log("Initializing processes...");
 
   // load program here
+	panic("不应该到这\n");
 
-	naive_uload(current, "/bin/nterm");
+// 	naive_uload(current, "/bin/nterm");
 }
 
 Context* schedule(Context *prev) {
