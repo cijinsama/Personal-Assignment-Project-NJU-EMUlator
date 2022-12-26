@@ -53,10 +53,6 @@ void init_proc() {
   switch_boot_pcb();
 
   Log("Initializing processes...");
-
-  // load program here
-// 	naive_uload(current, "/bin/dummy");
-	context_uload(&pcb[0], "/bin/nterm");
 }
 
 Context* schedule(Context *prev) {
