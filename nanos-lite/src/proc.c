@@ -32,6 +32,7 @@ void context_kload(void (*entry)(void *), void *arg, PCB *pcb){
 
 void init_proc() {
 	context_kload(hello_fun, "cijin", &pcb[0]);
+	context_kload(hello_fun, "liuyi", &pcb[1]);
   switch_boot_pcb();
 
   Log("Initializing processes...");
