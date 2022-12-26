@@ -27,7 +27,7 @@ void ReadElfHeader(int fd, Elf_Ehdr *elfheader);
 void program2vmem(int fd, uintptr_t program_off, uintptr_t vmemaddr, uint32_t memsize);
 void vmemset(uint8_t* vaddr,uint32_t size, uint32_t value);
 
-static uintptr_t loader(PCB *pcb, const char *filename) {
+uintptr_t loader(PCB *pcb, const char *filename) {
 	Log("load file name : %s", filename);
 	Elf_Ehdr elf_header;
 	Elf_Off program_header_off;

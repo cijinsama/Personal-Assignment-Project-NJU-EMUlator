@@ -21,25 +21,42 @@ void hello_fun(void *arg) {
   }
 }
 
-void context_kload(void (*entry)(void *), void *arg, PCB *pcb){
+void context_kload(PCB *pcb, void (*entry)(void *), void *arg){
 	Area area;
 	area.start = pcb->stack;
 	area.end = pcb->stack + STACK_SIZE;
+
+  Log("kload Jump to entry = %p",(void *)entry);
+
 	Context *context = kcontext(area, entry, arg);
 	pcb->cp = context;
 	return;
 }
 
+void context_uload(PCB *pcb, char filename[]){
+	Area area;
+	area.start = heap.end - STACK_SIZE;
+	area.end = heap.end;
+
+  uintptr_t entry = loader(pcb, filename);
+  Log("uload Jump to entry = %p",(void *)entry);
+
+	Context *context = ucontext(NULL, area,(void *) entry);
+	pcb->cp = context;
+	return;
+}
+
 void init_proc() {
-	context_kload(hello_fun, "cijin", &pcb[0]);
-	context_kload(hello_fun, "liuyi", &pcb[1]);
+	context_uload(&pcb[0], "/bin/nterm");
+	context_kload(&pcb[1], hello_fun, "cijin");
+	
   switch_boot_pcb();
 
   Log("Initializing processes...");
 
   // load program here
-
-	naive_uload(current, "/bin/dummy");
+// 	naive_uload(current, "/bin/dummy");
+	context_uload(&pcb[0], "/bin/nterm");
 }
 
 Context* schedule(Context *prev) {

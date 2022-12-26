@@ -21,8 +21,6 @@ size_t ramdisk_write(const void *buf, size_t offset, size_t len);
 //# define CONFIG_STRACE
 //#define CONFIG_RAMTRACE
 
-
-
 size_t serial_write(const void *buf, size_t offset, size_t len);
 size_t do_sys_gettimeofday(struct timeval * tv, struct timezone * tz);
 size_t events_read(void *buf, size_t offset, size_t len);
