@@ -1,3 +1,4 @@
+#include <common.h>
 #include <proc.h>
 
 #define MAX_NR_PROC 4
@@ -19,7 +20,17 @@ void hello_fun(void *arg) {
   }
 }
 
+void context_kload(void (*entry)(void *), void *arg, PCB *pcb){
+	Area area;
+	area.start = pcb->stack;
+	area.end = pcb->stack + STACK_SIZE;
+	Context *context = kcontext(area, entry, arg);
+	pcb->cp = context;
+	return;
+}
+
 void init_proc() {
+	context_kload(hello_fun, NULL, &pcb[0]);
   switch_boot_pcb();
 
   Log("Initializing processes...");
@@ -30,5 +41,8 @@ void init_proc() {
 }
 
 Context* schedule(Context *prev) {
-  return NULL;
+	current->cp = prev;
+	current = &pcb[0];
+  return current->cp;
 }
+

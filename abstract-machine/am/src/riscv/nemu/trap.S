@@ -49,7 +49,12 @@ __am_asm_trap:
 
   mv a0, sp
   jal __am_irq_handle
+	//自己加的
+	mv sp, a0
+	//切换栈顶指针到新的上下文上
+	addi t4, sp, CONTEXT_SIZE
 
+	//
   LOAD t1, OFFSET_STATUS(sp)
   LOAD t2, OFFSET_EPC(sp)
   csrw mstatus, t1

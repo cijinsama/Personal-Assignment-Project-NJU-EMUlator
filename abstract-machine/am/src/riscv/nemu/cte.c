@@ -6,7 +6,7 @@ static Context* (*user_handler)(Event, Context*) = NULL;
 
 
 void event_for_excp_ecvironment(Event *ev, Context *c){
-	if(c->GPR1 == -1){//10是a0
+	if(c->GPR1 == -1){
 		ev->event = EVENT_YIELD;
 	}
 	else{
@@ -42,7 +42,12 @@ bool cte_init(Context*(*handler)(Event, Context*)) {
 }
 
 Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
-  return NULL;
+	Context *context = kstack.end - sizeof(Context);
+	context->mepc = (uintptr_t)	entry;
+	//context->mstatus = 0x1880;
+	context->mstatus = 0x1800;
+	//context->gpu[10] = arg;
+  return context;
 }
 
 void yield() {
