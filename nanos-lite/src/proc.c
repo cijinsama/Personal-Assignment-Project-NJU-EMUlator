@@ -15,6 +15,7 @@ void hello_fun(void *arg) {
   int j = 1;
   while (1) {
     Log("Hello World from Nanos-lite with arg '%p' for the %dth time!", (uintptr_t)arg, j);
+    Log("arg is %s", ((char **) arg)[0], j);
     j ++;
     yield();
   }
@@ -30,7 +31,7 @@ void context_kload(void (*entry)(void *), void *arg, PCB *pcb){
 }
 
 void init_proc() {
-	context_kload(hello_fun, NULL, &pcb[0]);
+	context_kload(hello_fun, "cijin", &pcb[0]);
   switch_boot_pcb();
 
   Log("Initializing processes...");
@@ -42,7 +43,8 @@ void init_proc() {
 
 Context* schedule(Context *prev) {
 	current->cp = prev;
-	current = &pcb[0];
+	//每次返回pcb中的第一个进程执行
+	current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
   return current->cp;
 }
 

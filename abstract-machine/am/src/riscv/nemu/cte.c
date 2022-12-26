@@ -46,7 +46,7 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
 	context->mepc = (uintptr_t)	entry;
 	//context->mstatus = 0x1880;
 	context->mstatus = 0x1800;
-	//context->gpu[10] = arg;
+	context->gpr[10] = (uintptr_t) arg;//用a0传参数
   return context;
 }
 
