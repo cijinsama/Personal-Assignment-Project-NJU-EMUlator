@@ -47,7 +47,7 @@ void context_uload(PCB *pcb, char filename[]){
 }
 
 void init_proc() {
-	context_uload(&pcb[0], "/bin/nterm");
+	context_uload(&pcb[0], "/bin/dummy");
 	context_kload(&pcb[1], hello_fun, "cijin");
 	
   switch_boot_pcb();
