@@ -14,13 +14,11 @@ int main(int argc, char *argv[]) {
 		printf("argv %d = %s", i, argv[i]);
 	}
 
-//   while (1) {
-//     j ++;
-//     if (j == 10000) {
-//       printf("Hello World from Navy-apps for the %dth time!\n", i ++);
-//       j = 0;
-//     }
-//   }
-//   return _syscall_(SYS_yield, 0, 0, 0);
-	return 0;
+	int j = 0;
+  while (1) {
+    j ++;
+		printf("Hello World from Navy-apps for the %dth time!\n", j ++);
+		_syscall_(SYS_yield, 0, 0, 0);
+  }
+  return 0;
 }
