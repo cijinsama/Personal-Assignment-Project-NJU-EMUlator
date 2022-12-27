@@ -51,6 +51,7 @@ __am_asm_trap:
 
   mv a0, sp
   jal __am_irq_handle
+	ebreak
 	//运行完后已经修改了sp指向的context,现在就是想要的程序的context
 	//恢复context
 	//自己加的
