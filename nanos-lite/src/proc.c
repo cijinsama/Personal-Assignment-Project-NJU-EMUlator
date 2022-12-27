@@ -107,7 +107,7 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	Log("argc is %p", *(int *)temp);
 	temp += sizeof(int);
 	*(char ***)temp = argv_;
-	Log("&argv is %p", temp);
+	Log("&argv is %p", (char ***)temp);
 	Log("argv is %p", *(char ***)temp);
 	Log("argv[0] is %p", **(char ***)temp);
 	Log("argv[0] string is %s", **(char ***)temp);
