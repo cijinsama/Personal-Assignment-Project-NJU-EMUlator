@@ -52,6 +52,8 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	int argc = 0;
 	int envc = 0;
 	Log("1");
+	Log("%s", argv[0]);
+	Log("%s", argv[1]);
 	if(argv){
 		for(;argv[argc]!=NULL; argc++){
 			current_addr -= strlen(argv[argc]);
