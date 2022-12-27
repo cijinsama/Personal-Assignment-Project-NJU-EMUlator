@@ -47,6 +47,8 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 
 	Context *context = ucontext(NULL, area,(void *) entry);
 	pcb->cp = context;
+	//gpr[2]是sp
+  context->gpr[2]  = (uintptr_t) area.start;
 	return;
 }
 
