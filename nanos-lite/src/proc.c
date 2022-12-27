@@ -23,8 +23,8 @@ void hello_fun(void *arg) {
 
 void context_kload(PCB *pcb, void (*entry)(void *), void *arg){
 	Area area;
-	area.start = pcb->cp;
-	area.end = pcb->cp + STACK_SIZE;
+	area.start = pcb->stack;
+	area.end = pcb->stack + STACK_SIZE;
 
   Log("kload Jump to entry = %p",(void *)entry);
 
@@ -35,30 +35,88 @@ void context_kload(PCB *pcb, void (*entry)(void *), void *arg){
 
 void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	Area area;
-	area.start = pcb->cp;
-	area.end = pcb->cp + STACK_SIZE;
+	area.start = heap.end - STACK_SIZE;
+	area.end = heap.end;
+
+
+	//假设main上面的argc从这个开始
+	uintptr_t main_ebp = (uintptr_t)area.start - PGSIZE;
+	char** environ = (char**) (main_ebp + 64);
+	//搜索argcenv的大小，并且获得储存完过后的地址
+	char* current_addr = area.end;
+	char* env_str_addr = NULL;
+	char* arg_str_addr = NULL;
+	int argc = 0;
+	int envc = 0;
+	for(;argv[argc]!=NULL; argc++){
+		current_addr -= strlen(argv[argc]);
+	}
+	env_str_addr = current_addr;
+	for(;envp[envc]!=NULL; envc++){
+		current_addr -= strlen(envp[envc]);
+	}
+	arg_str_addr = current_addr;
+
+	//把字符串copy进取
+//   char *envp_ustack[envc];
+//   char *argp_ustack[argc];
+	current_addr = area.end;
+	for(int i = envc-1; i>=0 ; i--){
+		current_addr -= strlen(envp[i]);
+		strcpy(current_addr, envp[i]);
+// 		envp_ustack[i] = current_addr;
+	}
+
+	for(int i = argc-1; i>=0 ; i--){
+		current_addr -= strlen(argv[i]);
+		strcpy(current_addr, argv[i]);
+// 		argp_ustack[i] = current_addr;
+	}
+	//把字符串对应的指针copy进取
+	//首先正向copyenv
+	environ[0] = env_str_addr;
+	for(int i = 1; i < envc; i++){
+		environ[i] = environ[i-1] + strlen(envp[i]);
+	}
+	environ[envc] = NULL;
+	//然后正向copyargv
+	char** argvp = environ - argc - 1;
+	argvp[0] = arg_str_addr;
+	for(int i = 1; i < argc; i++){
+		argvp[i] = argvp[i-1] + strlen(argv[i]);
+	}
+	argvp[envc] = NULL;
+
+	//开始写下方的东西
+	uintptr_t temp = main_ebp + 4;
+	*(int *)(temp + 4) = argc;
+	temp += sizeof(int);
+	*(char ***)temp = argvp;
+	temp += sizeof(char **);
+	*(char ***) temp = environ;
+	
 
   uintptr_t entry = loader(pcb, filename);
   Log("uload Jump to entry = %p",(void *)entry);
 
 	//拷贝argv，envp
-// 	((uint32_t *)area.start)[1]
 
 
 	Context *context = ucontext(NULL, area,(void *) entry);
 	pcb->cp = context;
 
-	Log("The sp is supposed to be 0x%x", area.start);
+	Log("The sp is supposed to be 0x%x", main_ebp);
+	Log("pcb->cp = 0x%x", context);
 	//gpr[2]是sp
-  context->gpr[2]  = (uintptr_t) area.start;
-	context->GPRx = (uintptr_t) area.start;
+  context->gpr[2]  = main_ebp;
+	context->GPRx = main_ebp + 4;
 	return;
 }
 
 void init_proc() {
 // 	context_uload(&pcb[0], "/bin/pal", NULL, NULL);
-	context_uload(&pcb[1], "/bin/dummy", NULL, NULL);
 	context_kload(&pcb[0], hello_fun, "cijin");
+	context_uload(&pcb[1], "/bin/dummy", NULL, NULL);
 	
   switch_boot_pcb();
 
