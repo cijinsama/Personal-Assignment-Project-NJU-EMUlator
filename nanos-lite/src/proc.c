@@ -144,7 +144,7 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 
 
 #define prog_hello "/bin/hello"
-#define prog_nterm "/bin/hello"
+#define prog_nterm "/bin/nterm"
 #define prog_pal "/bin/pal"
 #define prog_n prog_1919
 
