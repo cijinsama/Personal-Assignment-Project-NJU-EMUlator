@@ -46,7 +46,7 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	char** environ = (char**) (main_ebp + 64);
 
 	//搜索argcenv的大小，并且获得储存完过后的地址
-	char* current_addr = area.end;
+	char* current_addr = area.end - 16;
 	char* env_str_addr = NULL;
 	char* arg_str_addr = NULL;
 	int argc = 0;
