@@ -17,7 +17,6 @@ PCB *get_free_PCB(){
 
 
 void switch_boot_pcb() {
-	Log("switch boot %p", &pcb_boot);
   current = &pcb_boot;
 }
 
@@ -151,7 +150,7 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 void init_proc() {
 // 	context_uload(&pcb[0], "/bin/pal", NULL, NULL);
 	context_kload(&pcb[0], hello_fun, "cijin");
-  char *argv1[] = {prog_nterm, "--skip",NULL};
+  char *argv1[] = {prog_nterm, NULL};
   char *envp1[] = {NULL};
 	context_uload(&pcb[1], prog_nterm, argv1, envp1);
 	
@@ -174,5 +173,6 @@ size_t execve(const char * filename, char *const argv[], char *const envp[]){
 	if(newpcb) context_uload(newpcb, (char *) filename, (char **) argv, (char **) envp);
 	else panic("lack of free pcb");
 	switch_boot_pcb();
+	yield();
 	return 0;
 }
