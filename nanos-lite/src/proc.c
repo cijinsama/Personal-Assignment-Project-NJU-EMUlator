@@ -42,7 +42,7 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
   Log("uload Jump to entry = %p",(void *)entry);
 
 
-	printf("context_uload %p\n", area.start);
+	printf("context_uload %p, entry at %p\n", area.start, entry);
 	//拷贝argv，envp
 // 	((uint32_t *)area.start)[1]
 	
