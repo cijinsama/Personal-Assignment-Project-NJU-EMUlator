@@ -2,24 +2,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int main() {
-  write(1, "Hello World!\n", 13);
-  int i = 2;
-  volatile int j = 0;
-	int *a = malloc(127);
-	int *b = malloc(0);
-	printf("%x\n", a);
-	printf("%x\n", b);
-	printf("%x\n", b - a);
-	free(a);
-	free(b);
-	a = malloc(129);
-	b = malloc(0);
-	printf("%x\n", a);
-	printf("%x\n", b);
-	printf("%x\n", b - a);
-	free(a);
-	free(b);
+int main(int argc, char *argv[]) {
+	printf("argc = %d\n", argc);
+  int j = 1;
+	for(int i = 0; i < argc; i++){
+		printf("argv %d = %s", i, argv[i]);
+	}
+	j ++;
 
 //   while (1) {
 //     j ++;
