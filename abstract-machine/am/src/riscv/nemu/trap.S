@@ -51,10 +51,8 @@ __am_asm_trap:
 
   mv a0, sp
   jal __am_irq_handle
-	//运行完后已经修改了sp指向的context,现在就是想要的程序的context
+	//a0是返回值寄存器,指向的是context
 	//恢复context
-	//自己加的
-	//a0是返回值寄存器
 	mv sp, a0
 	//
   LOAD t1, OFFSET_STATUS(sp)
@@ -70,6 +68,6 @@ __am_asm_trap:
   addi sp, sp, CONTEXT_SIZE
 	//自己加的
   mv sp, t4
-#   LOAD t4, (sp)
+  LOAD sp, (sp)
 	//
   mret
