@@ -92,21 +92,22 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	}
 	environ[envc] = NULL;
 	//然后正向copyargv
-	char** argvp = environ - argc - 1;
+	char** argv_ = environ - argc - 1;
 	if(argv){
-		argvp[0] = arg_str_addr;
+		argv_[0] = arg_str_addr;
 		for(int i = 1; i < argc; i++){
-			argvp[i] = argp_ustack[i];
+			argv_[i] = argp_ustack[i];
 		}
 	}
-	argvp[envc] = NULL;
+	argv_[envc] = NULL;
 
 	//开始写下方的东西
 	uintptr_t temp = main_ebp + 4;
 	*(int *)temp  = argc;
-	Log("argc address is %p", (int *)temp);
+	Log("&argc is %p", (int *)temp);
+	Log("argc is %p", *(int *)temp);
 	temp += sizeof(int);
-	*(char ***)temp = argvp;
+	*(char ***)temp = argv_;
 	Log("&argv is %p", temp);
 	Log("argv is %p", *(char ***)temp);
 	Log("argv[0] is %p", **(char ***)temp);
