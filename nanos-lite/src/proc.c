@@ -64,7 +64,7 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 		}
 		arg_str_addr = current_addr;
 	}
-	Log("2");
+	Log("2::::%x", envc);
 	//把字符串copy进取
 //   char *envp_ustack[envc];
 //   char *argp_ustack[argc];
