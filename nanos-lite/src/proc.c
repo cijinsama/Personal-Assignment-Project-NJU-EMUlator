@@ -43,9 +43,9 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 
 
 	printf("context_uload %p, entry at %p\n", area.start, entry);
+	printf("context_uload %p, entry at %p\n", area.end, entry);
 	//拷贝argv，envp
 // 	((uint32_t *)area.start)[1]
-	
 
 
 	Context *context = ucontext(NULL, area,(void *) entry);
