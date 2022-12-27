@@ -107,6 +107,10 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	Log("argc address is %p", (int *)temp);
 	temp += sizeof(int);
 	*(char ***)temp = argvp;
+	Log("&argv is %p", temp);
+	Log("argv is %p", *(char ***)temp);
+	Log("argv[0] is %p", **(char ***)temp);
+	Log("argv[0] string is %s", **(char ***)temp);
 	temp += sizeof(char **);
 	*(char ***) temp = environ;
 	
