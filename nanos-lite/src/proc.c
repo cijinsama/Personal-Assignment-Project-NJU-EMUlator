@@ -103,14 +103,14 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	//开始写下方的东西
 	uintptr_t temp = main_ebp + 4;
 	*(int *)temp  = argc;
-	Log("&argc is %p", (int *)temp);
-	Log("argc is %p", *(int *)temp);
+// 	Log("&argc is %p", (int *)temp);
+// 	Log("argc is %p", *(int *)temp);
 	temp += sizeof(int);
 	*(char ***)temp = argv_;
-	Log("&argv is %p", (char ***)temp);
-	Log("argv is %p", *(char ***)temp);
-	Log("argv[0] is %p", **(char ***)temp);
-	Log("argv[0] string is %s", **(char ***)temp);
+// 	Log("&argv is %p", (char ***)temp);
+// 	Log("argv is %p", *(char ***)temp);
+// 	Log("argv[0] is %p", **(char ***)temp);
+// 	Log("argv[0] string is %s", **(char ***)temp);
 	temp += sizeof(char **);
 	*(char ***) temp = environ;
 	
@@ -124,8 +124,8 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	Context *context = ucontext(NULL, area,(void *) entry);
 	pcb->cp = context;
 
-	Log("The sp is supposed to be 0x%x", main_ebp);
-	Log("pcb->cp = 0x%x", context);
+// 	Log("The sp is supposed to be 0x%x", main_ebp);
+// 	Log("pcb->cp = 0x%x", context);
 	//gpr[2]是sp
 //   context->gpr[2]  = main_ebp;
 	context->GPRx = main_ebp + 4;
