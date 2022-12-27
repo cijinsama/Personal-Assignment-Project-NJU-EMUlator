@@ -80,7 +80,7 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	Log("2.5");
 	if(argv){
 		for(int i = argc-1; i>=0 ; i--){
-			current_addr -= strlen(argv[i]);
+			current_addr -= strlen(argv[i]) + 1;
 			strcpy(current_addr, argv[i]);
 	// 		argp_ustack[i] = current_addr;
 		}
