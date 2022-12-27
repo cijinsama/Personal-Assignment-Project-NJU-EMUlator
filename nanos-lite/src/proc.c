@@ -55,8 +55,8 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 
 void init_proc() {
 // 	context_uload(&pcb[0], "/bin/pal", NULL, NULL);
-	context_uload(&pcb[0], "/bin/hello", NULL, NULL);
-	context_kload(&pcb[1], hello_fun, "cijin");
+	context_uload(&pcb[1], "/bin/hello", NULL, NULL);
+	context_kload(&pcb[0], hello_fun, "cijin");
 	
   switch_boot_pcb();
 
