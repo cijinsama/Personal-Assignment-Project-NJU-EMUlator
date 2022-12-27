@@ -102,8 +102,9 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	argvp[envc] = NULL;
 
 	//开始写下方的东西
-	uintptr_t temp = main_ebp + 4;
+	uintptr_t temp = main_ebp;
 	*(int *)(temp + 4) = argc;
+	Log("argc address is %p", *(int *)(temp + 4));
 	temp += sizeof(int);
 	*(char ***)temp = argvp;
 	temp += sizeof(char **);
@@ -122,7 +123,7 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	Log("The sp is supposed to be 0x%x", main_ebp);
 	Log("pcb->cp = 0x%x", context);
 	//gpr[2]是sp
-  context->gpr[2]  = main_ebp;
+//   context->gpr[2]  = main_ebp;
 	context->GPRx = main_ebp + 4;
 	return;
 }
