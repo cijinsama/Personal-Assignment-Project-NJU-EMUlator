@@ -30,6 +30,7 @@ f(30) f(31)
 .align 3
 .globl __am_asm_trap
 __am_asm_trap:
+	//这一步过后sp指向的是将要给irq_handle的参数context
   addi sp, sp, -CONTEXT_SIZE
 
   MAP(REGS, PUSH)
@@ -41,6 +42,7 @@ __am_asm_trap:
   STORE t0, OFFSET_CAUSE(sp)
   STORE t1, OFFSET_STATUS(sp)
   STORE t2, OFFSET_EPC(sp)
+	//调用的参数context准备完成
 
   # set mstatus.MPRV to pass difftest
   li a0, (1 << 17)
@@ -51,9 +53,6 @@ __am_asm_trap:
   jal __am_irq_handle
 	//自己加的
 	mv sp, a0
-	//切换栈顶指针到新的上下文上
-	addi t4, sp, CONTEXT_SIZE
-
 	//
   LOAD t1, OFFSET_STATUS(sp)
   LOAD t2, OFFSET_EPC(sp)
@@ -64,8 +63,5 @@ __am_asm_trap:
 
   addi sp, sp, CONTEXT_SIZE
 	//自己加的
-  mv sp, t4
-  LOAD t4, (sp)
-  addi sp, sp, XLEN
 	//
   mret
