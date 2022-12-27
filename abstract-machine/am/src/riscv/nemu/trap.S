@@ -63,4 +63,9 @@ __am_asm_trap:
   MAP(REGS, POP)
 
   addi sp, sp, CONTEXT_SIZE
+	//自己加的
+  mv sp, t4
+  LOAD t4, (sp)
+  addi sp, sp, XLEN
+	//
   mret
