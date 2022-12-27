@@ -51,7 +51,9 @@ __am_asm_trap:
 
   mv a0, sp
   jal __am_irq_handle
-	//a0是返回值寄存器,指向的是context
+	//如果当前进行了程序替换则
+	//a0是返回值寄存器,指向的是PCB储存的context
+	//否则a0还是原来的a0
 	//恢复context
 	mv sp, a0
 	//
@@ -60,6 +62,7 @@ __am_asm_trap:
   csrw mstatus, t1
   csrw mepc, t2
 
+	//并没有加载位置0和位置2的寄存器，也就是sp和0
   MAP(REGS, POP)
 
 	//自己加的
@@ -67,7 +70,8 @@ __am_asm_trap:
 	//
   addi sp, sp, CONTEXT_SIZE
 	//自己加的
+	//这应该判断是否把sp给加载进取
   mv sp, t4
-  LOAD sp, (sp)
+  LOAD t4, (sp)
 	//
   mret

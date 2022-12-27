@@ -23,8 +23,8 @@ void hello_fun(void *arg) {
 
 void context_kload(PCB *pcb, void (*entry)(void *), void *arg){
 	Area area;
-	area.start = pcb->stack;
-	area.end = pcb->stack + STACK_SIZE;
+	area.start = pcb->cp;
+	area.end = pcb->cp + STACK_SIZE;
 
   Log("kload Jump to entry = %p",(void *)entry);
 
@@ -35,8 +35,8 @@ void context_kload(PCB *pcb, void (*entry)(void *), void *arg){
 
 void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	Area area;
-	area.start = heap.end - STACK_SIZE;
-	area.end = heap.end;
+	area.start = pcb->cp;
+	area.end = pcb->cp + STACK_SIZE;
 
   uintptr_t entry = loader(pcb, filename);
   Log("uload Jump to entry = %p",(void *)entry);
@@ -51,6 +51,7 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	Log("The sp is supposed to be 0x%x", area.start);
 	//gpr[2]是sp
   context->gpr[2]  = (uintptr_t) area.start;
+	context->GPRx = (uintptr_t) area.start;
 	return;
 }
 
