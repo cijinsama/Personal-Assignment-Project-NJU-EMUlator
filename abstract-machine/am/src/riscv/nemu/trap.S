@@ -59,19 +59,11 @@ __am_asm_trap:
 	//
   LOAD t1, OFFSET_STATUS(sp)
   LOAD t2, OFFSET_EPC(sp)
+	//并没有加载位置0和位置2的寄存器，也就是sp和0
   csrw mstatus, t1
   csrw mepc, t2
 
-	//并没有加载位置0和位置2的寄存器，也就是sp和0
   MAP(REGS, POP)
 
-	//自己加的
-#   LOAD t4, OFFSET_SP(sp)
-	//
   addi sp, sp, CONTEXT_SIZE
-	//自己加的
-	//这应该判断是否把sp给加载进取
-#   mv sp, t4
-#   LOAD t4, (sp)
-	//
   mret

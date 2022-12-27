@@ -1,5 +1,6 @@
 #include <common.h>
 #include <proc.h>
+#include <memory.h>
 
 #define MAX_NR_PROC 4
 
@@ -7,7 +8,16 @@ static PCB pcb[MAX_NR_PROC] __attribute__((used)) = {};
 static PCB pcb_boot = {};
 PCB *current = NULL;
 
+PCB *get_free_PCB(){
+	for(int i = 0; i < sizeof(pcb)/sizeof(pcb[0]); i++){
+		if(pcb[i].cp == NULL)	return &pcb[i];
+	}
+	return NULL;
+}
+
+
 void switch_boot_pcb() {
+	Log("switch boot %p", &pcb_boot);
   current = &pcb_boot;
 }
 
@@ -35,18 +45,18 @@ void context_kload(PCB *pcb, void (*entry)(void *), void *arg){
 
 void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	Area area;
-	area.start = heap.end - STACK_SIZE;
-	area.end = heap.end;
+	area.start = new_page(MAX_NR_PROC);
+	area.end = heap.start + STACK_SIZE;
 	Log("start %x", area.start);
 	Log("end %x", area.end);
 
 
 	//假设main上面的argc从这个开始
-	uintptr_t main_ebp = (uintptr_t)area.start - PGSIZE;
+	uintptr_t main_ebp = (uintptr_t)area.end - 256;
 	char** environ = (char**) (main_ebp + 64);
 
 	//搜索argcenv的大小，并且获得储存完过后的地址
-	char* current_addr = area.end - 16;
+	char* current_addr = area.end - 4;
 	char* env_str_addr = NULL;
 	char* arg_str_addr = NULL;
 	int argc = 0;
@@ -133,16 +143,17 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 }
 
 
-#define prog_name_0 "/bin/hello"
-#define prog_name "/bin/pal"
-#define prog_n prog_name
+#define prog_hello "/bin/hello"
+#define prog_nterm "/bin/hello"
+#define prog_pal "/bin/pal"
+#define prog_n prog_1919
 
 void init_proc() {
 // 	context_uload(&pcb[0], "/bin/pal", NULL, NULL);
 	context_kload(&pcb[0], hello_fun, "cijin");
-  char *argv1[] = {prog_n, "--skip",NULL};
+  char *argv1[] = {prog_nterm, "--skip",NULL};
   char *envp1[] = {NULL};
-	context_uload(&pcb[1], prog_n, argv1, envp1);
+	context_uload(&pcb[1], prog_nterm, argv1, envp1);
 	
   switch_boot_pcb();
 
@@ -156,3 +167,12 @@ Context* schedule(Context *prev) {
   return current->cp;
 }
 
+
+size_t execve(const char * filename, char *const argv[], char *const envp[]){
+	Log("loading program : %s", filename);
+	PCB* newpcb = get_free_PCB();
+	if(newpcb) context_uload(newpcb, (char *) filename, (char **) argv, (char **) envp);
+	else panic("lack of free pcb");
+	switch_boot_pcb();
+	return 0;
+}

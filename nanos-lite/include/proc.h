@@ -15,9 +15,12 @@ typedef union {
     uintptr_t max_brk;
   };
 } PCB;
+PCB *get_free_PCB();
 
+void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]);
 extern PCB *current;
 uintptr_t loader(PCB *pcb, const char *filename);
 
 void naive_uload(PCB *pcb, const char *filename);
+size_t execve(const char * filename, char *const argv[], char *const envp[]);
 #endif
