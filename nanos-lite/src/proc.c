@@ -51,8 +51,6 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	char* arg_str_addr = NULL;
 	int argc = 0;
 	int envc = 0;
-	Log("1");
-	Log("%s", argv[0]);
 	if(argv){
 		for(;argv[argc]!=NULL; argc++){
 			current_addr -= strlen(argv[argc]);
@@ -65,34 +63,31 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 		}
 		arg_str_addr = current_addr;
 	}
-	Log("2::::%x", argc);
 	//把字符串copy进取
-//   char *envp_ustack[envc];
-//   char *argp_ustack[argc];
+  char *envp_ustack[envc];
+  char *argp_ustack[argc];
 	current_addr = area.end;
 	if(envp){
 		for(int i = envc-1; i>=0 ; i--){
-			current_addr -= strlen(envp[i]);
+			current_addr -= strlen(envp[i]) + 1;
 			strcpy(current_addr, envp[i]);
-	// 		envp_ustack[i] = current_addr;
+	 		envp_ustack[i] = current_addr;
 		}
 	}
-	Log("2.5");
 	if(argv){
 		for(int i = argc-1; i>=0 ; i--){
 			current_addr -= strlen(argv[i]) + 1;
 			strcpy(current_addr, argv[i]);
-	// 		argp_ustack[i] = current_addr;
+	 		argp_ustack[i] = current_addr;
 		}
 	}
 
-	Log("3");
 	//把字符串对应的指针copy进取
 	//首先正向copyenv
 	if(envp){
 		environ[0] = env_str_addr;
 		for(int i = 1; i < envc; i++){
-			environ[i] = environ[i-1] + strlen(envp[i]);
+			environ[i] = envp_ustack[i];
 		}
 	}
 	environ[envc] = NULL;
@@ -101,7 +96,7 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	if(argv){
 		argvp[0] = arg_str_addr;
 		for(int i = 1; i < argc; i++){
-			argvp[i] = argvp[i-1] + strlen(argv[i]);
+			argvp[i] = argp_ustack[i];
 		}
 	}
 	argvp[envc] = NULL;
