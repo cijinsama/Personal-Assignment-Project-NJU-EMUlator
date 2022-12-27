@@ -33,7 +33,7 @@ void context_kload(PCB *pcb, void (*entry)(void *), void *arg){
 	return;
 }
 
-void context_uload(PCB *pcb, char filename[]){
+void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	Area area;
 	area.start = heap.end - STACK_SIZE;
 	area.end = heap.end;
@@ -41,13 +41,21 @@ void context_uload(PCB *pcb, char filename[]){
   uintptr_t entry = loader(pcb, filename);
   Log("uload Jump to entry = %p",(void *)entry);
 
+
+	printf("context_uload %p\n", area.start);
+	//拷贝argv，envp
+// 	((uint32_t *)area.start)[1]
+	
+
+
 	Context *context = ucontext(NULL, area,(void *) entry);
 	pcb->cp = context;
 	return;
 }
 
 void init_proc() {
-	context_uload(&pcb[0], "/bin/dummy");
+// 	context_uload(&pcb[0], "/bin/pal", NULL, NULL);
+	context_uload(&pcb[0], "/bin/dummy", NULL, NULL);
 	context_kload(&pcb[1], hello_fun, "cijin");
 	
   switch_boot_pcb();
