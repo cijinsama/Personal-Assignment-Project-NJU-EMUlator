@@ -135,7 +135,7 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 
 #define prog_name_0 "/bin/hello"
 #define prog_name "/bin/pal"
-#define prog_n prog_name_0
+#define prog_n prog_name
 
 void init_proc() {
 // 	context_uload(&pcb[0], "/bin/pal", NULL, NULL);
