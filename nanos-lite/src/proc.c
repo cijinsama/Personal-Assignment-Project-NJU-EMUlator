@@ -132,12 +132,17 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	return;
 }
 
+
+#define prog_name_0 "/bin/hello"
+#define prog_name "/bin/pal"
+
+
 void init_proc() {
 // 	context_uload(&pcb[0], "/bin/pal", NULL, NULL);
 	context_kload(&pcb[0], hello_fun, "cijin");
-  char *argv1[] = {"liuyi", "qiqiq",NULL};
-  char *envp1[] = {"iuiu","qweqwe",NULL};
-	context_uload(&pcb[1], "/bin/hello", argv1, envp1);
+  char *argv1[] = {prog_name, "--skip",NULL};
+  char *envp1[] = {NULL};
+	context_uload(&pcb[1], prog_name, argv1, envp1);
 	
   switch_boot_pcb();
 
