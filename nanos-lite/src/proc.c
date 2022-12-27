@@ -98,7 +98,7 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 			argv_[i] = argp_ustack[i];
 		}
 	}
-	argv_[envc] = NULL;
+	argv_[argc] = NULL;
 
 	//开始写下方的东西
 	uintptr_t temp = main_ebp + 4;
