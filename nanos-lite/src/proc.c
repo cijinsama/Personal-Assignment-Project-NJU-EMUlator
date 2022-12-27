@@ -101,7 +101,6 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	}
 	argvp[envc] = NULL;
 
-	Log("4");
 	//开始写下方的东西
 	uintptr_t temp = main_ebp + 4;
 	*(int *)(temp + 4) = argc;
@@ -125,7 +124,6 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	//gpr[2]是sp
   context->gpr[2]  = main_ebp;
 	context->GPRx = main_ebp + 4;
-	Log("5");
 	return;
 }
 
