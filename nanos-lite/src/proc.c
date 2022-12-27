@@ -37,19 +37,21 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	Area area;
 	area.start = heap.end - STACK_SIZE;
 	area.end = heap.end;
-	Log("start %x\n", area.start);
-	Log("end %x\n", area.end);
+	Log("start %x", area.start);
+	Log("end %x", area.end);
 
 
 	//假设main上面的argc从这个开始
 	uintptr_t main_ebp = (uintptr_t)area.start - PGSIZE;
 	char** environ = (char**) (main_ebp + 64);
+
 	//搜索argcenv的大小，并且获得储存完过后的地址
 	char* current_addr = area.end;
 	char* env_str_addr = NULL;
 	char* arg_str_addr = NULL;
 	int argc = 0;
 	int envc = 0;
+	Log("1");
 	if(argv){
 		for(;argv[argc]!=NULL; argc++){
 			current_addr -= strlen(argv[argc]);
@@ -62,6 +64,7 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 		}
 		arg_str_addr = current_addr;
 	}
+	Log("2");
 	//把字符串copy进取
 //   char *envp_ustack[envc];
 //   char *argp_ustack[argc];
@@ -81,6 +84,7 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 		}
 	}
 
+	Log("3");
 	//把字符串对应的指针copy进取
 	//首先正向copyenv
 	if(envp){
@@ -97,9 +101,10 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 		for(int i = 1; i < argc; i++){
 			argvp[i] = argvp[i-1] + strlen(argv[i]);
 		}
-		argvp[envc] = NULL;
 	}
+	argvp[envc] = NULL;
 
+	Log("4");
 	//开始写下方的东西
 	uintptr_t temp = main_ebp + 4;
 	*(int *)(temp + 4) = argc;
@@ -123,6 +128,7 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	//gpr[2]是sp
   context->gpr[2]  = main_ebp;
 	context->GPRx = main_ebp + 4;
+	Log("5");
 	return;
 }
 
