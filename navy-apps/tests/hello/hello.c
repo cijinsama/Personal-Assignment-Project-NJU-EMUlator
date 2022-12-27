@@ -3,12 +3,12 @@
 #include <stdlib.h>
 
 int main(int argc, char *argv[]) {
-	printf("argc = %d\n", argc);
-  int j = 1;
-	for(int i = 0; i < argc; i++){
-		printf("argv %d = %s", i, argv[i]);
-	}
-	j ++;
+// 	printf("argc = %d\n", argc);
+//   int j = 1;
+// 	for(int i = 0; i < argc; i++){
+// 		printf("argv %d = %s", i, argv[i]);
+// 	}
+// 	j ++;
 
 //   while (1) {
 //     j ++;
