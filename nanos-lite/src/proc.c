@@ -102,9 +102,9 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	argvp[envc] = NULL;
 
 	//开始写下方的东西
-	uintptr_t temp = main_ebp;
-	*(int *)(temp + 4) = argc;
-	Log("argc address is %p", *(int *)(temp + 4));
+	uintptr_t temp = main_ebp + 4;
+	*(int *)temp  = argc;
+	Log("argc address is %p", (int *)temp);
 	temp += sizeof(int);
 	*(char ***)temp = argvp;
 	temp += sizeof(char **);
