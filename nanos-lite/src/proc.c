@@ -37,8 +37,8 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	Area area;
 	area.start = heap.end - STACK_SIZE;
 	area.end = heap.end;
-	Log("start %d\n", area.start);
-	Log("end %d\n", area.end);
+	Log("start %x\n", area.start);
+	Log("end %x\n", area.end);
 
 
 	//假设main上面的argc从这个开始
