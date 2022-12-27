@@ -53,13 +53,13 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	int envc = 0;
 	if(argv){
 		for(;argv[argc]!=NULL; argc++){
-			current_addr -= strlen(argv[argc]);
+			current_addr -= strlen(argv[argc]) + 1;
 		}
 	}
 	env_str_addr = current_addr;
 	if(envp){
 		for(;envp[envc]!=NULL; envc++){
-			current_addr -= strlen(envp[envc]);
+			current_addr -= strlen(envp[envc]) + 1;
 		}
 	}
 	arg_str_addr = current_addr;
@@ -71,7 +71,7 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 		for(int i = 0; i < envc; i++){
 			strcpy(current_addr, envp[i]);
 	 		envp_ustack[i] = current_addr;
-			current_addr += strlen(envp[i]);
+			current_addr += strlen(envp[i]) + 1;
 		}
 	}
 	current_addr = arg_str_addr;
@@ -79,7 +79,7 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 		for(int i = 0; i < argc ; i++){
 			strcpy(current_addr, argv[i]);
 	 		argp_ustack[i] = current_addr;
-			current_addr += strlen(argv[i]);
+			current_addr += strlen(argv[i]) + 1;
 		}
 	}
 
