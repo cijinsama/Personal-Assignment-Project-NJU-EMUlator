@@ -10,11 +10,6 @@
 extern int _syscall_(int, uintptr_t, uintptr_t, uintptr_t);
 
 int main(int argc, char *argv[]) {
-	printf("argc = %d\n", argc);
-	printf("&argv = %p\n", &argv);
-	printf("argv = %p\n", argv);
-	printf("argv[0] = %p\n", argv[0]);
-	printf("*argv[0] = %s\n", argv[0]);
 	for(int i = 0; i < argc; i++){
 		printf("argv %d = %s", i, argv[i]);
 	}
