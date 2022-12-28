@@ -46,8 +46,6 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	Area area;
 	area.start = new_page(MAX_NR_PROC);
 	area.end = heap.start + STACK_SIZE;
-	Log("start %x", area.start);
-	Log("end %x", area.end);
 
 
 	//假设main上面的argc从这个开始
@@ -114,14 +112,14 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	//开始写下方的东西
 	uintptr_t temp = main_ebp + 4;
 	*(int *)temp  = argc;
-// 	Log("&argc is %p", (int *)temp);
-// 	Log("argc is %p", *(int *)temp);
+	Log("&argc is %p", (int *)temp);
+	Log("argc is %p", *(int *)temp);
 	temp += sizeof(int);
 	*(char ***)temp = argv_;
-// 	Log("&argv is %p", (char ***)temp);
-// 	Log("argv is %p", *(char ***)temp);
-// 	Log("argv[0] is %p", **(char ***)temp);
-// 	Log("argv[0] string is %s", **(char ***)temp);
+	Log("&argv is %p", (char ***)temp);
+	Log("argv is %p", *(char ***)temp);
+	Log("argv[0] is %p", **(char ***)temp);
+	Log("argv[0] string is %s", **(char ***)temp);
 	temp += sizeof(char **);
 	*(char ***) temp = environ;
 	
