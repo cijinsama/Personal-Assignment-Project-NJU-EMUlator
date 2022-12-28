@@ -177,6 +177,7 @@ Context* schedule(Context *prev) {
 
 size_t execve(const char * filename, char *const argv[], char *const envp[]){
 	Log("loading program : %s", filename);
+	Log("&argv = %p, &envp = %p", &argv, &envp);
 	for(int i = 0; i < 4 && argv[i] != NULL; i++){
 		Log("argv %d = %s", i ,argv[i]);
 	}

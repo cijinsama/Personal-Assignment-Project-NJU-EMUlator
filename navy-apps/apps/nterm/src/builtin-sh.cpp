@@ -91,7 +91,7 @@ static void sh_handle_cmd(const char *input) {
 	}
 
 	//如果没有匹配，则直接执行指令(即运行对应的程序)
-	printf("debug : args = %s", args);
+	printf("debug : args = %s , at %p\n", args, &args);
   execvp(cmd, (char * const*)args);
 	return;
 
@@ -101,7 +101,7 @@ void builtin_sh_run() {
   sh_banner();
   sh_prompt();
 
-  setenv("PATH", "/bin", 0);
+  setenv("PATH", "/usr/bin:/bin", 0);
   while (1) {
     SDL_Event ev;
     if (SDL_PollEvent(&ev)) {
