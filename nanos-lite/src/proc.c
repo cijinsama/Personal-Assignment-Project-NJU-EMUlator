@@ -17,6 +17,12 @@ PCB *get_free_PCB(){
 
 
 void switch_boot_pcb() {
+	Log("switch");
+	for(int i = 0; i < MAX_NR_PROC; i++){
+		if(pcb[i].cp != NULL && current == &pcb[i]){
+			Log("change to pcb[%d]", i);
+		}
+	}
   current = &pcb_boot;
 }
 
