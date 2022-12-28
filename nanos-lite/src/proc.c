@@ -2,7 +2,7 @@
 #include <proc.h>
 #include <memory.h>
 
-#define MAX_NR_PROC 4
+#define MAX_NR_PROC 6
 
 static PCB pcb[MAX_NR_PROC] __attribute__((used)) = {};
 static PCB pcb_boot = {};
@@ -79,7 +79,7 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 		for(int i = 0; i < envc; i++){
 			strcpy(current_addr, envp[i]);
 	 		envp_ustack[i] = current_addr;
-// 			Log("uload envp[%d]: %s at %p - %p ,gap to %p", i,current_addr, current_addr, current_addr + strlen(envp[i]),current_addr + strlen(envp[i]) + gap_between );
+			Log("uload envp[%d]: %s at %p - %p ,gap to %p", i,current_addr, current_addr, current_addr + strlen(envp[i]),current_addr + strlen(envp[i]) + gap_between );
 			current_addr += strlen(envp[i]) + gap_between;
 		}
 	}
@@ -89,7 +89,7 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 			strcpy(current_addr, argv[i]);
 	 		argp_ustack[i] = current_addr;
 // 			Log("strlen = %d", strlen(argv[i]));
-// 			Log("uload argv[%d]: %s at %p - %p ,gap to %p", i,current_addr, current_addr, current_addr + strlen(argv[i]),current_addr + strlen(argv[i]) + gap_between );
+			Log("uload argv[%d]: %s at %p - %p ,gap to %p", i,current_addr, current_addr, current_addr + strlen(argv[i]),current_addr + strlen(argv[i]) + gap_between );
 // 			Log("debug string is %s", arg_str_addr);
 			current_addr += strlen(argv[i]) + gap_between;
 		}
