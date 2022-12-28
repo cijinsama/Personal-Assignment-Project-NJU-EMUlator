@@ -10,6 +10,7 @@ void* new_page(size_t nr_page) {
 
 #ifdef HAS_VME
 static void* pg_alloc(int n) {
+  panic("not implement yet");
   return NULL;
 }
 #endif
@@ -20,6 +21,7 @@ void free_page(void *p) {
 
 /* The brk() system call handler. */
 int mm_brk(uintptr_t brk) {
+  panic("not implement yet");
   return 0;
 }
 
