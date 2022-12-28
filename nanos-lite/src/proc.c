@@ -42,7 +42,7 @@ void context_kload(PCB *pcb, void (*entry)(void *), void *arg){
 	return;
 }
 
-#define gap_between 4
+#define gap_between 12
 void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	Area area;
 	area.start = new_page(MAX_NR_PROC);
@@ -88,7 +88,6 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 		for(int i = 0; i < argc ; i++){
 			strcpy(current_addr, argv[i]);
 	 		argp_ustack[i] = current_addr;
-			Log("strlen = %d", strlen(argv[i]));
 			Log("uload argv[%d]: %s at %p - %p ,gap to %p", i,current_addr, current_addr, current_addr + strlen(argv[i]),current_addr + strlen(argv[i]) + gap_between );
 			Log("debug string is %s", arg_str_addr);
 			current_addr += strlen(argv[i]) + gap_between;
