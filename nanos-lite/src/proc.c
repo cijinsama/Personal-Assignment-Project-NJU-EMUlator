@@ -47,6 +47,7 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	Area area;
 	area.start = new_page(MAX_NR_PROC);
 	area.end = heap.start + STACK_SIZE;
+	Log("start = %x, end = %x", area.start, area.end);
 
 
 	//假设main上面的argc从这个开始

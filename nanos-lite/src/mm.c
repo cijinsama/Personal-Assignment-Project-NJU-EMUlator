@@ -5,7 +5,6 @@ static void *pf = NULL;
 void* new_page(size_t nr_page) {
 	void *temp = pf;
 	pf += nr_page * PGSIZE;//每次增加一个页的大小4kB
-	printf("ret = %p", temp);
   return temp;
 }
 
