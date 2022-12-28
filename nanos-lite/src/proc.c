@@ -45,9 +45,8 @@ void context_kload(PCB *pcb, void (*entry)(void *), void *arg){
 #define gap_between 12
 void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	Area area;
-	area.start = new_page(MAX_NR_PROC);
+	area.start = new_page(STACK_SIZE / PGSIZE);
 	area.end = heap.start + STACK_SIZE;
-	panic("%d, %d", STACK_SIZE, MAX_NR_PROC * PGSIZE);
 	Log("start = %x, end = %x", area.start, area.end);
 
 
