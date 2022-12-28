@@ -49,8 +49,8 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 
 
 	//假设main上面的argc从这个开始
-	uintptr_t main_ebp = (uintptr_t)area.end - 256;
-	char** environ = (char**) (main_ebp + 64);
+	uintptr_t main_ebp = (uintptr_t)area.end - 512;
+	char** environ = (char**) (main_ebp + 128);
 
 	//搜索argcenv的大小，并且获得储存完过后的地址
 	char* current_addr = area.end - 4;
