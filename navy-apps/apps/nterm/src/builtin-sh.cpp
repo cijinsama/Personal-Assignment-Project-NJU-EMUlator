@@ -103,6 +103,7 @@ static void sh_handle_cmd(const char *input) {
 
 	//如果没有匹配，则直接执行指令(即运行对应的程序)
   execvp(cmd, argv);
+	printf("debug : &argv = %p argv = %p *argv = %s", &argv, argv, *argv);
 	return;
 
 }
