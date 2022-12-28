@@ -17,13 +17,7 @@ PCB *get_free_PCB(){
 
 
 void switch_boot_pcb() {
-	Log("switch");
-	for(int i = 0; i < MAX_NR_PROC; i++){
-		if(pcb[i].cp != NULL && current == &pcb[i]){
-			Log("change to pcb[%d]", i);
-		}
-	}
-  current = &pcb_boot;
+	current = &pcb_boot;
 }
 
 void hello_fun(void *arg) {
@@ -159,14 +153,16 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 
 Context* schedule(Context *prev) {
 	current->cp = prev;
-	//每次返回pcb中的第一个进程执行
-	current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
-	for(int i = 0; i < sizeof(pcb)/sizeof(pcb[0]); i++){
+// 	current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
+	int i = 0;
+	for(i = 0; i < MAX_NR_PROC; i++){
 		if(pcb[i].cp != NULL && current != &pcb[i]){
+			Log("switch to pcb[%d]", i);
 			current = &pcb[i];
 			break;
 		}
 	}
+	if(i == MAX_NR_PROC) panic("lack of available pcb");
   return current->cp;
 }
 
