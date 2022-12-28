@@ -63,6 +63,7 @@ static void sh_handle_cmd(const char *input) {
 	strcpy(cmd_buffer, input);
 	char *str = cmd_buffer;
 	char *str_end = str + strlen(str);
+	char* argv[8];
 
 	/* extract the first token as the command */
 	char *cmd = strtok(str, " ");
@@ -90,9 +91,18 @@ static void sh_handle_cmd(const char *input) {
 		}
 	}
 
+	argv[0] = cmd;
+	int i = 1;
+  arg = strtok(args, " ");
+	while(arg != NULL){
+		argv[i] = arg;
+		arg = strtok(args, " ");
+	}
+	argv[i] = NULL;
+
+
 	//如果没有匹配，则直接执行指令(即运行对应的程序)
-	printf("debug : args = %s , at %p\n", args, &args);
-  execvp(cmd, (char * const*)args);
+  execvp(cmd, argv);
 	return;
 
 }
