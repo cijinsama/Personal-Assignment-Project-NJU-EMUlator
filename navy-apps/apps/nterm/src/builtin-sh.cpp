@@ -92,8 +92,8 @@ static void sh_handle_cmd(const char *input) {
 	}
 
 	argv[0] = cmd;
-	int i = 1;
-  arg = strtok(args, " ");
+	i = 1;
+  char *arg = strtok(args, " ");
 	while(arg != NULL){
 		argv[i] = arg;
 		arg = strtok(args, " ");
