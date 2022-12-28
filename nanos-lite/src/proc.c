@@ -89,10 +89,12 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 			strcpy(current_addr, argv[i]);
 	 		argp_ustack[i] = current_addr;
 			Log("uload argv[%d]: %s at %p - %p ,gap to %p", i,current_addr, current_addr, current_addr + strlen(argv[i]),current_addr + strlen(argv[i]) + gap_between );
+			Log("debug string is %s", arg_str_addr);
 			current_addr += strlen(argv[i]) + gap_between;
 		}
 	}
 
+	Log("debug string is %s", arg_str_addr);
 	//把字符串对应的指针copy进取
 	//首先正向copyenv
 	if(envp){
@@ -111,6 +113,7 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 		}
 	}
 	argv_[argc] = NULL;
+
 
 	//开始写下方的东西
 	uintptr_t temp = main_ebp + 4;
