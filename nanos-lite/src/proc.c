@@ -144,15 +144,16 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 
 #define prog_hello "/bin/hello"
 #define prog_nterm "/bin/nterm"
+#define prog_exectest "/bin/exec-test"
 #define prog_pal "/bin/pal"
 #define prog_n prog_1919
 
 void init_proc() {
 // 	context_uload(&pcb[0], "/bin/pal", NULL, NULL);
 	context_kload(&pcb[0], hello_fun, "cijin");
-  char *argv1[] = {prog_nterm, NULL};
+  char *argv1[] = {prog_exectest, NULL};
   char *envp1[] = {NULL};
-	context_uload(&pcb[1], prog_nterm, argv1, envp1);
+	context_uload(&pcb[1], prog_exectest, argv1, envp1);
 	
   switch_boot_pcb();
 
