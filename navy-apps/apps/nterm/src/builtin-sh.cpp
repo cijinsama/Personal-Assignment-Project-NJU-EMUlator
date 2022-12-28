@@ -96,6 +96,11 @@ static void sh_handle_cmd(const char *input) {
   char *arg = strtok(args, " ");
 	while(arg != NULL){
 		argv[i++] = arg;
+		last_ind = strlen(arg) - 1;
+		while(arg[last_ind] == '\n'||arg[last_ind] == '\t'||arg[last_ind] == ' '){
+			arg[last_ind] = '\0';
+			last_ind--;
+		}
 		arg = strtok(NULL, " ");
 	}
 	argv[i] = NULL;
