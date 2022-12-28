@@ -42,6 +42,7 @@ void context_kload(PCB *pcb, void (*entry)(void *), void *arg){
 	return;
 }
 
+#define gap_between 4
 void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	Area area;
 	area.start = new_page(MAX_NR_PROC);
@@ -60,13 +61,13 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	int envc = 0;
 	if(argv){
 		for(;argv[argc]!=NULL; argc++){
-			current_addr -= strlen(argv[argc]) + 1;
+			current_addr -= strlen(argv[argc]) + gap_between;
 		}
 	}
 	env_str_addr = current_addr;
 	if(envp){
 		for(;envp[envc]!=NULL; envc++){
-			current_addr -= strlen(envp[envc]) + 1;
+			current_addr -= strlen(envp[envc]) + gap_between;
 		}
 	}
 	arg_str_addr = current_addr;
@@ -79,7 +80,7 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 			strcpy(current_addr, envp[i]);
 	 		envp_ustack[i] = current_addr;
 			Log("uload envp[%d]: %s at %p", i,current_addr, current_addr);
-			current_addr += strlen(envp[i]) + 1;
+			current_addr += strlen(envp[i]) + gap_between;
 		}
 	}
 	current_addr = arg_str_addr;
@@ -88,7 +89,7 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 			strcpy(current_addr, argv[i]);
 	 		argp_ustack[i] = current_addr;
 			Log("uload argv[%d]: %s at %p", i,current_addr, current_addr);
-			current_addr += strlen(argv[i]) + 1;
+			current_addr += strlen(argv[i]) + gap_between;
 		}
 	}
 
