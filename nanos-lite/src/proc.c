@@ -78,6 +78,7 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	current_addr = env_str_addr;
 	if(envp){
 		for(int i = 0; i < envc; i++){
+			Log("uload envp[%d]: %s at %p", i,envp[i], current_addr);
 			strcpy(current_addr, envp[i]);
 	 		envp_ustack[i] = current_addr;
 			current_addr += strlen(envp[i]) + 1;
@@ -86,6 +87,7 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	current_addr = arg_str_addr;
 	if(argv){
 		for(int i = 0; i < argc ; i++){
+			Log("uload argv[%d]: %s at %p", i,argv[i], current_addr);
 			strcpy(current_addr, argv[i]);
 	 		argp_ustack[i] = current_addr;
 			current_addr += strlen(argv[i]) + 1;
