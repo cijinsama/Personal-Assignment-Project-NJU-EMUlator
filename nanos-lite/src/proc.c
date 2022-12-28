@@ -177,6 +177,12 @@ Context* schedule(Context *prev) {
 
 size_t execve(const char * filename, char *const argv[], char *const envp[]){
 	Log("loading program : %s", filename);
+	for(int i = 0; i < 4 && argv[i] != NULL; i++){
+		Log("argv %d = %s", i ,argv[i]);
+	}
+	for(int i = 0; i < 4 && envp[i] != NULL; i++){
+		Log("envp %d = %s", i ,envp[i]);
+	}
 	PCB* newpcb = get_free_PCB();
 	if(newpcb) context_uload(newpcb, (char *) filename, (char **) argv, (char **) envp);
 	else panic("lack of free pcb");
