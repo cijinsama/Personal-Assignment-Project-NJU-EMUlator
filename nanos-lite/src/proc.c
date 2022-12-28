@@ -155,6 +155,12 @@ Context* schedule(Context *prev) {
 	current->cp = prev;
 	//每次返回pcb中的第一个进程执行
 	current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
+	for(int i = 0; i < sizeof(pcb)/sizeof(pcb[0]); i++){
+		if(pcb[i].cp != NULL && current != &pcb[i]){
+			current = &pcb[i];
+			break;
+		}
+	}
   return current->cp;
 }
 
@@ -172,6 +178,7 @@ size_t execve(const char * filename, char *const argv[], char *const envp[]){
 	if(newpcb) context_uload(newpcb, (char *) filename, (char **) argv, (char **) envp);
 	else panic("lack of free pcb");
 	switch_boot_pcb();
+	current->cp = NULL;
 	yield();
 	return 0;
 }
