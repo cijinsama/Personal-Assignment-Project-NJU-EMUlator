@@ -46,7 +46,7 @@ void context_kload(PCB *pcb, void (*entry)(void *), void *arg){
 void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	Area area;
 	area.start = new_page(STACK_SIZE / PGSIZE);
-	area.end = heap.start + STACK_SIZE;
+	area.end = area.start + STACK_SIZE;
 	Log("start = %x, end = %x", area.start, area.end);
 
 
