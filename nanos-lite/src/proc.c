@@ -104,7 +104,7 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	if(envp){
 		for(int i = 0; i < envc; i++){
 			environ[i] = envp_ustack[i];
-// 			Log("uload environ[%d]: %p at %p", i,envp_ustack[i], &envp_ustack[i]);
+			Log("uload environ[%d]: %p at %p", i,envp_ustack[i], &envp_ustack[i]);
 		}
 	}
 	environ[envc] = NULL;
