@@ -91,23 +91,18 @@ static void sh_handle_cmd(const char *input) {
 		}
 	}
 
-	printf("debug 1\n");
 	argv[0] = cmd;
 	i = 1;
   char *arg = strtok(args, " ");
 	while(arg != NULL){
-		printf("debug 1\n");
-		printf("%s\n", arg);
 		argv[i] = arg;
 		arg = strtok(NULL, " ");
 	}
 	argv[i] = NULL;
 
 
-	printf("debug 2\n");
 	//如果没有匹配，则直接执行指令(即运行对应的程序)
   execvp(cmd, argv);
-	printf("debug : &argv = %p argv = %p *argv = %s", &argv, argv, *argv);
 	return;
 
 }

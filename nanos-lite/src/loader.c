@@ -103,6 +103,6 @@ void ReadSectionName(int fp, Elf32_Shdr shstrtab_sect_header, Elf32_Shdr section
 
 
 size_t do_sys_execve(const char * filename, char *const argv[], char *const envp[]){
-	if(fs_open(filename, 0, 0) != 0) return execve(filename, argv, envp);
-	else return -2;
+	if(fs_open(filename, 0, 0) < 0)	return -2;
+	return execve(filename, argv, envp);
 }

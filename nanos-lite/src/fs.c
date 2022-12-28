@@ -85,7 +85,7 @@ int do_sys_open(const char *path, int flags, int mode) {
 // 		}
 	}
 	Log("Can't find file : %s", path);
-  return 0;
+  return -1;
 }
 
 size_t do_sys_read(int fd, void *buf, size_t count) {
