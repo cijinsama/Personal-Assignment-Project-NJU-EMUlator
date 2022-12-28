@@ -99,7 +99,7 @@ static void sh_handle_cmd(const char *input) {
 		printf("debug 1\n");
 		printf("%s\n", arg);
 		argv[i] = arg;
-		arg = strtok(args, " ");
+		arg = strtok(NULL, " ");
 	}
 	argv[i] = NULL;
 
