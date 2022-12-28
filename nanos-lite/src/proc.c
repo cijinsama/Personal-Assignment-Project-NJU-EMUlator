@@ -159,7 +159,7 @@ Context* schedule(Context *prev) {
 		if(pcb[i].cp != NULL && current != &pcb[i]){
 			Log("switch to pcb[%d]", i);
 			current = &pcb[i];
-			break;
+			return current->cp;
 		}
 	}
 	if(i == MAX_NR_PROC) panic("lack of available pcb");
