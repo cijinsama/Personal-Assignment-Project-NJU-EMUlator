@@ -183,8 +183,8 @@ size_t execve(const char * filename, char *const argv[], char *const envp[]){
 	PCB* newpcb = get_free_PCB();
 	if(newpcb) context_uload(newpcb, (char *) filename, (char **) argv, (char **) envp);
 	else panic("lack of free pcb");
-	switch_boot_pcb();
 	current->cp = NULL;
+	switch_boot_pcb();
 	yield();
 	return 0;
 }
