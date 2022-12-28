@@ -47,6 +47,7 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	Area area;
 	area.start = new_page(MAX_NR_PROC);
 	area.end = heap.start + STACK_SIZE;
+	panic("%d, %d", STACK_SIZE, MAX_NR_PROC * PGSIZE);
 	Log("start = %x, end = %x", area.start, area.end);
 
 
