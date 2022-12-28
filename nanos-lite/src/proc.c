@@ -43,6 +43,9 @@ void context_kload(PCB *pcb, void (*entry)(void *), void *arg){
 }
 
 #define gap_between 4
+#define gap_between_context_string 64
+#define gap_between_main_context 512
+#define gap_between_main_env 128
 void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	Area area;
 	area.start = new_page(STACK_SIZE / PGSIZE);
@@ -50,11 +53,11 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 
 
 	//假设main上面的argc从这个开始
-	uintptr_t main_ebp = (uintptr_t)area.end - sizeof(Context) - 16 - 512;
-	char** environ = (char**) (main_ebp + 128);
+	uintptr_t main_ebp = (uintptr_t)area.end - sizeof(Context) - gap_between_context_string - gap_between_main_context;
+	char** environ = (char**) (main_ebp + gap_between_main_env);
 
 	//搜索argcenv的大小，并且获得储存完过后的地址
-	char* current_addr = area.end - sizeof(Context) - 16;
+	char* current_addr = area.end - sizeof(Context) - gap_between_context_string;
 	char* env_str_addr = NULL;
 	char* arg_str_addr = NULL;
 	int argc = 0;
@@ -148,25 +151,6 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	return;
 }
 
-
-#define prog_hello "/bin/hello"
-#define prog_nterm "/bin/nterm"
-#define prog_exectest "/bin/exec-test"
-#define prog_pal "/bin/pal"
-#define prog_n prog_1919
-
-void init_proc() {
-// 	context_uload(&pcb[0], "/bin/pal", NULL, NULL);
-	context_kload(&pcb[0], hello_fun, "cijin");
-  char *argv1[] = {prog_pal, "--skip"};
-  char *envp1[] = {NULL};
-	context_uload(&pcb[1], prog_pal, argv1, envp1);
-	
-  switch_boot_pcb();
-
-  Log("Initializing processes...");
-}
-
 Context* schedule(Context *prev) {
 	current->cp = prev;
 	//每次返回pcb中的第一个进程执行
@@ -191,3 +175,22 @@ size_t execve(const char * filename, char *const argv[], char *const envp[]){
 	yield();
 	return 0;
 }
+
+#define prog_hello "/bin/hello"
+#define prog_nterm "/bin/nterm"
+#define prog_exectest "/bin/exec-test"
+#define prog_pal "/bin/pal"
+#define prog_n prog_1919
+
+void init_proc() {
+// 	context_uload(&pcb[0], "/bin/pal", NULL, NULL);
+	context_kload(&pcb[0], hello_fun, "cijin");
+  char *argv1[] = {prog_pal, "--skip", NULL};
+  char *envp1[] = {NULL};
+	context_uload(&pcb[1], prog_pal, argv1, envp1);
+	
+  switch_boot_pcb();
+
+  Log("Initializing processes...");
+}
+
