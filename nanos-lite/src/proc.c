@@ -42,12 +42,11 @@ void context_kload(PCB *pcb, void (*entry)(void *), void *arg){
 	return;
 }
 
-#define gap_between 12
+#define gap_between 4
 void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	Area area;
 	area.start = new_page(STACK_SIZE / PGSIZE);
 	area.end = area.start + STACK_SIZE;
-	Log("start = %x, end = %x", area.start, area.end);
 
 
 	//假设main上面的argc从这个开始
@@ -96,13 +95,13 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 		}
 	}
 
-	Log("debug string is %s", arg_str_addr);
+// 	Log("debug string is %s", arg_str_addr);
 	//把字符串对应的指针copy进取
 	//首先正向copyenv
 	if(envp){
 		for(int i = 0; i < envc; i++){
 			environ[i] = envp_ustack[i];
-			Log("uload environ[%d]: %p at %p", i,envp_ustack[i], &envp_ustack[i]);
+// 			Log("uload environ[%d]: %p at %p", i,envp_ustack[i], &envp_ustack[i]);
 		}
 	}
 	environ[envc] = NULL;
@@ -111,7 +110,7 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	if(argv){
 		for(int i = 0; i < argc; i++){
 			argv_[i] = argp_ustack[i];
-			Log("uload argv [%d]: %p at %p", i,argp_ustack[i], &argp_ustack[i]);
+// 			Log("uload argv [%d]: %p at %p", i,argp_ustack[i], &argp_ustack[i]);
 		}
 	}
 	argv_[argc] = NULL;
@@ -120,14 +119,14 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	//开始写下方的东西
 	uintptr_t temp = main_ebp + 4;
 	*(int *)temp  = argc;
-	Log("&argc is %p", (int *)temp);
-	Log("argc is %p", *(int *)temp);
+// 	Log("&argc is %p", (int *)temp);
+// 	Log("argc is %p", *(int *)temp);
 	temp += sizeof(int);
 	*(char ***)temp = argv_;
-	Log("&argv is %p", (char ***)temp);
-	Log("argv is %p", *(char ***)temp);
-	Log("argv[0] is %p", **(char ***)temp);
-	Log("argv[0] string is %s", **(char ***)temp);
+// 	Log("&argv is %p", (char ***)temp);
+// 	Log("argv is %p", *(char ***)temp);
+// 	Log("argv[0] is %p", **(char ***)temp);
+// 	Log("argv[0] string is %s", **(char ***)temp);
 	temp += sizeof(char **);
 	*(char ***) temp = environ;
 	
