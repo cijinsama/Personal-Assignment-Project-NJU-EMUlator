@@ -39,7 +39,7 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
 		Log("translate vaddr");
 		uintptr_t base = csr.satp.decode.base << 12;
 		Log("base = %08x",(uint32_t) base);
-		uintptr_t pd_item = base | (get_PAGE_DIRECTORY(vaddr) << 2);
+		uintptr_t pd_item = base + (get_PAGE_DIRECTORY(vaddr) << 2);
 		uintptr_t pt_addr = paddr_read(pd_item, 4);
 		uintptr_t pt_item = (pt_addr >> 12 << 12) | (get_PAGE_TABLE(vaddr) << 2);
 		Log("pd_item = %08x", (uint32_t)pd_item);
