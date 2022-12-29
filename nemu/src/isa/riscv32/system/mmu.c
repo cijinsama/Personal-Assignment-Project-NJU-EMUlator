@@ -40,7 +40,7 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
 		uintptr_t base = csr.satp.decode.base << 12;
 		uintptr_t pd_item = base | (get_PAGE_DIRECTORY(vaddr) << 2);
 		uintptr_t pt_addr = paddr_read(pd_item, 4);
-		uintptr_t pt_item = (pt_addr >> 10 << 12) | (get_PAGE_TABLE(vaddr) << 2);
+		uintptr_t pt_item = (pt_addr >> 12 << 12) | (get_PAGE_TABLE(vaddr) << 2);
 		uintptr_t pg_addr = paddr_read(pt_item, 4);
 		assert(((pg_addr << 12) | get_PAGE_INSIDE(vaddr)) == vaddr);
 		if(type == 0){
