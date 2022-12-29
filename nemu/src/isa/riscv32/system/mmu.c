@@ -18,7 +18,6 @@
 #include <memory/vaddr.h>
 
 static inline uint32_t get_PAGE_DIRECTORY(vaddr_t addr){
-// 	return (addr & 0xffc00000u) >> 22;
 	return addr >> 22;
 }
 static inline uint32_t get_PAGE_TABLE(vaddr_t addr){
@@ -43,8 +42,10 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
 		uint32_t pt_addr = paddr_read(pd_item, 4);
 		uint32_t pt_item = (pt_addr >> 12 << 12) | (get_PAGE_TABLE(vaddr) << 2);
 		Log("pd_item = %08x", (uint32_t)pd_item);
+		Log("pt_addr = %08x", (uint32_t)pt_addr);
 		Log("pt_item = %08x", (uint32_t)pt_item);
 		uint32_t pg_addr = paddr_read(pt_item, 4);
+		Log("pg_addr = %08x", (uint32_t)pg_addr);
 		Assert(((pg_addr << 12) | get_PAGE_INSIDE(vaddr)) == vaddr, "vaddr = %08x, paddr = %08x", (uint32_t)((pg_addr << 12) | get_PAGE_INSIDE(vaddr)), vaddr);
 		if(type == 0){
 			paddr_write(pt_addr, 4, pt_addr | PTE_A);
