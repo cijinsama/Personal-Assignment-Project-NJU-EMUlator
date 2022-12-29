@@ -103,6 +103,9 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
 	pt_item = pt_item & (PTE_V | PTE_X | PTE_W | PTE_R);
 	*(uint32_t *)((pd_item >> 12 << 12) + (pt_bias << 2)) = pt_item;
 
+	if((uint32_t)pa == 0x80001e34u){
+		printf("pd_bias = %08x, pd_item = %08x, pt_bias = %08x, pt_item = %08x\n", pd_bias, pd_item, pt_bias, pt_item);
+	}
 // 	printf("pd : %08x;pt : %08x\n", pd_item, pt_item);
 }
 
