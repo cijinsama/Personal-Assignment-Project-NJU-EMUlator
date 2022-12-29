@@ -29,6 +29,7 @@ bool vme_init(void* (*pgalloc_f)(int), void (*pgfree_f)(void*)) {
   pgfree_usr = pgfree_f;
 
   kas.ptr = pgalloc_f(PGSIZE);
+	printf("base = %08x", kas.ptr);
 
   int i;
   for (i = 0; i < LENGTH(segments); i ++) {
@@ -70,7 +71,6 @@ void __am_switch(Context *c) {
 
 
 static inline uintptr_t get_PAGE_DIRECTORY(uintptr_t addr){
-// 	return (addr & 0xffc00000u) >> 22;
 	return addr >> 22;
 }
 static inline uintptr_t get_PAGE_TABLE(uintptr_t addr){
