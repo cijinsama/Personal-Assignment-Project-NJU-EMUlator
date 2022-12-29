@@ -17,14 +17,14 @@
 #include <memory/paddr.h>
 #include <memory/vaddr.h>
 
-static inline uintptr_t get_PAGE_DIRECTORY(vaddr_t addr){
+static inline uint32_t get_PAGE_DIRECTORY(vaddr_t addr){
 // 	return (addr & 0xffc00000u) >> 22;
 	return addr >> 22;
 }
-static inline uintptr_t get_PAGE_TABLE(vaddr_t addr){
+static inline uint32_t get_PAGE_TABLE(vaddr_t addr){
 	return (addr & 0x003ff000u) >> 12;
 }
-static inline uintptr_t get_PAGE_INSIDE(vaddr_t addr){
+static inline uint32_t get_PAGE_INSIDE(vaddr_t addr){
 	return addr & 0xfff;
 }
 #define PTE_V 0x01
@@ -37,14 +37,14 @@ static inline uintptr_t get_PAGE_INSIDE(vaddr_t addr){
 paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
 	if(isa_mmu_check(vaddr, len, type) == MMU_TRANSLATE){
 		Log("translate vaddr");
-		uintptr_t base = csr.satp.decode.base << 12;
+		uint32_t base = csr.satp.decode.base << 12;
 		Log("base = %08x",(uint32_t) base);
-		uintptr_t pd_item = base + (get_PAGE_DIRECTORY(vaddr) << 2);
-		uintptr_t pt_addr = paddr_read(pd_item, 4);
-		uintptr_t pt_item = (pt_addr >> 12 << 12) | (get_PAGE_TABLE(vaddr) << 2);
+		uint32_t pd_item = base + (get_PAGE_DIRECTORY(vaddr) << 2);
+		uint32_t pt_addr = paddr_read(pd_item, 4);
+		uint32_t pt_item = (pt_addr >> 12 << 12) | (get_PAGE_TABLE(vaddr) << 2);
 		Log("pd_item = %08x", (uint32_t)pd_item);
 		Log("pt_item = %08x", (uint32_t)pt_item);
-		uintptr_t pg_addr = paddr_read(pt_item, 4);
+		uint32_t pg_addr = paddr_read(pt_item, 4);
 		Assert(((pg_addr << 12) | get_PAGE_INSIDE(vaddr)) == vaddr, "vaddr = %08x, paddr = %08x", (uint32_t)((pg_addr << 12) | get_PAGE_INSIDE(vaddr)), vaddr);
 		if(type == 0){
 			paddr_write(pt_addr, 4, pt_addr | PTE_A);
