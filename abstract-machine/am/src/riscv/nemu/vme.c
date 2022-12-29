@@ -29,13 +29,10 @@ bool vme_init(void* (*pgalloc_f)(int), void (*pgfree_f)(void*)) {
   pgfree_usr = pgfree_f;
 
   kas.ptr = pgalloc_f(PGSIZE);
-	printf("base = %08x", kas.ptr);
 
   int i;
   for (i = 0; i < LENGTH(segments); i ++) {
-		printf("%08x/%08x\n", i, LENGTH(segments));
     void *va = segments[i].start;
-		printf("%08x-%08x\n", va, segments[i].end);
     for (; va < segments[i].end; va += PGSIZE) {
 // 			printf("\t%x/%x\n", va, segments[i].end);
       map(&kas, va, va, 0);
@@ -101,12 +98,9 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
 	uintptr_t pt_item = *(uint32_t *)((pd_item >> 12 << 12) | (pt_bias << 2));
   pt_item = 0xfffffc00u & ((uintptr_t)pa & ~0xfff);
   pt_item = ((uintptr_t)pa) & 0xfffffc00u;
-	pt_item = pt_item & (PTE_V | PTE_X | PTE_W | PTE_R);
+	pt_item = pt_item | (PTE_V | PTE_X | PTE_W | PTE_R);
 	*(uint32_t *)((pd_item >> 12 << 12) + (pt_bias << 2)) = pt_item;
 
-	if((uint32_t)pa == 0x80001f00u || (((uint32_t)pa) & 0xfffffc00u)== (0x80001f00u & 0xfffffc00u)){
-		printf("pd_bias = %08x, pd_item = %08x, pt_bias = %08x, pt_item = %08x\n", pd_bias, pd_item, pt_bias, pt_item);
-	}
 // 	printf("pd : %08x;pt : %08x\n", pd_item, pt_item);
 }
 
