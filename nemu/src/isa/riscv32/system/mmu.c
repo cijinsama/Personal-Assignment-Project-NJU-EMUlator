@@ -50,10 +50,10 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
 // 		Log("pg_addr = %08x", (uint32_t)pg_addr << 2);
 		Assert(((pg_addr>>10 << 12) | get_PAGE_INSIDE(vaddr)) == vaddr, "vaddr = %08x, paddr = %08x", (uint32_t)((pg_addr>>10 << 12) | get_PAGE_INSIDE(vaddr)), vaddr);
 		if(type == 0){
-			paddr_write(pt_addr, 4, pt_addr | PTE_A);
+			paddr_write(pt_item, 4, pt_addr | PTE_A);
 		}
 		else {
-			paddr_write(pt_addr, 4, pt_addr | PTE_D);
+			paddr_write(pt_item, 4, pt_addr | PTE_D);
 		}
 		return (pg_addr>>10 << 12) | get_PAGE_INSIDE(vaddr);
 	}
