@@ -99,7 +99,7 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
 // 	printf("*pd_item = %08x\n", (*(uint32_t *)pd_item));
 	uintptr_t pt_item = *(uint32_t *)((pd_item >> 10 << 12) | (pt_bias << 2));
 //   pt_item = 0xfffffc00u & ((uintptr_t)pa & ~0xfff);
-  pt_item = ((uintptr_t)pa >> 2) & 0xfffffc00u;
+  pt_item = ((uintptr_t)pa) & 0xfffffc00u;
 	pt_item = pt_item & (PTE_V | PTE_X | PTE_W | PTE_R);
 	*(uint32_t *)((pd_item >> 10 << 12) + (pt_bias << 2)) = pt_item;
 
