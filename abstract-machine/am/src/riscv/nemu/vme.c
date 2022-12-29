@@ -32,10 +32,10 @@ bool vme_init(void* (*pgalloc_f)(int), void (*pgfree_f)(void*)) {
 
   int i;
   for (i = 0; i < LENGTH(segments); i ++) {
-		printf("%d/%d\n", i, LENGTH(segments));
+// 		printf("%d/%d\n", i, LENGTH(segments));
     void *va = segments[i].start;
     for (; va < segments[i].end; va += PGSIZE) {
-			printf("\t%x/%x\n", va, segments[i].end);
+// 			printf("\t%x/%x\n", va, segments[i].end);
       map(&kas, va, va, 0);
     }
   }
@@ -84,21 +84,25 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
 // 	printf("pd : %08x;pt : %08x\n", va, pa);
 	uintptr_t pd_bias = get_PAGE_DIRECTORY((uintptr_t)va);
 	uintptr_t pt_bias = get_PAGE_TABLE((uintptr_t)va);
-	uintptr_t pd_item = (uintptr_t)as->ptr + (pd_bias << 2);//由于每个表项大小为4B
+	uint32_t pd_item = *(uint32_t *)((uintptr_t)as->ptr + (pd_bias << 2));//由于每个表项大小为4B
 // 	printf("pdbias : %08x;ptbias : %08x\n", pd_bias, pt_bias);
 // 	printf("ptr = %08x\n", as->ptr);
 // 	printf("pd_item = %08x\n", pd_item);
 // 	printf("*pd_item = %08x\n", (*(uint32_t *)pd_item));
-	if(!((*(uint32_t *)pd_item) & PTE_V)){
-    uintptr_t new_page = (uintptr_t)pgalloc_usr(PGSIZE);
-// 		printf("new page = %08x\n", new_page);
-    *(uint32_t *)pd_item = ((*(uint32_t *)pd_item) & 0x3ff) | (0xfffffc00u & (new_page ));//把新开的page地址放到对应的PD里面
-    *(uint32_t *)pd_item = ((*(uint32_t *)pd_item) | PTE_V);
+	if(!(pd_item & PTE_V)){
+    uintptr_t new_page_table = (uintptr_t)pgalloc_usr(PGSIZE);//每个table有1024项，每项4B
+// 		printf("new page = %08x\n", new_page_table);
+    pd_item = (pd_item & 0x3ff) | (0xfffffc00u & (new_page_table));//把新开的page地址放到对应的PD里面
+    pd_item = (pd_item | PTE_V);
+		*(uint32_t *)((uintptr_t)as->ptr + (pd_bias << 2)) = pd_item;
 	}
 // 	printf("*pd_item = %08x\n", (*(uint32_t *)pd_item));
-	uintptr_t pt_item = (*(uint32_t *)pd_item) >> 12 << 12 | pt_bias << 2;
-  *(uint32_t *)pt_item = 0xfffffc00u & (((uintptr_t)pa & ~0xfff) >> 2);
-	*(uint32_t *)pt_item = (*(uint32_t *)pt_item) & PTE_V;
+	uintptr_t pt_item = *(uint32_t *)((pd_item >> 10 << 12) | (pt_bias << 2));
+//   pt_item = 0xfffffc00u & ((uintptr_t)pa & ~0xfff);
+  pt_item = ((uintptr_t)pa >> 2) & 0xfffffc00u;
+	pt_item = pt_item & (PTE_V | PTE_X | PTE_W | PTE_R);
+	*(uint32_t *)((pd_item >> 10 << 12) + (pt_bias << 2)) = pt_item;
+
 // 	printf("pd : %08x;pt : %08x\n", pd_item, pt_item);
 }
 
