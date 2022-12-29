@@ -2,7 +2,7 @@
 #include <nemu.h>
 #include <klib.h>
 
-static AddrSpace kas = {};
+static AddrSpace kas = {};//kas是页表
 static void* (*pgalloc_usr)(int) = NULL;
 static void (*pgfree_usr)(void*) = NULL;
 static int vme_enable = 0;
@@ -66,7 +66,30 @@ void __am_switch(Context *c) {
   }
 }
 
+
+static inline uintptr_t get_PAGE_DIRECTORY(uintptr_t addr){
+// 	return (addr & 0xffc00000u) >> 22;
+	return addr >> 22;
+}
+static inline uintptr_t get_PAGE_TABLE(uintptr_t addr){
+	return (addr & 0x003ff000u) >> 12;
+}
+static inline uintptr_t get_PAGE_INSIDE(uintptr_t addr){
+	return addr & 0xfff;
+}
+
 void map(AddrSpace *as, void *va, void *pa, int prot) {
+	uintptr_t pd_bias = get_PAGE_DIRECTORY((uintptr_t)va);
+	uintptr_t pt_bias = get_PAGE_TABLE((uintptr_t)va);
+	uintptr_t pd_item = (uintptr_t)as->ptr + (pd_bias << 2);//由于每个表项大小为4B
+	if(!(*(uint32_t *)pd_item & PTE_V)){
+    uintptr_t new_page = (uintptr_t)pgalloc_usr(PGSIZE);
+    *(uint32_t *)pd_item = (*(uint32_t *)pd_item & 0x3ff) | (0xfffffc00u & (new_page >> 2));//把新开的page地址放到对应的PD里面
+    *(uint32_t *)pd_item = (*(uint32_t *)pd_item | PTE_V);
+	}
+	uintptr_t pt_item = *(uint32_t *)pd_item >> 12 << 12 | pt_bias << 2;
+  *(uint32_t *)pt_item = 0xfffffc00u & (((uintptr_t)pa & ~0xfff) >> 2);
+	*(uint32_t *)pt_item = *(uint32_t *)pt_item & PTE_V;
 }
 
 Context *ucontext(AddrSpace *as, Area kstack, void *entry) {

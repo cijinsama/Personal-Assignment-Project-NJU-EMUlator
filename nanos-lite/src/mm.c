@@ -1,6 +1,6 @@
 #include <memory.h>
 
-static void *pf = NULL;
+static void *pf = NULL;//空闲物理页的首地址
 
 void* new_page(size_t nr_page) {
 	void *temp = pf;
@@ -9,9 +9,10 @@ void* new_page(size_t nr_page) {
 }
 
 #ifdef HAS_VME
-static void* pg_alloc(int n) {
-  panic("not implement yet");
-  return NULL;
+static void* pg_alloc(int n) {//n是字节大小
+  void *ret = new_page(n / PGSIZE);
+  memset(ret, 0, n);
+  return ret;
 }
 #endif
 

@@ -61,9 +61,17 @@ typedef struct {
     } decode;
     word_t val;
   } mstatus;
+  union {
+    struct{
+      word_t base  : 20;
+			word_t other : 11;
+      word_t V     : 1;
+    } decode;
+    word_t val;
+  } satp;
 } riscv32_CSR_state;
 
 
-#define isa_mmu_check(vaddr, len, type) (MMU_DIRECT)
+//# define isa_mmu_check(vaddr, len, type) (MMU_DIRECT)
 
 #endif

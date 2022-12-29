@@ -106,7 +106,7 @@ static void sh_handle_cmd(const char *input) {
 	argv[i] = NULL;
 
 
-	for(int j = 0; j < i; j++) printf("debug arg[j] = %s\n", argv[j]);
+// 	for(int j = 0; j < i; j++) printf("debug arg[j] = %s\n", argv[j]);
 	//如果没有匹配，则直接执行指令(即运行对应的程序)
   execvp(cmd, argv);
 	return;
