@@ -88,7 +88,7 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
 	printf("pdbias : %08x;ptbias : %08x\n", pd_bias, pt_bias);
 	printf("ptr = %08x\n", as->ptr);
 	printf("pd_item = %08x\n", pd_item);
-	printf("*pd_item = %08x\n", (*(uint32_t *)pd_item));
+// 	printf("*pd_item = %08x\n", (*(uint32_t *)pd_item));
 	if(!(pd_item & PTE_V)){
     uintptr_t new_page_table = (uintptr_t)pgalloc_usr(PGSIZE);//每个table有1024项，每项4B
 		printf("new page = %08x\n", new_page_table);
