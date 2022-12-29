@@ -81,7 +81,7 @@ static inline uintptr_t get_PAGE_INSIDE(uintptr_t addr){
 }
 
 void map(AddrSpace *as, void *va, void *pa, int prot) {
-// 	printf("pd : %08x;pt : %08x\n", va, pa);
+	printf("pd : %08x;pt : %08x\n", va, pa);
 	uintptr_t pd_bias = get_PAGE_DIRECTORY((uintptr_t)va);
 	uintptr_t pt_bias = get_PAGE_TABLE((uintptr_t)va);
 	uint32_t pd_item = *(uint32_t *)((uintptr_t)as->ptr + (pd_bias << 2));//由于每个表项大小为4B
