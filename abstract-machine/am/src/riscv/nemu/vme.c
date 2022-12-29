@@ -92,7 +92,6 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
     pd_item = (pd_item & 0x3ff) | (0xfffffc00u & (new_page_table >> 2));//把新开的page地址放到对应的PD里面
     pd_item = (pd_item | PTE_V);
 		*(uint32_t *)((uintptr_t)as->ptr + (pd_bias << 2)) = pd_item;
-		assert(*(uint32_t *)((uintptr_t)as->ptr + (pd_bias << 2)) == pd_item);
 	}
 // 	printf("pd_item = %08x\n", (pd_item));
 	uintptr_t pt_item = *(uint32_t *)((pd_item >> 10 << 12) | (pt_bias << 2));
@@ -100,7 +99,7 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
 	pt_item = pt_item | (PTE_V | PTE_X | PTE_W | PTE_R);
 	*(uint32_t *)((pd_item >> 10 << 12) + (pt_bias << 2)) = pt_item;
 	if( *(uint32_t *)((pd_item >> 10 << 12) + (pt_bias << 2)) != (uint32_t)pa ){
-		printf("va : %08x, pa : %08x\n",*(uint32_t *)((pd_item >> 10 << 12) + (pt_bias << 2)), pa);
+		printf("va : %08x, pa : %08x\n",(*(uint32_t *)((pd_item >> 10 << 12) + (pt_bias << 2))) >> 10 << 12, pa);
 		panic("va != pa");
 	}
 // 	printf("va : %08x, pa : %08x\n",((pt_item >> 12 << 12) | get_PAGE_INSIDE((uint32_t)va)), pa);
