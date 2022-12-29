@@ -102,7 +102,7 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
 	if( ((pt_item >> 12 << 12) | get_PAGE_INSIDE((uint32_t)va)) != (uint32_t)pa ){
 		printf("va : %08x, pa : %08x\n",((pt_item >> 12 << 12) | get_PAGE_INSIDE((uint32_t)va)), pa);
 	}
-// 	printf("pd : %08x;pt : %08x\n", pd_item, pt_item);
+	printf("pd : %08x;pt : %08x\n", pd_item, pt_item);
 }
 
 Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
