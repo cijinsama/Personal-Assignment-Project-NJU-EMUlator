@@ -36,6 +36,7 @@ static inline uintptr_t get_PAGE_INSIDE(vaddr_t addr){
 #define PTE_D 0x80
 paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
 	if(isa_mmu_check(vaddr, len, type) == MMU_TRANSLATE){
+		Log("translate vaddr");
 		uintptr_t base = csr.satp.decode.base << 12;
 		uintptr_t pd_item = base | (get_PAGE_DIRECTORY(vaddr) << 2);
 		uintptr_t pt_addr = paddr_read(pd_item, 4);
