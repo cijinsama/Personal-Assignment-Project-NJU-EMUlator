@@ -86,14 +86,16 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
 	uintptr_t pt_bias = get_PAGE_TABLE((uintptr_t)va);
 	uintptr_t pd_item = (uintptr_t)as->ptr + (pd_bias << 2);//由于每个表项大小为4B
 	printf("pdbias : %08x;ptbias : %08x\n", pd_bias, pt_bias);
-	if(!(*(uint32_t *)pd_item & PTE_V)){
+	printf("ptr = %08x\n", as->ptr);
+	printf("pd_item = %08x\n", pd_item);
+	if(!((*(uint32_t *)pd_item) & PTE_V)){
     uintptr_t new_page = (uintptr_t)pgalloc_usr(PGSIZE);
-    *(uint32_t *)pd_item = (*(uint32_t *)pd_item & 0x3ff) | (0xfffffc00u & (new_page >> 2));//把新开的page地址放到对应的PD里面
-    *(uint32_t *)pd_item = (*(uint32_t *)pd_item | PTE_V);
+    *(uint32_t *)pd_item = ((*(uint32_t *)pd_item) & 0x3ff) | (0xfffffc00u & (new_page >> 2));//把新开的page地址放到对应的PD里面
+    *(uint32_t *)pd_item = ((*(uint32_t *)pd_item) | PTE_V);
 	}
-	uintptr_t pt_item = *(uint32_t *)pd_item >> 12 << 12 | pt_bias << 2;
+	uintptr_t pt_item = (*(uint32_t *)pd_item) >> 12 << 12 | pt_bias << 2;
   *(uint32_t *)pt_item = 0xfffffc00u & (((uintptr_t)pa & ~0xfff) >> 2);
-	*(uint32_t *)pt_item = *(uint32_t *)pt_item & PTE_V;
+	*(uint32_t *)pt_item = (*(uint32_t *)pt_item) & PTE_V;
 	printf("pd : %08x;pt : %08x\n", pd_item, pt_item);
 }
 
