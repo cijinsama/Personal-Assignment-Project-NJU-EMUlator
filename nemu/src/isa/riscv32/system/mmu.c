@@ -54,6 +54,7 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
 }
 
 inline int isa_mmu_check(vaddr_t vaddr, int len, int type){
+	Log("mmu %08x, %d",vaddr, len);
 	if(csr.satp.decode.V) return MMU_TRANSLATE;
 	else return MMU_DIRECT;
 }
