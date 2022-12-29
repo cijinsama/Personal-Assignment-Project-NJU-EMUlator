@@ -37,17 +37,17 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
 	if(isa_mmu_check(vaddr, len, type) == MMU_TRANSLATE){
 		Log("translate vaddr");
 		uint32_t base = csr.satp.decode.base << 12;
-		Log("base = %08x",(uint32_t) base);
+// 		Log("base = %08x",(uint32_t) base);
 		uint32_t pd_item = base + (get_PAGE_DIRECTORY(vaddr) << 2);
 		uint32_t pt_addr = paddr_read(pd_item, 4);
 		Assert(pt_addr & PTE_V, "page_table_entry not valid, vaddr: %#x", vaddr);
 		uint32_t pt_item = (pt_addr >> 10 << 12) | (get_PAGE_TABLE(vaddr) << 2);
-		Log("pd_item = %08x", (uint32_t)pd_item);
-		Log("pt_addr = %08x", (uint32_t)pt_addr << 2);
-		Log("pt_item = %08x", (uint32_t)pt_item);
+// 		Log("pd_item = %08x", (uint32_t)pd_item);
+// 		Log("pt_addr = %08x", (uint32_t)pt_addr << 2);
+// 		Log("pt_item = %08x", (uint32_t)pt_item);
 		uint32_t pg_addr = paddr_read(pt_item, 4);
 		Assert(pg_addr & PTE_V, "page_table_entry not valid, vaddr: %#x", vaddr);
-		Log("pg_addr = %08x", (uint32_t)pg_addr << 2);
+// 		Log("pg_addr = %08x", (uint32_t)pg_addr << 2);
 		Assert(((pg_addr>>10 << 12) | get_PAGE_INSIDE(vaddr)) == vaddr, "vaddr = %08x, paddr = %08x", (uint32_t)((pg_addr>>10 << 12) | get_PAGE_INSIDE(vaddr)), vaddr);
 		if(type == 0){
 			paddr_write(pt_addr, 4, pt_addr | PTE_A);
@@ -55,7 +55,7 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
 		else {
 			paddr_write(pt_addr, 4, pt_addr | PTE_D);
 		}
-		return (pg_addr>>12 << 12) | get_PAGE_INSIDE(vaddr);
+		return (pg_addr>>10 << 12) | get_PAGE_INSIDE(vaddr);
 	}
 	else return vaddr;
 }
