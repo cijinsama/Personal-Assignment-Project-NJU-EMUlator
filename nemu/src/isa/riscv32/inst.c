@@ -48,7 +48,7 @@ inline static word_t get_csr(word_t csr_num){
 		case 0x0300: ret = csr.mstatus.val;							break;
 		case 0x0342: ret = csr.mcause;									break;
 		case 0x0305: ret = csr.mtvec;										break;
-		default : Log("Unknown csr register\n"); panic("please complete\n");
+		default : Log("Unknown csr register %08x\n", csr_num); panic("please complete\n");
 	}
 	return ret;
 }
