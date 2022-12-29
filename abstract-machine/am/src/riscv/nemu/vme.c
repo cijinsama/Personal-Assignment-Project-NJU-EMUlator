@@ -90,6 +90,7 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
 	printf("pd_item = %08x\n", pd_item);
 	if(!((*(uint32_t *)pd_item) & PTE_V)){
     uintptr_t new_page = (uintptr_t)pgalloc_usr(PGSIZE);
+		printf("new page = %08x\n", new_page);
     *(uint32_t *)pd_item = ((*(uint32_t *)pd_item) & 0x3ff) | (0xfffffc00u & (new_page >> 2));//把新开的page地址放到对应的PD里面
     *(uint32_t *)pd_item = ((*(uint32_t *)pd_item) | PTE_V);
 	}
