@@ -88,13 +88,14 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
 	printf("pdbias : %08x;ptbias : %08x\n", pd_bias, pt_bias);
 	printf("ptr = %08x\n", as->ptr);
 	printf("pd_item = %08x\n", pd_item);
+	printf("*pd_item = %08x\n", (*(uint32_t *)pd_item));
 	if(!((*(uint32_t *)pd_item) & PTE_V)){
     uintptr_t new_page = (uintptr_t)pgalloc_usr(PGSIZE);
 		printf("new page = %08x\n", new_page);
     *(uint32_t *)pd_item = ((*(uint32_t *)pd_item) & 0x3ff) | (0xfffffc00u & (new_page >> 2));//把新开的page地址放到对应的PD里面
     *(uint32_t *)pd_item = ((*(uint32_t *)pd_item) | PTE_V);
 	}
-	printf("pd_item = %08x\n", pd_item);
+	printf("*pd_item = %08x\n", (*(uint32_t *)pd_item));
 	uintptr_t pt_item = (*(uint32_t *)pd_item) >> 12 << 12 | pt_bias << 2;
   *(uint32_t *)pt_item = 0xfffffc00u & (((uintptr_t)pa & ~0xfff) >> 2);
 	*(uint32_t *)pt_item = (*(uint32_t *)pt_item) & PTE_V;
