@@ -48,7 +48,7 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
 		uint32_t pg_addr = paddr_read(pt_item, 4);
 		Assert(pg_addr & PTE_V, "page_table_entry not valid, vaddr: %#x", vaddr);
 // 		Log("pg_addr = %08x", (uint32_t)pg_addr << 2);
-		Assert(((pg_addr>>10 << 12) | get_PAGE_INSIDE(vaddr)) == vaddr, "vaddr = %08x, paddr = %08x", (uint32_t)((pg_addr>>10 << 12) | get_PAGE_INSIDE(vaddr)), vaddr);
+		Assert(((pg_addr>>10 << 12) | get_PAGE_INSIDE(vaddr)) == vaddr, "paddr = %08x, vaddr = %08x", (uint32_t)((pg_addr>>10 << 12) | get_PAGE_INSIDE(vaddr)), vaddr);
 		if(type == 0){
 			paddr_write(pt_item, 4, pt_addr | PTE_A);
 		}

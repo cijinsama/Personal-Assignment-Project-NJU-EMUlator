@@ -97,11 +97,10 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
 // 	printf("pd_item = %08x\n", (pd_item));
 	uintptr_t pt_item = *(uint32_t *)((pd_item >> 10 << 12) | (pt_bias << 2));
   pt_item = 0xfffffc00u & (((uintptr_t)pa & ~0xfff) >> 2);
-//   pt_item = ((uintptr_t)pa) & 0xfffffc00u;
 	pt_item = pt_item | (PTE_V | PTE_X | PTE_W | PTE_R);
 	*(uint32_t *)((pd_item >> 10 << 12) + (pt_bias << 2)) = pt_item;
-	if( ((pt_item >> 10 << 12) | get_PAGE_INSIDE((uint32_t)va)) != (uint32_t)pa ){
-		printf("va : %08x, pa : %08x\n",((pt_item >> 10 << 12) | get_PAGE_INSIDE((uint32_t)va)), pa);
+	if( *(uint32_t *)((pd_item >> 10 << 12) + (pt_bias << 2)) != (uint32_t)pa ){
+		printf("va : %08x, pa : %08x\n",*(uint32_t *)((pd_item >> 10 << 12) + (pt_bias << 2)), pa);
 		panic("va != pa");
 	}
 // 	printf("va : %08x, pa : %08x\n",((pt_item >> 12 << 12) | get_PAGE_INSIDE((uint32_t)va)), pa);
