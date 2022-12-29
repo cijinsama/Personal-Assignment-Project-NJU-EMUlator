@@ -33,8 +33,9 @@ bool vme_init(void* (*pgalloc_f)(int), void (*pgfree_f)(void*)) {
 
   int i;
   for (i = 0; i < LENGTH(segments); i ++) {
-// 		printf("%d/%d\n", i, LENGTH(segments));
+		printf("%d/%d\n", i, LENGTH(segments));
     void *va = segments[i].start;
+		printf("%d-%d\n", va, segments[i].end);
     for (; va < segments[i].end; va += PGSIZE) {
 // 			printf("\t%x/%x\n", va, segments[i].end);
       map(&kas, va, va, 0);
