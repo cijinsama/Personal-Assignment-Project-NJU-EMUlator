@@ -90,6 +90,7 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
 	uintptr_t pt_item = *(uint32_t *)pd_item >> 12 << 12 | pt_bias << 2;
   *(uint32_t *)pt_item = 0xfffffc00u & (((uintptr_t)pa & ~0xfff) >> 2);
 	*(uint32_t *)pt_item = *(uint32_t *)pt_item & PTE_V;
+	printf("pd : %08x;pt : %08x\n", pd_item, pt_item);
 }
 
 Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
