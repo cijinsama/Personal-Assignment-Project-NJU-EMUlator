@@ -1,5 +1,7 @@
 #include <memory.h>
+#include <proc.h>
 
+extern PCB *current;
 static void *pf = NULL;//空闲物理页的首地址
 
 void* new_page(size_t nr_page) {
@@ -22,7 +24,14 @@ void free_page(void *p) {
 
 /* The brk() system call handler. */
 int mm_brk(uintptr_t brk) {
-  panic("not implement yet");
+	if(brk >= current->max_brk){
+		int new_page_num = (brk>>12) - (current->max_brk>>12) + 1;
+    void *allocted_page =  new_page(new_page_num);
+    for (int i = 0; i < new_page_num; ++i){
+      map(&current->as, (void *)(current->max_brk + i * PGSIZE), (void *)(allocted_page + i * PGSIZE), 1);
+    }
+    current->max_brk += new_page_num << 12;
+	}
   return 0;
 }
 

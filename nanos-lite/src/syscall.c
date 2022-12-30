@@ -2,12 +2,12 @@
 #include <fs.h>
 #include "syscall.h"
 #include <sys/time.h>
+#include <memory.h>
 
 
 
-static intptr_t program_break;
 void *do_sys_brk(intptr_t addr){
-	program_break = addr;
+	mm_brk(addr);
 	return 0;
 }
 

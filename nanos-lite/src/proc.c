@@ -4,17 +4,6 @@
 
 #define MAX_NR_PROC 6
 
-static inline void set_satp(void *pdir) {
-  uintptr_t mode = 1ul << (__riscv_xlen - 1);
-  asm volatile("csrw satp, %0" : : "r"(mode | ((uintptr_t)pdir >> 12)));
-}
-
-static inline uintptr_t get_satp() {
-  uintptr_t satp;
-  asm volatile("csrr %0, satp" : "=r"(satp));
-  return satp << 12;
-}
-
 static PCB pcb[MAX_NR_PROC] __attribute__((used)) = {};
 static PCB pcb_boot = {};
 PCB *current = NULL;
@@ -69,11 +58,6 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	Area area;
 	area.end = user_stack_top;
 	area.start = area.end - STACK_SIZE;
-
-
-	
-// 	uintptr_t prev_satp = get_satp();
-// 	set_satp(pcb->as.ptr);
 
 	//假设main上面的argc从这个开始
 	uintptr_t main_ebp = (uintptr_t)area.end - sizeof(Context) - gap_between_context_string - gap_between_main_context;//这两个地方用到了end
@@ -155,15 +139,12 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 // 	Log("argv[0] string is %s", **(char ***)temp);
 	temp += sizeof(char **);
 	*(char ***) temp = environ;
-	
-// 	set_satp((void *)prev_satp);
 
   uintptr_t entry = loader(pcb, filename);
   Log("uload Jump to entry = %p",(void *)entry);
 
 	area.start = &pcb->cp;
 	area.end = area.start + STACK_SIZE;
-	Log("complete");
 	Context *context = ucontext(&pcb->as, area,(void *) entry);
 	pcb->cp = context;
 
@@ -214,9 +195,9 @@ size_t execve(const char * filename, char *const argv[], char *const envp[]){
 
 void init_proc() {
 	context_kload(&pcb[0], hello_fun, "cijin");
-  char *argv1[] = {prog_dummy,  NULL};
+  char *argv1[] = {prog_pal,"--skip" ,NULL};
   char *envp1[] = {NULL};
-	context_uload(&pcb[1], prog_dummy, argv1, envp1);
+	context_uload(&pcb[1], prog_pal, argv1, envp1);
 	
   switch_boot_pcb();
 
