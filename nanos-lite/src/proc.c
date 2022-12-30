@@ -48,6 +48,7 @@ void context_kload(PCB *pcb, void (*entry)(void *), void *arg){
 #define gap_between_main_env 128
 void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	protect(&pcb->as);
+	printf("111\n");
 	
   void *user_stack_top = new_page(8) + 8 * PGSIZE;
 	for(int i = 0; i < 8; i++){
@@ -55,6 +56,7 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	}
 	Area area;
 	area.end = pcb->as.area.end;
+	printf("222\n");
 
 	//假设main上面的argc从这个开始
 	uintptr_t main_ebp = (uintptr_t)area.end - sizeof(Context) - gap_between_context_string - gap_between_main_context;//这两个地方用到了end
@@ -144,11 +146,13 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	//拷贝argv，envp
 
 
+	printf("333\n");
 	area.start = &pcb->cp;
 	area.end = area.start + STACK_SIZE;
 	Context *context = ucontext(NULL, area,(void *) entry);
 	pcb->cp = context;
 
+	printf("444\n");
 // 	Log("The sp is supposed to be 0x%x", main_ebp);
 // 	Log("pcb->cp = 0x%x", context);
 	//gpr[2]是sp
@@ -200,11 +204,9 @@ size_t execve(const char * filename, char *const argv[], char *const envp[]){
 
 void init_proc() {
 	context_kload(&pcb[0], hello_fun, "cijin");
-	printf("comp kload\n");
   char *argv1[] = {prog_dummy,  NULL};
   char *envp1[] = {NULL};
 	context_uload(&pcb[1], prog_dummy, argv1, envp1);
-	printf("comp uload\n");
 	
   switch_boot_pcb();
 
