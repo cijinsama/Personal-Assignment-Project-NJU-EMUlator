@@ -163,11 +163,11 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 
 	area.start = &pcb->cp;
 	area.end = area.start + STACK_SIZE;
-	Context *context = ucontext(NULL, area,(void *) entry);
+	Log("complete");
+	Context *context = ucontext(&pcb->as, area,(void *) entry);
 	pcb->cp = context;
 
 	context->GPRx = main_ebp + 4;
-	Log("complete");
 	return;
 }
 
