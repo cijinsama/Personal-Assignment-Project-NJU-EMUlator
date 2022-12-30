@@ -167,6 +167,7 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	pcb->cp = context;
 
 	context->GPRx = main_ebp + 4;
+	Log("complete");
 	return;
 }
 
