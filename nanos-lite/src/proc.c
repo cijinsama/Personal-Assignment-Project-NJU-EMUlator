@@ -168,7 +168,9 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	
 	set_satp((void *)prev_satp);
 
-	assert(area.start == &pcb->cp);
+	if(area.start != &pcb->cp){
+		printf("%08x, %08x",area.start, &pcb->cp);
+	}
 // 	area.start = &pcb->cp;
 // 	area.end = area.start + STACK_SIZE;
 	Context *context = ucontext(NULL, area,(void *) entry);
