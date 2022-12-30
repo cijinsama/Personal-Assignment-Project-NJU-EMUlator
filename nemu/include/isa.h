@@ -55,6 +55,7 @@ vaddr_t isa_raise_intr(word_t NO, vaddr_t epc);
 #define INTR_Machine_timer_interrupt			0x80000007
 #define INTR_Environment									0x80000011
 #define EXCP_Environment									0x0000000b
+#define IRQ_TIMER													0x80000007
 word_t isa_query_intr();
 
 // difftest
