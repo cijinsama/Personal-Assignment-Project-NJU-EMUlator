@@ -55,6 +55,9 @@ uintptr_t loader(PCB *pcb, const char *filename) {
 		}
 	}
 	pcb->max_brk = ROUNDUP(program_header.p_vaddr + program_header.p_memsz, 0xfff);
+	Log("@@@@@@@@@@@ %08x", program_header.p_vaddr);
+	Log("@@@@@@@@@@@ %08x", program_header.p_memsz);
+	Log("############ %08x", program_header.p_vaddr + program_header.p_memsz);
 	Log("pcb->pa %08x", pcb->max_brk);
 	fs_close(fd);
 	return elf_header.e_entry;
