@@ -59,19 +59,21 @@ void context_kload(PCB *pcb, void (*entry)(void *), void *arg){
 #define gap_between_main_env 128
 void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	protect(&pcb->as);
-	Log("111\n");
   void *user_stack_top = new_page(STACK_SIZE / PGSIZE) + STACK_SIZE;
 	for(int i = 0; i < (STACK_SIZE / PGSIZE); i++){
 		map(&pcb->as, pcb->as.area.end - (i+1) * PGSIZE, user_stack_top - (i+1) * PGSIZE, 0); 
-		Log("map vaddr %08x paddr %08x\n", pcb->as.area.end - (i+1) * PGSIZE, user_stack_top - (i+1) * PGSIZE);
+// 		Log("map vaddr %08x paddr %08x\n", pcb->as.area.end - (i+1) * PGSIZE, user_stack_top - (i+1) * PGSIZE);
 	}
-	Area area = pcb->as.area;
-	Log("area.start vaddr %08x\n", area.start);
-	Log("area.end vaddr %08x\n", area.end);
+
+
+	Area area;
+	area.end = user_stack_top;
+	area.start = area.end - STACK_SIZE;
+
 
 	
-	uintptr_t prev_satp = get_satp();
-	set_satp(pcb->as.ptr);
+// 	uintptr_t prev_satp = get_satp();
+// 	set_satp(pcb->as.ptr);
 
 	//假设main上面的argc从这个开始
 	uintptr_t main_ebp = (uintptr_t)area.end - sizeof(Context) - gap_between_context_string - gap_between_main_context;//这两个地方用到了end
@@ -83,7 +85,6 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	char* arg_str_addr = NULL;
 	int argc = 0;
 	int envc = 0;
-	Log("222\n");
 	if(argv){
 		for(;argv[argc]!=NULL; argc++){
 			current_addr -= strlen(argv[argc]) + gap_between;
@@ -100,7 +101,6 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
   char *envp_ustack[envc];
   char *argp_ustack[argc];
 	current_addr = env_str_addr;
-	Log("333\n");
 	if(envp){
 		for(int i = 0; i < envc; i++){
 			strcpy(current_addr, envp[i]);
@@ -110,8 +110,6 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 		}
 	}
 	current_addr = arg_str_addr;
-	Log("444\n");
-	Log("current_addr %08x",current_addr);
 	if(argv){
 		for(int i = 0; i < argc ; i++){
 			strcpy(current_addr, argv[i]);
@@ -122,7 +120,6 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 			current_addr += strlen(argv[i]) + gap_between;
 		}
 	}
-	Log("555\n");
 
 // 	Log("debug string is %s", arg_str_addr);
 	//把字符串对应的指针copy进取
@@ -159,27 +156,16 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	temp += sizeof(char **);
 	*(char ***) temp = environ;
 	
+// 	set_satp((void *)prev_satp);
 
   uintptr_t entry = loader(pcb, filename);
   Log("uload Jump to entry = %p",(void *)entry);
 
-	//拷贝argv，envp
-
-	
-	set_satp((void *)prev_satp);
-
-	if(area.start != &pcb->cp){
-		printf("%08x, %08x",area.start, &pcb->cp);
-	}
-// 	area.start = &pcb->cp;
-// 	area.end = area.start + STACK_SIZE;
+	area.start = &pcb->cp;
+	area.end = area.start + STACK_SIZE;
 	Context *context = ucontext(NULL, area,(void *) entry);
 	pcb->cp = context;
 
-// 	Log("The sp is supposed to be 0x%x", main_ebp);
-// 	Log("pcb->cp = 0x%x", context);
-	//gpr[2]是sp
-//   context->gpr[2]  = main_ebp;
 	context->GPRx = main_ebp + 4;
 	return;
 }
