@@ -25,7 +25,7 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
 	csr.mepc = epc;
 	csr.mcause = NO;
 	cpu.pc = csr.mtvec;
-	csr.mstatus.decode.MPIE = csr.mstatus.decode.MIE;
+// 	csr.mstatus.decode.MPIE = csr.mstatus.decode.MIE;
   IFDEF(CONFIG_ETRACE, Log("[etrace]: raise exception at csr.mepc = %x, csr.mtvec = %x, csr.mstatus = %x, csr.mcause = %x", csr.mepc, csr.mtvec, csr.mstatus.val, csr.mcause); log_write("[etrace]: raise exception at csr.mepc = %x, csr.mtvec = %x, csr.mstatus = %x, csr.mcause = %x", csr.mepc, csr.mtvec, csr.mstatus.val, csr.mcause););
 	csr.mstatus.decode.MIE = 0;
   return 0;
@@ -33,18 +33,19 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
 
 word_t isa_query_intr() {
 	if (csr.mstatus.decode.MIE == 1) {
-		if(cpu.INTR){
-			cpu.INTR = false;
-			return IRQ_TIMER;
-		}
+// 		if(cpu.INTR){
+// 			cpu.INTR = false;
+// 			return IRQ_TIMER;
+// 		}
+// 		else{
+// 			return EXCP_Environment;
+// 		}
 		switch(csr.mstatus.val){
 			case 0x1808:
 				return EXCP_Environment;
 			case 0x21808://这个是syscall
 				return EXCP_Environment;
 			default : 
-// 				Log("Uncomplete mstatus, go to complete it !!!\ncsr.mstatus = %04x",csr.mstatus.val); 
-// 				panic("ERRRRORRRR");
 				return EXCP_Environment;
 		}
 	}
