@@ -55,7 +55,9 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 		map(&pcb->as, pcb->as.area.end - (i+1) * PGSIZE, user_stack_top - (i+1) * PGSIZE, 0); 
 	}
 	Area area;
+	area.start = pcb->as.area.start;
 	area.end = pcb->as.area.end;
+	printf("area.start vaddr %08x\n", area.start);
 	printf("area.end vaddr %08x\n", area.end);
 
 	//假设main上面的argc从这个开始
