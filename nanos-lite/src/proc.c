@@ -4,6 +4,17 @@
 
 #define MAX_NR_PROC 6
 
+static inline void set_satp(void *pdir) {
+  uintptr_t mode = 1ul << (__riscv_xlen - 1);
+  asm volatile("csrw satp, %0" : : "r"(mode | ((uintptr_t)pdir >> 12)));
+}
+
+static inline uintptr_t get_satp() {
+  uintptr_t satp;
+  asm volatile("csrr %0, satp" : "=r"(satp));
+  return satp << 12;
+}
+
 static PCB pcb[MAX_NR_PROC] __attribute__((used)) = {};
 static PCB pcb_boot = {};
 PCB *current = NULL;
@@ -49,7 +60,6 @@ void context_kload(PCB *pcb, void (*entry)(void *), void *arg){
 void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	protect(&pcb->as);
 	Log("111\n");
-	
   void *user_stack_top = new_page(STACK_SIZE / PGSIZE) + STACK_SIZE;
 	for(int i = 0; i < (STACK_SIZE / PGSIZE); i++){
 		map(&pcb->as, pcb->as.area.end - (i+1) * PGSIZE, user_stack_top - (i+1) * PGSIZE, 0); 
@@ -58,6 +68,10 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	Area area = pcb->as.area;
 	Log("area.start vaddr %08x\n", area.start);
 	Log("area.end vaddr %08x\n", area.end);
+
+	
+	uintptr_t prev_satp = get_satp();
+	set_satp(pcb->as.ptr);
 
 	//假设main上面的argc从这个开始
 	uintptr_t main_ebp = (uintptr_t)area.end - sizeof(Context) - gap_between_context_string - gap_between_main_context;//这两个地方用到了end
@@ -151,9 +165,12 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 
 	//拷贝argv，envp
 
+	
+	set_satp((void *)prev_satp);
 
-	area.start = &pcb->cp;
-	area.end = area.start + STACK_SIZE;
+	assert(area.start == &pcb->cp);
+// 	area.start = &pcb->cp;
+// 	area.end = area.start + STACK_SIZE;
 	Context *context = ucontext(NULL, area,(void *) entry);
 	pcb->cp = context;
 
