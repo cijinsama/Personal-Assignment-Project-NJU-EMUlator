@@ -41,6 +41,9 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
 			Log("vaddr %08x, pd_item to %08x",vaddr, pd_item);
 		}
 		uint32_t pt_addr = paddr_read(pd_item, 4);
+		if(vaddr == 0x7fffff22){
+			Log("vaddr %08x, pt_addr to %08x",vaddr, pt_addr);
+		}
 		uint32_t pt_item = (pt_addr >> 10 << 12) | (get_PAGE_TABLE(vaddr) << 2);
 		if(vaddr == 0x7fffff22){
 			Log("vaddr %08x, pt_item to %08x",vaddr, pt_item);
