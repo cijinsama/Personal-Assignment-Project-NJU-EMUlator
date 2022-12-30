@@ -38,14 +38,13 @@ word_t isa_query_intr() {
 			return IRQ_TIMER;
 		}
 		switch(csr.mstatus.val){
-			case 0x1888:
 			case 0x1808:
 				return EXCP_Environment;
 			case 0x21808://这个是syscall
 				return EXCP_Environment;
 			default : 
-				Log("Uncomplete mstatus, go to complete it !!!\ncsr.mstatus = %04x",csr.mstatus.val); 
-				panic("ERRRRORRRR");
+// 				Log("Uncomplete mstatus, go to complete it !!!\ncsr.mstatus = %04x",csr.mstatus.val); 
+// 				panic("ERRRRORRRR");
 				return INTR_EMPTY;
 		}
 	}
