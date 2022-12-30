@@ -96,8 +96,8 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
 		panic("va != pa");
 	}
 	if(((uintptr_t)va & ~0xfff) == 0x7ffff000u){
-		printf("pd_item = %08x\n", pd_item);
-		printf("pt_item = %08x\n", pt_item);
+		printf("pd_item = %08x\n", (pd_item & ~0x3ff) << 2);
+		printf("pt_item = %08x\n", (pt_item & ~0x3ff) << 2);
 	}
 }
 
