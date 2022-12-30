@@ -47,7 +47,7 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
 		else {
 			paddr_write(pt_item, 4, pg_addr | PTE_D);
 		}
-		Log("vaddr %08x, map to %08x",vaddr, (pg_addr>>10 << 12) | get_PAGE_INSIDE(vaddr));
+// 		Log("vaddr %08x, map to %08x",vaddr, (pg_addr>>10 << 12) | get_PAGE_INSIDE(vaddr));
 		return (pg_addr>>10 << 12) | get_PAGE_INSIDE(vaddr);
 	}
 	else return vaddr;
