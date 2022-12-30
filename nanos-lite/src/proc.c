@@ -55,9 +55,7 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 		map(&pcb->as, pcb->as.area.end - (i+1) * PGSIZE, user_stack_top - (i+1) * PGSIZE, 0); 
 		Log("map vaddr %08x paddr %08x\n", pcb->as.area.end - (i+1) * PGSIZE, user_stack_top - (i+1) * PGSIZE);
 	}
-	Area area;
-	area.start = pcb->as.area.start;
-	area.end = pcb->as.area.end;
+	Area area = pcb->as.area;
 	Log("area.start vaddr %08x\n", area.start);
 	Log("area.end vaddr %08x\n", area.end);
 
