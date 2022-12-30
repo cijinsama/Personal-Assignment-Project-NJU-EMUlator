@@ -15,7 +15,7 @@ typedef struct {
 } Finfo;
 
 
-#define prog_name "/bin/dummy"
+#define prog_name "/bin/hello"
 
 static Finfo file_table[] __attribute__((used)) = {
 #include "files.h"
