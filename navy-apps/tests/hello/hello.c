@@ -13,7 +13,9 @@ int main(int argc, char *argv[]) {
 	for(int i = 0; i < argc; i++){
 		printf("argv %d = %s", i, argv[i]);
 	}
-
+	int *a = malloc(sizeof(int));
+	*a = 1;
+	printf("%d\n",*a);
 	int j = 0;
   while (1) {
     j ++;
