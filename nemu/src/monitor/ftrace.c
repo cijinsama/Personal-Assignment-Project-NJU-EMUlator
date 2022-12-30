@@ -15,10 +15,10 @@ typedef struct {
 } Finfo;
 
 
-#define prog_name "/bin/hello"
+#define prog_name "/bin/nterm"
 
 static Finfo file_table[] __attribute__((used)) = {
-// #include "files.h"
+#include "files.h"
 };
 
 
