@@ -36,30 +36,30 @@ static inline uint32_t get_PAGE_INSIDE(vaddr_t addr){
 paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
 	if(isa_mmu_check(vaddr, len, type) == MMU_TRANSLATE){
 		uint32_t base = csr.satp.decode.base << 12;
-		uint32_t pd_item = base + (get_PAGE_DIRECTORY(vaddr) << 2);
+		uint32_t pd_item_addr = base + (get_PAGE_DIRECTORY(vaddr) << 2);
+		if(vaddr == 0x7fffff22){
+			Log("vaddr %08x, pd_item_addr to %08x",vaddr, pd_item_addr);
+		}
+		uint32_t pd_item = paddr_read(pd_item_addr, 4);
 		if(vaddr == 0x7fffff22){
 			Log("vaddr %08x, pd_item to %08x",vaddr, pd_item);
 		}
-		uint32_t pt_addr = paddr_read(pd_item, 4);
+		uint32_t pt_item_addr = (pd_item >> 10 << 12) | (get_PAGE_TABLE(vaddr) << 2);
 		if(vaddr == 0x7fffff22){
-			Log("vaddr %08x, pt_addr to %08x",vaddr, pt_addr);
+			Log("vaddr %08x, pt_item_addr to %08x",vaddr, pt_item_addr);
 		}
-		uint32_t pt_item = (pt_addr >> 10 << 12) | (get_PAGE_TABLE(vaddr) << 2);
+		uint32_t pt_item = paddr_read(pt_item_addr, 4);
+		Assert(((pt_item>>10 << 12) | get_PAGE_INSIDE(vaddr)) == vaddr, "paddr = %08x, vaddr = %08x", (uint32_t)((pt_item>>10 << 12) | get_PAGE_INSIDE(vaddr)), vaddr);
 		if(vaddr == 0x7fffff22){
-			Log("vaddr %08x, pt_item to %08x",vaddr, pt_item);
-		}
-		uint32_t pg_addr = paddr_read(pt_item, 4);
-		Assert(((pg_addr>>10 << 12) | get_PAGE_INSIDE(vaddr)) == vaddr, "paddr = %08x, vaddr = %08x", (uint32_t)((pg_addr>>10 << 12) | get_PAGE_INSIDE(vaddr)), vaddr);
-		if(vaddr == 0x7fffff22){
-			Log("vaddr %08x, map to %08x",vaddr, (pg_addr>>10 << 12) | get_PAGE_INSIDE(vaddr));
+			Log("vaddr %08x, map to %08x",vaddr, (pt_item>>10 << 12) | get_PAGE_INSIDE(vaddr));
 		}
 		if(type == 0){
-			paddr_write(pt_item, 4, pg_addr | PTE_A);
+			paddr_write(pt_item_addr, 4, pt_item | PTE_A);
 		}
 		else {
-			paddr_write(pt_item, 4, pg_addr | PTE_D);
+			paddr_write(pt_item_addr, 4, pt_item | PTE_D);
 		}
-		return (pg_addr>>10 << 12) | get_PAGE_INSIDE(vaddr);
+		return (pt_item>>10 << 12) | get_PAGE_INSIDE(vaddr);
 	}
 	else return vaddr;
 }
