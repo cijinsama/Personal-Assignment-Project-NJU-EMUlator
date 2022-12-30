@@ -52,13 +52,15 @@ uintptr_t loader(PCB *pcb, const char *filename) {
 			//从文件读入
 			program2vmem(fd, program_header.p_offset,((uintptr_t)newpages & ~0xfff) | (program_header.p_vaddr & 0xfff), program_header.p_filesz);
 			vmemset((uint8_t *) ((((uintptr_t)newpages & ~0xfff) | (program_header.p_vaddr & 0xfff))+program_header.p_filesz), program_header.p_memsz - program_header.p_filesz, 0);
+			if(ROUNDUP(program_header.p_vaddr + program_header.p_memsz, 0xfff) > pcb->max_brk){
+				pcb->max_brk = ROUNDUP(program_header.p_vaddr + program_header.p_memsz, 0xfff);
+				Log("@@@@@@@@@@@ %08x", program_header.p_vaddr);
+				Log("@@@@@@@@@@@ %08x", program_header.p_memsz);
+				Log("########### %08x", program_header.p_vaddr + program_header.p_memsz);
+				Log("pcb->pa %08x", pcb->max_brk);
+			}
 		}
 	}
-	pcb->max_brk = ROUNDUP(program_header.p_vaddr + program_header.p_memsz, 0xfff);
-	Log("@@@@@@@@@@@ %08x", program_header.p_vaddr);
-	Log("@@@@@@@@@@@ %08x", program_header.p_memsz);
-	Log("############ %08x", program_header.p_vaddr + program_header.p_memsz);
-	Log("pcb->pa %08x", pcb->max_brk);
 	fs_close(fd);
 	return elf_header.e_entry;
 }
