@@ -200,9 +200,11 @@ size_t execve(const char * filename, char *const argv[], char *const envp[]){
 
 void init_proc() {
 	context_kload(&pcb[0], hello_fun, "cijin");
+	printf("comp kload\n");
   char *argv1[] = {prog_dummy,  NULL};
   char *envp1[] = {NULL};
 	context_uload(&pcb[1], prog_dummy, argv1, envp1);
+	printf("comp uload\n");
 	
   switch_boot_pcb();
 
