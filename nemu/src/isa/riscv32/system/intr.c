@@ -45,7 +45,7 @@ word_t isa_query_intr() {
 			default : 
 // 				Log("Uncomplete mstatus, go to complete it !!!\ncsr.mstatus = %04x",csr.mstatus.val); 
 // 				panic("ERRRRORRRR");
-				return INTR_EMPTY;
+				return EXCP_Environment;
 		}
 	}
 	return INTR_EMPTY;
