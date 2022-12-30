@@ -193,6 +193,7 @@ size_t execve(const char * filename, char *const argv[], char *const envp[]){
 #define prog_n prog_1919
 
 void init_proc() {
+  Log("Initializing processes...");
 	context_kload(&pcb[0], hello_fun, "cijin");
 //   char *argv1[] = {prog_pal,"--skip" ,NULL};
   char *argv1[] = {prog_nterm ,NULL};
@@ -202,6 +203,6 @@ void init_proc() {
 	
   switch_boot_pcb();
 
-  Log("Initializing processes...");
+  Log("Complete Initializing processes...");
 }
 
