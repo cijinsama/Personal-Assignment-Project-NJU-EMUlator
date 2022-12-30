@@ -147,7 +147,6 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	area.end = area.start + STACK_SIZE;
 	Context *context = ucontext(&pcb->as, area,(void *) entry);
 	pcb->cp = context;
-	pcb->max_brk = 0x83000000u;
 
 	context->GPRx = main_ebp + 4;
 	return;

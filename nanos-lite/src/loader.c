@@ -54,6 +54,7 @@ uintptr_t loader(PCB *pcb, const char *filename) {
 			vmemset((uint8_t *) ((((uintptr_t)newpages & ~0xfff) | (program_header.p_vaddr & 0xfff))+program_header.p_filesz), program_header.p_memsz - program_header.p_filesz, 0);
 		}
 	}
+	pcb->max_brk = ROUNDUP(program_header.p_vaddr + program_header.p_memsz, 0xfff);
 	fs_close(fd);
 	return elf_header.e_entry;
 }
