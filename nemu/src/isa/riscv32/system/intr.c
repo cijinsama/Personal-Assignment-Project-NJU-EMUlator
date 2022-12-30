@@ -33,7 +33,10 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
 
 word_t isa_query_intr() {
 	if (csr.mstatus.decode.MIE == 1) {
-		if(cpu.INTR) return IRQ_TIMER;
+		if(cpu.INTR){
+			cpu.INTR = false;
+			return IRQ_TIMER;
+		}
 		switch(csr.mstatus.val){
 			case 0x1808:
 				return EXCP_Environment;
