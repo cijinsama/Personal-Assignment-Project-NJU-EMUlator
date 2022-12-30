@@ -42,8 +42,16 @@ uintptr_t loader(PCB *pcb, const char *filename) {
 	for (int i = 0; i < elf_header.e_phnum; i++, program_header_off += sizeof(program_header)){
 		ReadFile(fd, program_header_off, &program_header, sizeof(program_header), 1);
 		if (program_header.p_type == PT_LOAD){
-			program2vmem(fd, program_header.p_offset, program_header.p_vaddr, program_header.p_memsz);
-			vmemset((uint8_t *) (program_header.p_vaddr+program_header.p_filesz), program_header.p_memsz - program_header.p_filesz, 0);
+			void *newpages;
+			//申请物理页
+			newpages = new_page(program_header.p_memsz / PGSIZE + 1);
+			//map把物理页映射到用户进程的虚拟空间
+			for(int i = 0; i < program_header.p_memsz / PGSIZE + 1; i++){
+				map(&pcb->as, (void *)((program_header.p_vaddr & ~0xfff) + i * PGSIZE), (void *)(newpages + i * PGSIZE), 0);
+			}
+			//从文件读入
+			program2vmem(fd, program_header.p_offset,((uintptr_t)newpages & ~0xfff) | (program_header.p_vaddr & 0xfff), program_header.p_filesz);
+			vmemset((uint8_t *) ((((uintptr_t)newpages & ~0xfff) | (program_header.p_vaddr & 0xfff))+program_header.p_filesz), program_header.p_memsz - program_header.p_filesz, 0);
 		}
 	}
 	fs_close(fd);

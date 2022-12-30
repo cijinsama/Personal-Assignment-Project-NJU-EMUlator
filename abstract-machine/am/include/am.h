@@ -69,6 +69,8 @@ void     protect     (AddrSpace *as);
 void     unprotect   (AddrSpace *as);
 void     map         (AddrSpace *as, void *vaddr, void *paddr, int prot);
 Context *ucontext    (AddrSpace *as, Area kstack, void *entry);
+void __am_switch(Context *c);
+void __am_get_cur_as(Context *c);
 
 // ---------------------- MPE: Multi-Processing ----------------------
 bool     mpe_init    (void (*entry)());

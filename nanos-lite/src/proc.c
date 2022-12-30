@@ -47,17 +47,21 @@ void context_kload(PCB *pcb, void (*entry)(void *), void *arg){
 #define gap_between_main_context 512
 #define gap_between_main_env 128
 void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
+	protect(&pcb->as);
+	
+  void *user_stack_top = new_page(8) + 8 * PGSIZE;
+	for(int i = 0; i < 8; i++){
+		map(&pcb->as, pcb->as.area.end - (i+1) * PGSIZE, user_stack_top - (i+1) * PGSIZE, 0); 
+	}
 	Area area;
-	area.start = new_page(STACK_SIZE / PGSIZE);
-	area.end = area.start + STACK_SIZE;
-
+	area.end = pcb->as.area.end;
 
 	//假设main上面的argc从这个开始
-	uintptr_t main_ebp = (uintptr_t)area.end - sizeof(Context) - gap_between_context_string - gap_between_main_context;
+	uintptr_t main_ebp = (uintptr_t)area.end - sizeof(Context) - gap_between_context_string - gap_between_main_context;//这两个地方用到了end
 	char** environ = (char**) (main_ebp + gap_between_main_env);
 
 	//搜索argcenv的大小，并且获得储存完过后的地址
-	char* current_addr = area.end - sizeof(Context) - gap_between_context_string;
+	char* current_addr = area.end - sizeof(Context) - gap_between_context_string;//这两个地方用到了end
 	char* env_str_addr = NULL;
 	char* arg_str_addr = NULL;
 	int argc = 0;
@@ -140,6 +144,8 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	//拷贝argv，envp
 
 
+	area.start = &pcb->cp;
+	area.end = area.start + STACK_SIZE;
 	Context *context = ucontext(NULL, area,(void *) entry);
 	pcb->cp = context;
 
@@ -189,13 +195,14 @@ size_t execve(const char * filename, char *const argv[], char *const envp[]){
 #define prog_nterm "/bin/nterm"
 #define prog_exectest "/bin/exec-test"
 #define prog_pal "/bin/pal"
+#define prog_dummy "/bin/dummy"
 #define prog_n prog_1919
 
 void init_proc() {
 	context_kload(&pcb[0], hello_fun, "cijin");
-  char *argv1[] = {prog_pal, "--skip",  NULL};
+  char *argv1[] = {prog_dummy,  NULL};
   char *envp1[] = {NULL};
-	context_uload(&pcb[1], prog_pal, argv1, envp1);
+	context_uload(&pcb[1], prog_dummy, argv1, envp1);
 	
   switch_boot_pcb();
 
