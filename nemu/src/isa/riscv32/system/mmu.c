@@ -37,23 +37,22 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
 	if(isa_mmu_check(vaddr, len, type) == MMU_TRANSLATE){
 		uint32_t base = csr.satp.decode.base << 12;
 		uint32_t pd_item_addr = base + (get_PAGE_DIRECTORY(vaddr) << 2);
-		if(vaddr == 0x7fffff22){
-			Log("base %08x", base);
-			Log("vaddr %08x, pd_item_addr to %08x",vaddr, pd_item_addr);
-		}
+// 		if(vaddr == 0x7fffff22){
+// 			Log("base %08x", base);
+// 			Log("vaddr %08x, pd_item_addr to %08x",vaddr, pd_item_addr);
+// 		}
 		uint32_t pd_item = paddr_read(pd_item_addr, 4);
-		if(vaddr == 0x7fffff22){
-			Log("vaddr %08x, pd_item to %08x",vaddr, pd_item);
-		}
+// 		if(vaddr == 0x7fffff22){
+// 			Log("vaddr %08x, pd_item to %08x",vaddr, pd_item);
+// 		}
 		uint32_t pt_item_addr = (pd_item >> 10 << 12) | (get_PAGE_TABLE(vaddr) << 2);
-		if(vaddr == 0x7fffff22){
-			Log("vaddr %08x, pt_item_addr to %08x",vaddr, pt_item_addr);
-		}
+// 		if(vaddr == 0x7fffff22){
+// 			Log("vaddr %08x, pt_item_addr to %08x",vaddr, pt_item_addr);
+// 		}
 		uint32_t pt_item = paddr_read(pt_item_addr, 4);
-// 		Assert(((pt_item>>10 << 12) | get_PAGE_INSIDE(vaddr)) == vaddr, "paddr = %08x, vaddr = %08x", (uint32_t)((pt_item>>10 << 12) | get_PAGE_INSIDE(vaddr)), vaddr);
-		if(vaddr == 0x7fffff22){
-			Log("vaddr %08x, map to %08x",vaddr, (pt_item>>10 << 12) | get_PAGE_INSIDE(vaddr));
-		}
+// 		if(vaddr == 0x7fffff22){
+// 			Log("vaddr %08x, map to %08x",vaddr, (pt_item>>10 << 12) | get_PAGE_INSIDE(vaddr));
+// 		}
 		if(type == 0){
 			paddr_write(pt_item_addr, 4, pt_item | PTE_A);
 		}
