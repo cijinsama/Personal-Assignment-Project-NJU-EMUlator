@@ -48,6 +48,7 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
 	context->mepc = (uintptr_t)	entry;
 	context->mstatus = 0x1800;
 	context->gpr[10] = (uintptr_t) arg;//用a0传参数
+	context->pdir = NULL;
   return context;
 }
 

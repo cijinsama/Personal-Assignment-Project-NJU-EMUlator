@@ -23,6 +23,7 @@ size_t do_sys_gettimeofday(struct timeval * tv, struct timezone * tz){
 }
 
 size_t serial_write(const void *buf, size_t offset, size_t len) {
+	yield();
 	for (int i = 0; i < len; ++i){
 		putch(*((char *)buf + i));
 	}
@@ -33,6 +34,7 @@ size_t serial_write(const void *buf, size_t offset, size_t len) {
 static char buffer_for_key[1024];
 size_t events_read(void *buf, size_t offset, size_t len) {
 	if (len > 1024) assert(0);
+	yield();
 	AM_INPUT_KEYBRD_T event = io_read(AM_INPUT_KEYBRD);
 	memset(buf, 0, len);
 	memset(buffer_for_key, 0, 1024);
@@ -57,6 +59,7 @@ size_t dispinfo_read(void *buf, size_t offset, size_t len) {
 }
 
 size_t fb_write(const void *buf, size_t offset, size_t len) {
+	yield();
   io_write(AM_GPU_MEMCPY, offset,(void *) buf, len);
   io_write(AM_GPU_FBDRAW, 0, 0, NULL, 0, 0, true);
   return len;

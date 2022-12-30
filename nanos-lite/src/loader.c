@@ -54,10 +54,6 @@ uintptr_t loader(PCB *pcb, const char *filename) {
 			vmemset((uint8_t *) ((((uintptr_t)newpages & ~0xfff) | (program_header.p_vaddr & 0xfff))+program_header.p_filesz), program_header.p_memsz - program_header.p_filesz, 0);
 			if((((program_header.p_vaddr + program_header.p_memsz) >> 12 << 12) + 1) > pcb->max_brk){
 				pcb->max_brk = ((program_header.p_vaddr + program_header.p_memsz) >> 12 << 12) + 1;
-				Log("@@@@@@@@@@@ %08x", program_header.p_vaddr);
-				Log("@@@@@@@@@@@ %08x", program_header.p_memsz);
-				Log("########### %08x", program_header.p_vaddr + program_header.p_memsz);
-				Log("pcb->pa %08x", pcb->max_brk);
 			}
 		}
 	}
