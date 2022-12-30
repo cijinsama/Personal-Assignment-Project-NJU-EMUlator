@@ -158,7 +158,6 @@ Context* schedule(Context *prev) {
 	int i = 0;
 	for(i = 0; i < MAX_NR_PROC; i++){
 		if(pcb[i].cp != NULL && current != &pcb[i]){
-			Log("switch to pcb[%d]", i);
 			current = &pcb[i];
 			return current->cp;
 		}
