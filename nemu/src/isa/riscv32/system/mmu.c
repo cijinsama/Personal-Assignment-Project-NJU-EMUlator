@@ -38,6 +38,7 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
 		uint32_t base = csr.satp.decode.base << 12;
 		uint32_t pd_item_addr = base + (get_PAGE_DIRECTORY(vaddr) << 2);
 		if(vaddr == 0x7fffff22){
+			Log("base %08x", base);
 			Log("vaddr %08x, pd_item_addr to %08x",vaddr, pd_item_addr);
 		}
 		uint32_t pd_item = paddr_read(pd_item_addr, 4);
