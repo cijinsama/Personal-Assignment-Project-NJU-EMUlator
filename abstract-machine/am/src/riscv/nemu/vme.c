@@ -95,7 +95,7 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
 		printf("va : %08x, pa : %08x\n",(*(uint32_t *)((pd_item >> 10 << 12) + (pt_bias << 2))) >> 10 << 12, pa);
 		panic("va != pa");
 	}
-	if((pd_bias & ~0x3ff) == 0x7ffff000u){
+	if(((uintptr_t)va & ~0xfff) == 0x7ffff000u){
 		printf("pd_item = %08x\n", pd_item);
 		printf("pt_item = %08x\n", pt_item);
 	}
