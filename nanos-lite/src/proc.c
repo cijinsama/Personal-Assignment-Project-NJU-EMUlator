@@ -50,13 +50,13 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	protect(&pcb->as);
 	printf("111\n");
 	
-  void *user_stack_top = new_page(8) + 8 * PGSIZE;
-	for(int i = 0; i < 8; i++){
+  void *user_stack_top = new_page(STACK_SIZE / PGSIZE) + STACK_SIZE;
+	for(int i = 0; i < (STACK_SIZE / PGSIZE); i++){
 		map(&pcb->as, pcb->as.area.end - (i+1) * PGSIZE, user_stack_top - (i+1) * PGSIZE, 0); 
 	}
 	Area area;
 	area.end = pcb->as.area.end;
-	printf("222\n");
+	printf("area.end vaddr %08x\n", area.end);
 
 	//假设main上面的argc从这个开始
 	uintptr_t main_ebp = (uintptr_t)area.end - sizeof(Context) - gap_between_context_string - gap_between_main_context;//这两个地方用到了end
