@@ -98,6 +98,7 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	}
 	current_addr = arg_str_addr;
 	printf("444\n");
+	printf("current_addr %08x",current_addr);
 	if(argv){
 		for(int i = 0; i < argc ; i++){
 			strcpy(current_addr, argv[i]);
