@@ -48,17 +48,18 @@ void context_kload(PCB *pcb, void (*entry)(void *), void *arg){
 #define gap_between_main_env 128
 void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	protect(&pcb->as);
-	printf("111\n");
+	Log("111\n");
 	
   void *user_stack_top = new_page(STACK_SIZE / PGSIZE) + STACK_SIZE;
 	for(int i = 0; i < (STACK_SIZE / PGSIZE); i++){
 		map(&pcb->as, pcb->as.area.end - (i+1) * PGSIZE, user_stack_top - (i+1) * PGSIZE, 0); 
+		Log("map vaddr %08x paddr %08x\n", pcb->as.area.end - (i+1) * PGSIZE, user_stack_top - (i+1) * PGSIZE);
 	}
 	Area area;
 	area.start = pcb->as.area.start;
 	area.end = pcb->as.area.end;
-	printf("area.start vaddr %08x\n", area.start);
-	printf("area.end vaddr %08x\n", area.end);
+	Log("area.start vaddr %08x\n", area.start);
+	Log("area.end vaddr %08x\n", area.end);
 
 	//假设main上面的argc从这个开始
 	uintptr_t main_ebp = (uintptr_t)area.end - sizeof(Context) - gap_between_context_string - gap_between_main_context;//这两个地方用到了end
@@ -70,7 +71,7 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	char* arg_str_addr = NULL;
 	int argc = 0;
 	int envc = 0;
-	printf("222\n");
+	Log("222\n");
 	if(argv){
 		for(;argv[argc]!=NULL; argc++){
 			current_addr -= strlen(argv[argc]) + gap_between;
@@ -87,7 +88,7 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
   char *envp_ustack[envc];
   char *argp_ustack[argc];
 	current_addr = env_str_addr;
-	printf("333\n");
+	Log("333\n");
 	if(envp){
 		for(int i = 0; i < envc; i++){
 			strcpy(current_addr, envp[i]);
@@ -97,8 +98,8 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 		}
 	}
 	current_addr = arg_str_addr;
-	printf("444\n");
-	printf("current_addr %08x",current_addr);
+	Log("444\n");
+	Log("current_addr %08x",current_addr);
 	if(argv){
 		for(int i = 0; i < argc ; i++){
 			strcpy(current_addr, argv[i]);
@@ -109,7 +110,7 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 			current_addr += strlen(argv[i]) + gap_between;
 		}
 	}
-	printf("555\n");
+	Log("555\n");
 
 // 	Log("debug string is %s", arg_str_addr);
 	//把字符串对应的指针copy进取
@@ -153,13 +154,11 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	//拷贝argv，envp
 
 
-	printf("333\n");
 	area.start = &pcb->cp;
 	area.end = area.start + STACK_SIZE;
 	Context *context = ucontext(NULL, area,(void *) entry);
 	pcb->cp = context;
 
-	printf("444\n");
 // 	Log("The sp is supposed to be 0x%x", main_ebp);
 // 	Log("pcb->cp = 0x%x", context);
 	//gpr[2]是sp
