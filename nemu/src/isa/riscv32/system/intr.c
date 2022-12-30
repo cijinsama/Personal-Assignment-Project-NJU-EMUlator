@@ -38,6 +38,7 @@ word_t isa_query_intr() {
 			return IRQ_TIMER;
 		}
 		switch(csr.mstatus.val){
+			case 0x1888:
 			case 0x1808:
 				return EXCP_Environment;
 			case 0x21808://这个是syscall
