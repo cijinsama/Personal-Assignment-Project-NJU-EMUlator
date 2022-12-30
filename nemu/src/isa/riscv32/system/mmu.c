@@ -50,7 +50,7 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
 			Log("vaddr %08x, pt_item_addr to %08x",vaddr, pt_item_addr);
 		}
 		uint32_t pt_item = paddr_read(pt_item_addr, 4);
-		Assert(((pt_item>>10 << 12) | get_PAGE_INSIDE(vaddr)) == vaddr, "paddr = %08x, vaddr = %08x", (uint32_t)((pt_item>>10 << 12) | get_PAGE_INSIDE(vaddr)), vaddr);
+// 		Assert(((pt_item>>10 << 12) | get_PAGE_INSIDE(vaddr)) == vaddr, "paddr = %08x, vaddr = %08x", (uint32_t)((pt_item>>10 << 12) | get_PAGE_INSIDE(vaddr)), vaddr);
 		if(vaddr == 0x7fffff22){
 			Log("vaddr %08x, map to %08x",vaddr, (pt_item>>10 << 12) | get_PAGE_INSIDE(vaddr));
 		}
