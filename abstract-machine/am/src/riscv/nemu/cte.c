@@ -14,9 +14,9 @@ void event_for_excp_ecvironment(Event *ev, Context *c){
 	}
 }
 
-// void event_for_timer(Event *ev, Context *c){
-// 	ev->event = EVENT_IRQ_TIMER;
-// }
+void event_for_timer(Event *ev, Context *c){
+	ev->event = EVENT_IRQ_TIMER;
+}
 
 Context* __am_irq_handle(Context *c) {
 	__am_get_cur_as(c);
@@ -24,7 +24,7 @@ Context* __am_irq_handle(Context *c) {
     Event ev = {0};
     switch (c->mcause) {
 			case EXCP_Environment:	c->mepc += 4; event_for_excp_ecvironment(&ev, c); break;
-// 			case IRQ_TIMER:					c->mepc += 4; event_for_timer(&ev, c); break;
+			case IRQ_TIMER:					c->mepc += 4; event_for_timer(&ev, c); break;
       default:								c->mepc += 4; ev.event = EVENT_ERROR; break;
     }
     c = user_handler(ev, c);
