@@ -48,10 +48,12 @@ save_context:
   csrr t0, mcause
   csrr t1, mstatus
   csrr t2, mepc
+	csrr t3, mscratch //c->sp = $sp
 
   STORE t0, OFFSET_CAUSE(sp)
   STORE t1, OFFSET_STATUS(sp)
   STORE t2, OFFSET_EPC(sp)
+	STORE t3, OFFSET_SP(sp)//c->sp = $sp
 
 	//调用的参数context准备完成
 
