@@ -106,7 +106,7 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
 
 Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
 	Context *context = kstack.end - sizeof(Context);
-	printf("[ab] : context address : %08x", context);
+	printf("[ab] : context address : %08x - %08x", context, kstack.end);
 	context->mepc = (uintptr_t)	entry;
 	context->mstatus = 0x1800;
 	context->pdir = as->ptr;
