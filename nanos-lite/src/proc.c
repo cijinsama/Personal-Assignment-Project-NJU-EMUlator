@@ -56,7 +56,7 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	}
 
 
-	Area area;
+	Area area;//这一段area指代用户数据区域
 	area.end = user_stack_top;
 	area.start = area.end - STACK_SIZE;
 
@@ -144,9 +144,9 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
   uintptr_t entry = loader(pcb, filename);
   Log("uload Jump to entry = %p",(void *)entry);
 
-	area.start = &pcb->cp;
+	area.start = &pcb->cp;//从这开始area指代karea，储存context的
 	area.end = area.start + STACK_SIZE;
-	Log("area start %08x- %08x", area.start, area.end);
+	Log("karea start %08x- %08x", area.start, area.end);
 	Context *context = ucontext(&pcb->as, area,(void *) entry);
 	pcb->cp = context;
 
