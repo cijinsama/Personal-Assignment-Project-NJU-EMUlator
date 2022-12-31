@@ -158,13 +158,15 @@ static void exec_once(Decode *s, vaddr_t pc) {
 #endif
 }
 
+static bool temp_flag = false;
 static void execute(uint64_t n) {
   Decode s;
   for (;n > 0; n --) { 
 		exec_once(&s, cpu.pc);//执行前pc指向将要执行的指令.执行过后pc++
     g_nr_guest_inst ++;
-		if(csr.mstatus.decode.MIE){
-			Log("MIE set to 1");
+		if(csr.mstatus.decode.MIE != temp_flag){
+			Log("MIE set to %d",csr.mstatus.decode.MIE);
+			temp_flag = csr.mstatus.decode.MIE;
 		}
 // 		Log("csr.MIE %d",csr.mstatus.decode.MIE);
 		uint32_t NO = isa_query_intr();
