@@ -165,7 +165,7 @@ static void execute(uint64_t n) {
 		exec_once(&s, cpu.pc);//执行前pc指向将要执行的指令.执行过后pc++
     g_nr_guest_inst ++;
 		if(csr.mstatus.decode.MIE != temp_flag){
-			Log("MIE set to %d",csr.mstatus.decode.MIE);
+			Log("MIE set to %d, pc = %08x",csr.mstatus.decode.MIE, cpu.pc);
 			temp_flag = csr.mstatus.decode.MIE;
 		}
 // 		Log("csr.MIE %d",csr.mstatus.decode.MIE);
