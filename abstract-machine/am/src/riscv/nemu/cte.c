@@ -49,7 +49,7 @@ bool cte_init(Context*(*handler)(Event, Context*)) {
 Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
 	Context *context = kstack.end - sizeof(Context);
 	context->mepc = (uintptr_t)	entry;
-	context->mstatus = 0x1808;
+	context->mstatus = 0x8;
 	context->gpr[10] = (uintptr_t) arg;//用a0传参数
 	context->pdir = NULL;
   return context;
