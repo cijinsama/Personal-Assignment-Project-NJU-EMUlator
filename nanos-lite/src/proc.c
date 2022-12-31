@@ -186,13 +186,18 @@ size_t execve(const char * filename, char *const argv[], char *const envp[]){
 
 void init_proc() {
   Log("Initializing processes...");
-	context_kload(&pcb[0], hello_fun, "cijin");
+// 	context_kload(&pcb[0], hello_fun, "cijin");
 // 	context_kload(&pcb[1], hello_fun, "liuyi");
   char *argv1[] = {prog_pal,"--skip" ,NULL};
 //   char *argv1[] = {prog_hello ,NULL};
   char *envp1[] = {NULL};
 	context_uload(&pcb[1], prog_pal, argv1, envp1);
-// 	context_uload(&pcb[1], prog_hello, argv1, envp1);
+
+
+
+  char *argv2[] = {prog_nterm, NULL};
+  char *envp2[] = {NULL};
+	context_uload(&pcb[0], prog_nterm, argv2, envp2);
 	
   switch_boot_pcb();
 

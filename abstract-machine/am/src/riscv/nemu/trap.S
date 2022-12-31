@@ -21,15 +21,24 @@ f(30) f(31)
 #define PUSH(n) STORE concat(x, n), (n * XLEN)(sp);
 #define POP(n)  LOAD  concat(x, n), (n * XLEN)(sp);
 
-#define CONTEXT_SIZE  ((32 + 3 + 1) * XLEN)
+//最后+1是因为自己加入的东西
+#define CONTEXT_SIZE  ((32 + 3 + 1 + 1) * XLEN)
 #define OFFSET_SP     ( 2 * XLEN)
 #define OFFSET_CAUSE  (32 * XLEN)
 #define OFFSET_STATUS (33 * XLEN)
 #define OFFSET_EPC    (34 * XLEN)
+#define OFFSET_NP			(35 * XLEN)
 
 .align 3
 .globl __am_asm_trap
 __am_asm_trap:
+  csrrw sp, mscratch, sp   //交换sp和mscratch
+	bnez sp, save_context    //现在sp里面的东西代表ksp，如果是0就是内核态
+	csrr sp, mscratch        //用户态就把sp读回来
+
+save_context:
+	// now sp is pointing to the kernel stack
+	//save context
 	//这一步过后sp指向的是将要给irq_handle的参数context
   addi sp, sp, -CONTEXT_SIZE
 
@@ -57,6 +66,12 @@ __am_asm_trap:
 	//恢复context
 	mv sp, a0
 	//
+	LOAD a0, OFFSET_NP(sp)
+  bnez a0, restore_context
+  addi a0, sp, CONTEXT_SIZE//如果是用户态就要把sp读到scratch中
+  csrw mscratch, a0
+
+restore_context:
   LOAD t1, OFFSET_STATUS(sp)
   LOAD t2, OFFSET_EPC(sp)
 	//并没有加载位置0和位置2的寄存器，也就是sp和0
