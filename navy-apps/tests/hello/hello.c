@@ -16,11 +16,5 @@ int main(int argc, char *argv[]) {
 	int *a = malloc(sizeof(int));
 	*a = 1;
 	printf("%d\n",*a);
-	int j = 0;
-  while (1) {
-    j ++;
-		printf("Hello World from Navy-apps for the %dth time!\n", j ++);
-		_syscall_(SYS_yield, 0, 0, 0);
-  }
   return 0;
 }
