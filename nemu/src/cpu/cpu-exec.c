@@ -171,7 +171,7 @@ static void execute(uint64_t n) {
 // 		Log("csr.MIE %d",csr.mstatus.decode.MIE);
 		uint32_t NO = isa_query_intr();
 		if (NO == IRQ_TIMER){
-			cpu.pc = isa_raise_intr(NO, s.pc);
+			cpu.pc = isa_raise_intr(NO, cpu.pc);
 			Log("cpu.pc set to %08x", cpu.pc);
 		}
     trace_and_difftest(&s, cpu.pc);
