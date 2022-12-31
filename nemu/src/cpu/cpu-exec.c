@@ -96,7 +96,7 @@ static void cpiring(Decode *s){
 static void exec_once(Decode *s, vaddr_t pc) {
   s->pc = pc;
   s->snpc = pc;
-  isa_exec_once(s);
+  isa_exec_once(s);//执行过后dnpc++
 #ifdef CONFIG_TRACE
 	int i = 0;
 #endif
@@ -161,7 +161,7 @@ static void exec_once(Decode *s, vaddr_t pc) {
 static void execute(uint64_t n) {
   Decode s;
   for (;n > 0; n --) { 
-		exec_once(&s, cpu.pc);
+		exec_once(&s, cpu.pc);//执行前pc指向将要执行的指令.执行过后pc++
     g_nr_guest_inst ++;
 		if (csr.mstatus.decode.MIE == 1){
 			uint32_t NO = isa_query_intr();
