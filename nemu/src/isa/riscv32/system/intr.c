@@ -36,9 +36,6 @@ word_t isa_query_intr() {
 			cpu.INTR = false;
 			return IRQ_TIMER;
 		}
-		else{
-			return EXCP_Environment;
-		}
 // 		switch(csr.mstatus.val){
 // 			case 0x1808:
 // 				return EXCP_Environment;
