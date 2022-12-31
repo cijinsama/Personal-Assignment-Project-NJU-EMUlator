@@ -8,11 +8,11 @@
 extern int _syscall_(int, uintptr_t, uintptr_t, uintptr_t);
 
 int main() {
-	int i  = 1;
+// 	int i  = 1;
 	while(1){
 // 		printf("123\n");
-		i++;
-// 		_syscall_(SYS_yield, 0, 0, 0);
+// 		i++;
+		_syscall_(SYS_yield, 0, 0, 0);
 	}
   return _syscall_(SYS_yield, 0, 0, 0);
 }
