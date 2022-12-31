@@ -96,7 +96,7 @@ static void cpiring(Decode *s){
 static void exec_once(Decode *s, vaddr_t pc) {
   s->pc = pc;
   s->snpc = pc;
-  isa_exec_once(s);//执行过后dnpc++
+  isa_exec_once(s);//执行前pc，snpc指向当前指令//执行过后dnpc指向下一条指令
 #ifdef CONFIG_TRACE
 	int i = 0;
 #endif
@@ -165,7 +165,7 @@ static void execute(uint64_t n) {
     g_nr_guest_inst ++;
 		if (csr.mstatus.decode.MIE == 1){
 			uint32_t NO = isa_query_intr();
-			isa_raise_intr(NO, s.pc);
+			cpu.pc = isa_raise_intr(NO, s.pc);
 		}
     trace_and_difftest(&s, cpu.pc);
     if (nemu_state.state != NEMU_RUNNING) break;
