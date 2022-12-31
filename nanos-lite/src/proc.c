@@ -154,16 +154,16 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 
 Context* schedule(Context *prev) {
 	current->cp = prev;
-// 	current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
-	int i = 0;
-	for(i = 0; i < MAX_NR_PROC; i++){
-		if(pcb[i].cp != NULL && current != &pcb[i]){
-			Log("switch to pcb %d", i);
-			current = &pcb[i];
-			return current->cp;
-		}
-	}
-	if(i == MAX_NR_PROC) panic("lack of available pcb");
+	current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
+// 	int i = 0;
+// 	for(i = 0; i < MAX_NR_PROC; i++){
+// 		if(pcb[i].cp != NULL && current != &pcb[i]){
+// 			Log("switch to pcb %d", i);
+// 			current = &pcb[i];
+// 			return current->cp;
+// 		}
+// 	}
+// 	if(i == MAX_NR_PROC) panic("lack of available pcb");
   return current->cp;
 }
 
@@ -196,11 +196,12 @@ size_t execve(const char * filename, char *const argv[], char *const envp[]){
 void init_proc() {
   Log("Initializing processes...");
 	context_kload(&pcb[0], hello_fun, "cijin");
+	context_kload(&pcb[1], hello_fun, "liuyi");
 //   char *argv1[] = {prog_pal,"--skip" ,NULL};
-  char *argv1[] = {prog_dummy ,NULL};
-  char *envp1[] = {NULL};
+//   char *argv1[] = {prog_dummy ,NULL};
+//   char *envp1[] = {NULL};
 // 	context_uload(&pcb[1], prog_pal, argv1, envp1);
-	context_uload(&pcb[1], prog_dummy, argv1, envp1);
+// 	context_uload(&pcb[1], prog_dummy, argv1, envp1);
 	
   switch_boot_pcb();
 
