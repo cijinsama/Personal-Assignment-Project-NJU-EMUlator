@@ -25,7 +25,7 @@ Context* __am_irq_handle(Context *c) {
 	sp += sizeof(Context);
 	if(sp == mscratch) c->np = 3;
 	else c->np = 0;
-	printf("$sp = %08x, scrach = %08x", sp, mscratch);
+	printf("$sp = %08x, scrach = %08x\n", sp, mscratch);
 	
 	uintptr_t temp = 0;
   asm volatile("csrw mscratch, %0" : : "r"(temp));
