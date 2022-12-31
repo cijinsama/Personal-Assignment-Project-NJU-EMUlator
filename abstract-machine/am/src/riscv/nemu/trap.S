@@ -42,6 +42,7 @@ save_context:
 	//这一步过后sp指向的是将要给irq_handle的参数context
   addi sp, sp, -CONTEXT_SIZE
 
+
   MAP(REGS, PUSH)
 
   csrr t0, mcause
@@ -51,6 +52,7 @@ save_context:
   STORE t0, OFFSET_CAUSE(sp)
   STORE t1, OFFSET_STATUS(sp)
   STORE t2, OFFSET_EPC(sp)
+  STORE t3, OFFSET_SP(sp)//+++++
 	//调用的参数context准备完成
 
   # set mstatus.MPRV to pass difftest
@@ -74,6 +76,7 @@ save_context:
 restore_context:
   LOAD t1, OFFSET_STATUS(sp)
   LOAD t2, OFFSET_EPC(sp)
+	LOAD t3, OFFSET_SP(sp)//+++
 	//并没有加载位置0和位置2的寄存器，也就是sp和0
   csrw mstatus, t1
   csrw mepc, t2
