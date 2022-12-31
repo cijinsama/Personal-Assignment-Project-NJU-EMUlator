@@ -49,6 +49,7 @@ void context_kload(PCB *pcb, void (*entry)(void *), void *arg){
 void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	protect(&pcb->as);
   void *user_stack_top = new_page(STACK_SIZE / PGSIZE) + STACK_SIZE;
+	Log("user_stack_top %08x - %08x",user_stack_top - STACK_SIZE ,user_stack_top);
 	for(int i = 0; i < (STACK_SIZE / PGSIZE); i++){
 		map(&pcb->as, pcb->as.area.end - (i+1) * PGSIZE, user_stack_top - (i+1) * PGSIZE, 0); 
 // 		Log("map vaddr %08x paddr %08x\n", pcb->as.area.end - (i+1) * PGSIZE, user_stack_top - (i+1) * PGSIZE);
@@ -145,6 +146,7 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 
 	area.start = &pcb->cp;
 	area.end = area.start + STACK_SIZE;
+	Log("area start %08x- %08x", area.start, area.end);
 	Context *context = ucontext(&pcb->as, area,(void *) entry);
 	pcb->cp = context;
 
