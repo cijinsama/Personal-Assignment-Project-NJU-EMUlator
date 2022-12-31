@@ -199,11 +199,11 @@ void init_proc() {
   Log("Initializing processes...");
 	context_kload(&pcb[0], hello_fun, "cijin");
 // 	context_kload(&pcb[1], hello_fun, "liuyi");
-//   char *argv1[] = {prog_pal,"--skip" ,NULL};
-  char *argv1[] = {prog_hello ,NULL};
+  char *argv1[] = {prog_pal,"--skip" ,NULL};
+//   char *argv1[] = {prog_hello ,NULL};
   char *envp1[] = {NULL};
-// 	context_uload(&pcb[1], prog_pal, argv1, envp1);
-	context_uload(&pcb[1], prog_hello, argv1, envp1);
+	context_uload(&pcb[1], prog_pal, argv1, envp1);
+// 	context_uload(&pcb[1], prog_hello, argv1, envp1);
 	
   switch_boot_pcb();
 
