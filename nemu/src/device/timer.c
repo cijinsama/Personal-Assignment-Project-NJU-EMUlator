@@ -31,7 +31,7 @@ static void rtc_io_handler(uint32_t offset, int len, bool is_write) {
 #ifndef CONFIG_TARGET_AM
 static int temp = 0;
 static void timer_intr() {
-	if(temp++ < 1000){
+	if(temp++ < 100){
 		return;
 	}
 	temp = 0;
