@@ -32,9 +32,9 @@ f(30) f(31)
 .align 3
 .globl __am_asm_trap
 __am_asm_trap:
-#   csrrw sp, mscratch, sp   //交换sp和mscratch
-# 	bnez sp, save_context    //现在sp里面的东西代表ksp，如果是0就是内核态
-# 	csrr sp, mscratch        //用户态就把sp读回来
+  csrrw sp, mscratch, sp   //交换sp和mscratch
+	bnez sp, save_context    //现在sp里面的东西代表ksp，如果是0就是内核态
+	csrr sp, mscratch        //用户态就把sp读回来
 
 save_context:
 	// now sp is pointing to the kernel stack
@@ -52,7 +52,7 @@ save_context:
   STORE t0, OFFSET_CAUSE(sp)
   STORE t1, OFFSET_STATUS(sp)
   STORE t2, OFFSET_EPC(sp)
-#   STORE t3, OFFSET_SP(sp)//+++++
+
 	//调用的参数context准备完成
 
   # set mstatus.MPRV to pass difftest
@@ -68,15 +68,15 @@ save_context:
 	//恢复context
 	mv sp, a0
 	//
-# 	LOAD t3, OFFSET_NP(sp)
-#   bnez t3, restore_context
-#   addi t3, sp, CONTEXT_SIZE//如果是用户态就要把sp读到scratch中
-#   csrw mscratch, t3
+	LOAD t3, OFFSET_NP(sp)
+  bnez t3, restore_context
+  addi t3, sp, CONTEXT_SIZE//如果是用户态就要把sp读到scratch中
+  csrw mscratch, t3
 
 restore_context:
   LOAD t1, OFFSET_STATUS(sp)
   LOAD t2, OFFSET_EPC(sp)
-# 	LOAD t3, OFFSET_SP(sp)//+++
+	LOAD t3, OFFSET_SP(sp)//+++
 	//并没有加载位置0和位置2的寄存器，也就是sp和0
   csrw mstatus, t1
   csrw mepc, t2

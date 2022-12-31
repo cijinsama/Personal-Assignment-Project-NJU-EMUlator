@@ -19,6 +19,11 @@ void event_for_timer(Event *ev, Context *c){
 }
 
 Context* __am_irq_handle(Context *c) {
+	int ksp = 0;
+  asm volatile("csrr %0, mscratch" : "=r"(ksp));
+	c->np = (ksp == 0 ? 3 : 0);  // np should be in Context
+	ksp = 0;
+  asm volatile("csrw mscratch, %0" : : "r"(ksp));
 	__am_get_cur_as(c);
   if (user_handler) {
     Event ev = {0};
