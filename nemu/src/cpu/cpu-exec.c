@@ -163,7 +163,10 @@ static void execute(uint64_t n) {
   for (;n > 0; n --) { 
 		exec_once(&s, cpu.pc);//执行前pc指向将要执行的指令.执行过后pc++
     g_nr_guest_inst ++;
-		Log("csr.MIE %d",csr.mstatus.decode.MIE);
+		if(csr.mstatus.decode.MIE){
+			Log("MIE set to 1");
+		}
+// 		Log("csr.MIE %d",csr.mstatus.decode.MIE);
 		if (csr.mstatus.decode.MIE == 1){
 			uint32_t NO = isa_query_intr();
 			cpu.pc = isa_raise_intr(NO, s.pc);
