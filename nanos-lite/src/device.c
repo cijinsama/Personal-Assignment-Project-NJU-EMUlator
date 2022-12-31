@@ -34,6 +34,22 @@ static char buffer_for_key[1024];
 size_t events_read(void *buf, size_t offset, size_t len) {
 	if (len > 1024) assert(0);
 	AM_INPUT_KEYBRD_T event = io_read(AM_INPUT_KEYBRD);
+
+	switch(event.keycode){
+		case AM_KEY_F1:
+			switch_prog(1);
+			return 0;
+
+		case AM_KEY_F2:
+			switch_prog(2);
+			return 0;
+
+		case AM_KEY_F3:
+			switch_prog(3);
+			return 0;
+	}
+
+
 	memset(buf, 0, len);
 	memset(buffer_for_key, 0, 1024);
 	if (event.keycode == AM_KEY_NONE) return 0;

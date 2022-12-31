@@ -143,6 +143,13 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	return;
 }
 
+
+void switch_prog(int index){
+  if (&pcb[index] == current) return;
+	current = &pcb[index];
+  yield();
+}
+
 Context* schedule(Context *prev) {
 	current->cp = prev;
 // 	current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);

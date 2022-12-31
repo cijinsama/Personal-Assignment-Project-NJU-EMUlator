@@ -19,17 +19,22 @@ void event_for_timer(Event *ev, Context *c){
 }
 
 Context* __am_irq_handle(Context *c) {
-	uintptr_t mscratch = 0;
-	uintptr_t sp = (uintptr_t)&c;
-  asm volatile("csrr %0, mscratch" : "=r"(mscratch));
-	sp += sizeof(Context);
-	if(sp == mscratch) c->np = 3;
-	else c->np = 0;
-	printf("$sp = %08x, scrach = %08x\n", sp, mscratch);
-	
-	uintptr_t temp = 0;
-  asm volatile("csrw mscratch, %0" : : "r"(temp));
+// 	uintptr_t mscratch = 0;
+// 	uintptr_t sp = (uintptr_t)&c;
+//   asm volatile("csrr %0, mscratch" : "=r"(mscratch));
+// 	sp += sizeof(Context);
+// 	if(sp == mscratch) c->np = 3;
+// 	else c->np = 0;
+// 	printf("$sp = %08x, scrach = %08x\n", sp, mscratch);
+// 	
+// 	uintptr_t temp = 0;
+//   asm volatile("csrw mscratch, %0" : : "r"(temp));
 
+  uintptr_t mscratch;
+  uintptr_t kas = 0;
+  asm volatile("csrr %0, mscratch" : "=r"(mscratch));
+  c->np = (mscratch == 0 ? 3 : 0);
+  asm volatile("csrw mscratch, %0" : : "r"(kas));
 
 	__am_get_cur_as(c);
   if (user_handler) {
