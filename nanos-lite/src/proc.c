@@ -52,7 +52,6 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	Log("user_stack_top %08x - %08x",user_stack_top - STACK_SIZE ,user_stack_top);
 	for(int i = 0; i < (STACK_SIZE / PGSIZE); i++){
 		map(&pcb->as, pcb->as.area.end - (i+1) * PGSIZE, user_stack_top - (i+1) * PGSIZE, 0); 
-// 		Log("map vaddr %08x paddr %08x\n", pcb->as.area.end - (i+1) * PGSIZE, user_stack_top - (i+1) * PGSIZE);
 	}
 
 
@@ -61,11 +60,11 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	area.start = area.end - STACK_SIZE;
 
 	//假设main上面的argc从这个开始
-	uintptr_t main_ebp = (uintptr_t)area.end - sizeof(Context) - gap_between_context_string - gap_between_main_context;//这两个地方用到了end
+	uintptr_t main_ebp = (uintptr_t)area.end - gap_between_context_string - gap_between_main_context;//这两个地方用到了end
 	char** environ = (char**) (main_ebp + gap_between_main_env);
 
 	//搜索argcenv的大小，并且获得储存完过后的地址
-	char* current_addr = area.end - sizeof(Context) - gap_between_context_string;//这两个地方用到了end
+	char* current_addr = area.end - gap_between_context_string;//这两个地方用到了end
 	char* env_str_addr = NULL;
 	char* arg_str_addr = NULL;
 	int argc = 0;
@@ -99,14 +98,11 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 		for(int i = 0; i < argc ; i++){
 			strcpy(current_addr, argv[i]);
 	 		argp_ustack[i] = current_addr;
-// 			Log("strlen = %d", strlen(argv[i]));
 			Log("uload argv[%d]: %s at %p - %p ,gap to %p", i,current_addr, current_addr, current_addr + strlen(argv[i]),current_addr + strlen(argv[i]) + gap_between );
-// 			Log("debug string is %s", arg_str_addr);
 			current_addr += strlen(argv[i]) + gap_between;
 		}
 	}
 
-// 	Log("debug string is %s", arg_str_addr);
 	//把字符串对应的指针copy进取
 	//首先正向copyenv
 	if(envp){
@@ -121,7 +117,6 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	if(argv){
 		for(int i = 0; i < argc; i++){
 			argv_[i] = argp_ustack[i];
-// 			Log("uload argv [%d]: %p at %p", i,argp_ustack[i], &argp_ustack[i]);
 		}
 	}
 	argv_[argc] = NULL;
@@ -130,14 +125,8 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	//开始写下方的东西
 	uintptr_t temp = main_ebp + 4;
 	*(int *)temp  = argc;
-// 	Log("&argc is %p", (int *)temp);
-// 	Log("argc is %p", *(int *)temp);
 	temp += sizeof(int);
 	*(char ***)temp = argv_;
-// 	Log("&argv is %p", (char ***)temp);
-// 	Log("argv is %p", *(char ***)temp);
-// 	Log("argv[0] is %p", **(char ***)temp);
-// 	Log("argv[0] string is %s", **(char ***)temp);
 	temp += sizeof(char **);
 	*(char ***) temp = environ;
 
