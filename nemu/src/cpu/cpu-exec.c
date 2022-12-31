@@ -165,13 +165,14 @@ static void execute(uint64_t n) {
 		exec_once(&s, cpu.pc);//执行前pc指向将要执行的指令.执行过后pc++
     g_nr_guest_inst ++;
 		if(csr.mstatus.decode.MIE != temp_flag){
-			Log("MIE set to %d, pc = %08x",csr.mstatus.decode.MIE, cpu.pc);
+			Log("MIE set to %d, cpu.pc = %08x, s.pc = %08x",csr.mstatus.decode.MIE, cpu.pc, s.pc);
 			temp_flag = csr.mstatus.decode.MIE;
 		}
 // 		Log("csr.MIE %d",csr.mstatus.decode.MIE);
 		uint32_t NO = isa_query_intr();
 		if (NO == IRQ_TIMER){
 			cpu.pc = isa_raise_intr(NO, s.pc);
+			Log("cpu.pc set to %08x", cpu.pc);
 		}
     trace_and_difftest(&s, cpu.pc);
     if (nemu_state.state != NEMU_RUNNING) break;
