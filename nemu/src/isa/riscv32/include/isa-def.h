@@ -70,6 +70,7 @@ typedef struct {
     } decode;
     word_t val;
   } satp;
+	word_t mscratch;
 } riscv32_CSR_state;
 
 

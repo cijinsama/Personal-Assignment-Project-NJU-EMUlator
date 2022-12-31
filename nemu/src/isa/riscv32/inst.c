@@ -49,6 +49,7 @@ inline static word_t get_csr(word_t csr_num){
 		case 0x0342: ret = csr.mcause;									break;
 		case 0x0305: ret = csr.mtvec;										break;
 		case 0x0180: ret = csr.satp.val;								break;
+		case 0x0340: ret = csr.mscratch;								break;
 		default : Log("Unknown csr register %08x\n", csr_num); panic("please complete\n");
 	}
 	return ret;
@@ -64,6 +65,7 @@ inline static void set_csr(word_t csr_num, word_t imm){
 		case 0x0342: csr.mcause = imm;												break;
 		case 0x0305: csr.mtvec = imm;													break;
 		case 0x0180: csr.satp.val = imm;											break;
+		case 0x0340: csr.mscratch = imm;											break;
 		default : Log("Unknown csr register\n"); panic("please complete\n");
 	}
 // 	Log("mstatus.val = %08x",csr.mstatus.val);
@@ -78,6 +80,7 @@ inline static void and_csr(word_t csr_num, word_t imm){
 		case 0x0342: csr.mcause = csr.mcause | imm;									break;
 		case 0x0305: csr.mtvec = csr.mtvec | imm;										break;
 		case 0x0180: csr.satp.val = csr.satp.val | imm;							break;
+		case 0x0340: csr.mscratch = csr.mscratch | imm;							break;
 		default : Log("Unknown csr register\n"); panic("please complete\n");
 	}
 }
