@@ -31,19 +31,9 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
 }
 
 word_t isa_query_intr() {
-	if (csr.mstatus.decode.MIE == 1) {
-		if(cpu.INTR){
-			cpu.INTR = false;
-			return IRQ_TIMER;
-		}
-// 		switch(csr.mstatus.val){
-// 			case 0x1808:
-// 				return EXCP_Environment;
-// 			case 0x21808://这个是syscall
-// 				return EXCP_Environment;
-// 			default : 
-// 				return EXCP_Environment;
-// 		}
+	if ((csr.mstatus.decode.MIE == 1) && cpu.INTR) {
+		cpu.INTR = false;
+		return IRQ_TIMER;
 	}
 	return INTR_EMPTY;
 }

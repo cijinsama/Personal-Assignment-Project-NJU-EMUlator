@@ -167,8 +167,8 @@ static void execute(uint64_t n) {
 			Log("MIE set to 1");
 		}
 // 		Log("csr.MIE %d",csr.mstatus.decode.MIE);
-		if (csr.mstatus.decode.MIE == 1){
-			uint32_t NO = isa_query_intr();
+		uint32_t NO = isa_query_intr();
+		if (NO == IRQ_TIMER){
 			cpu.pc = isa_raise_intr(NO, s.pc);
 		}
     trace_and_difftest(&s, cpu.pc);
