@@ -154,16 +154,16 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 
 Context* schedule(Context *prev) {
 	current->cp = prev;
-	current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
-// 	int i = 0;
-// 	for(i = 0; i < MAX_NR_PROC; i++){
-// 		if(pcb[i].cp != NULL && current != &pcb[i]){
-// 			Log("switch to pcb %d", i);
-// 			current = &pcb[i];
-// 			return current->cp;
-// 		}
-// 	}
-// 	if(i == MAX_NR_PROC) panic("lack of available pcb");
+// 	current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
+	int i = 0;
+	for(i = 0; i < MAX_NR_PROC; i++){
+		if(pcb[i].cp != NULL && current != &pcb[i]){
+			Log("switch to pcb %d", i);
+			current = &pcb[i];
+			return current->cp;
+		}
+	}
+	if(i == MAX_NR_PROC) panic("lack of available pcb");
   return current->cp;
 }
 
