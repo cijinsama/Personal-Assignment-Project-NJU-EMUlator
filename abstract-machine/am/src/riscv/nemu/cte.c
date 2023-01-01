@@ -34,8 +34,7 @@ Context* __am_irq_handle(Context *c) {
 
 
 	
-	uintptr_t temp = 0;
-  asm volatile("csrw mscratch, %0" : : "r"(temp));
+  asm volatile("csrwi mscratch, 0");
 
 
 	__am_get_cur_as(c);
