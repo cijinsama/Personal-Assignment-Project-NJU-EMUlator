@@ -89,19 +89,13 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
 	}
 	uintptr_t pt_item = *(uint32_t *)((pd_item >> 10 << 12) | (pt_bias << 2));
   pt_item = 0xfffffc00u & (((uintptr_t)pa & ~0xfff) >> 2);
-	pt_item = pt_item | PTE_V | PTE_X | PTE_W | PTE_R;
+	pt_item = pt_item | PTE_V;
+// 	pt_item = pt_item | PTE_V | PTE_X | PTE_W | PTE_R;
 	*(uint32_t *)((pd_item >> 10 << 12) + (pt_bias << 2)) = pt_item;
 	if( (*(uint32_t *)((pd_item >> 10 << 12) + (pt_bias << 2))) >> 10 << 12 != (uint32_t)pa ){
 		printf("va : %08x, pa : %08x\n",(*(uint32_t *)((pd_item >> 10 << 12) + (pt_bias << 2))) >> 10 << 12, pa);
 		panic("va != pa");
 	}
-// 	if(((uintptr_t)va & ~0xfff) == 0x7ffff000u){
-// 		printf("base %08x\n", as->ptr);
-// 		printf("pd_item_addr = %08x\n", ((uintptr_t)as->ptr + (pd_bias << 2)));
-// 		printf("pd_item = %08x\n", (pd_item & ~0x3ff) << 2);
-// 		printf("pd_item_addr = %08x\n", ((pd_item >> 10 << 12) | (pt_bias << 2)));
-// 		printf("pt_item = %08x\n", (pt_item & ~0x3ff) << 2);
-// 	}
 }
 
 Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
