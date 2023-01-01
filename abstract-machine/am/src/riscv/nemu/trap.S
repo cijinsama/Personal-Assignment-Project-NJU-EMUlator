@@ -77,7 +77,8 @@ save_context:
 	//
 	LOAD t3, OFFSET_NP(sp)
   bnez t3, restore_context
-  addi t3, sp, CONTEXT_SIZE//如果是用户态就要把sp读到scratch中
+  addi t3, sp, 0//如果是用户态就要把sp读到scratch中
+#   addi t3, sp, CONTEXT_SIZE//如果是用户态就要把sp读到scratch中
   csrw mscratch, t3
 
 restore_context:
