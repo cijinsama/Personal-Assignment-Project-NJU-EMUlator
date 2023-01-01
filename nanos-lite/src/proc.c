@@ -204,9 +204,9 @@ void init_proc() {
   char *envp2[] = {NULL};
 	context_uload(&pcb[2], prog_nterm, argv2, envp2);
 	
-  char *argv3[] = {prog_dummy, NULL};
+  char *argv3[] = {prog_pal, NULL};
   char *envp3[] = {NULL};
-	context_uload(&pcb[3], prog_dummy, argv3, envp3);
+	context_uload(&pcb[3], prog_pal, argv3, envp3);
 
   switch_boot_pcb();
 
