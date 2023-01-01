@@ -189,23 +189,27 @@ size_t execve(const char * filename, char *const argv[], char *const envp[]){
 #define prog_exectest "/bin/exec-test"
 #define prog_pal "/bin/pal"
 #define prog_dummy "/bin/dummy"
-#define prog_n prog_1919
+#define prog_bird "/bin/bird"
 
 void init_proc() {
   Log("Initializing processes...");
 	context_kload(&pcb[0], hello_fun, "cijin");
-// 	context_kload(&pcb[1], hello_fun, "liuyi");
-//   char *argv1[] = {prog_pal,"--skip" ,NULL};
-//   char *argv1[] = {prog_hello ,NULL};
-//   char *envp1[] = {NULL};
-// 	context_uload(&pcb[1], prog_pal, argv1, envp1);
+
+
+  char *argv1[] = {prog_pal,"--skip" ,NULL};
+  char *envp1[] = {NULL};
+	context_uload(&pcb[1], prog_pal, argv1, envp1);
 
 
 
   char *argv2[] = {prog_nterm, NULL};
   char *envp2[] = {NULL};
-	context_uload(&pcb[1], prog_nterm, argv2, envp2);
+	context_uload(&pcb[2], prog_nterm, argv2, envp2);
 	
+  char *argv3[] = {prog_bird, NULL};
+  char *envp3[] = {NULL};
+	context_uload(&pcb[3], prog_bird, argv3, envp3);
+
   switch_boot_pcb();
 
   Log("Complete Initializing processes...");
