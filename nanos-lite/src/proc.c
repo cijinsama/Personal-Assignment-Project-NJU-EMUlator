@@ -23,8 +23,7 @@ void switch_boot_pcb() {
 void hello_fun(void *arg) {
   int j = 1;
   while (1) {
-    Log("Hello World from Nanos-lite with arg '%p' for the %dth time!", (uintptr_t)arg, j);
-    Log("arg is %s", ((char *) arg), j);
+    Log("Hello World from Nanos-lite with arg '%s' for the %dth time!", (char *)arg, j);
     j ++;
     yield();
   }
@@ -143,25 +142,24 @@ void context_uload(PCB *pcb, char filename[],char *argv[],char *envp[]){
 	return;
 }
 
+static int front_proc = 1;
 
 void switch_prog(int index){
-  if (&pcb[index] == current) return;
-	current = &pcb[index];
-  yield();
+	front_proc = index;
 }
 
 Context* schedule(Context *prev) {
 	current->cp = prev;
-// 	current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
-	int i = 0;
-	for(i = 0; i < MAX_NR_PROC; i++){
-		if(pcb[i].cp != NULL && current != &pcb[i]){
+	current = (current == &pcb[0] ? &pcb[front_proc] : &pcb[0]);
+// 	int i = 0;
+// 	for(i = 0; i < MAX_NR_PROC; i++){
+// 		if(pcb[i].cp != NULL && current != &pcb[i]){
 // 			Log("switch to pcb %d", i);
-			current = &pcb[i];
-			return current->cp;
-		}
-	}
-	if(i == MAX_NR_PROC) panic("lack of available pcb");
+// 			current = &pcb[i];
+// 			return current->cp;
+// 		}
+// 	}
+// 	if(i == MAX_NR_PROC) panic("lack of available pcb");
   return current->cp;
 }
 
