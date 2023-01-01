@@ -26,7 +26,7 @@ Context* __am_irq_handle(Context *c) {
 	if(sp == mscratch) {printf("current ksp == 0");c->np = 3;}
 	else {printf("current ksp != 0");c->np = 0;}
 	printf("$sp = %08x, scrach = %08x\n", sp, mscratch);
-	printf("& = %08x", &c);
+	printf("& = %08x\n", &c);
 
 
 	uintptr_t temp2 = c->gpr[2];
