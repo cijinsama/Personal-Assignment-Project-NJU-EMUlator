@@ -10,11 +10,8 @@
 extern int _syscall_(int, uintptr_t, uintptr_t, uintptr_t);
 
 int main() {
-// 	int i  = 1;
 	while(1){
-		printf("123\n");
-// 		i++;
-		_syscall_(SYS_yield, 0, 0, 0);
+		printf("This is dummy running\n");
 	}
-  return _syscall_(SYS_yield, 0, 0, 0);
+  return 0;
 }

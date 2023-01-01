@@ -22,8 +22,8 @@ void do_syscall(Context *c) {
 	Log("[strace]: system call number: %x, args : %x, %x, %x", a[0], a[1], a[2], a[3]);
 #endif
   switch (a[0]) {
-// 		case SYS_exit: c->GPRx = do_sys_execve("/bin/nterm",(char *const *) a[2],(char *const *) a[3]); break;
-		case SYS_exit: halt(0); break;
+		case SYS_exit: c->GPRx = do_sys_execve("/bin/nterm",(char *const *) a[2],(char *const *) a[3]); break;
+// 		case SYS_exit: halt(0); break;
 		case SYS_yield: yield(); c->GPRx = 0; break;
 		case SYS_open: c->GPRx = do_sys_open((char *) a[1], a[2], a[3]); break;
 		case SYS_read: c->GPRx = do_sys_read(a[1],(void *) a[2], a[3]); break;
