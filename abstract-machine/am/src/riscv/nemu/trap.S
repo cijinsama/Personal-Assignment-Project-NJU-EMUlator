@@ -83,12 +83,13 @@ save_context:
 restore_context:
   LOAD t1, OFFSET_STATUS(sp)
   LOAD t2, OFFSET_EPC(sp)
-	LOAD t3, OFFSET_SP(sp)//+++
-	//并没有加载位置0和位置2的寄存器，也就是sp和0
   csrw mstatus, t1
   csrw mepc, t2
 
   MAP(REGS, POP)
 
+	LOAD t3, OFFSET_SP(sp)//+++
   addi sp, sp, CONTEXT_SIZE
+	mv t3, sp
+
   mret
