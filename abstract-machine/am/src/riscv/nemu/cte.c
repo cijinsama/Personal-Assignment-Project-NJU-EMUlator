@@ -23,8 +23,8 @@ Context* __am_irq_handle(Context *c) {
 	uintptr_t sp = (uintptr_t)c;
   asm volatile("csrr %0, mscratch" : "=r"(mscratch));
 	sp += sizeof(Context);
-	if(sp == mscratch) {;c->np = 3;}
-	else {;c->np = 0;}
+	if(sp == mscratch) {c->np = 3;}
+	else {c->np = 0;}
 // 	printf("$sp = %08x, scrach = %08x\n", sp, mscratch);
 // 	printf("& = %08x\n", &c);
 
@@ -34,7 +34,8 @@ Context* __am_irq_handle(Context *c) {
 
 
 	
-  asm volatile("csrwi mscratch, 0");
+	uintptr_t temp = 0;
+  asm volatile("csrw mscratch, %0" : : "r"(temp));
 
 
 	__am_get_cur_as(c);
