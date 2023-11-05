@@ -61,6 +61,54 @@ when making the config, enter `Testing and Debugging`. Disable the tracer for pe
 
 Save the config
 
+## Download PAL data file
+You can download PAL data file at [Link](https://ci-jin.top/Resource/pal-data-new.tar.bz2)
+
+make data dir:
+```
+cd navy-apps/apps/pal/repo
+mkdir data
+```
+Then upzip datafile to `navy-apps/apps/pal/repo/data/`
+
+After this, your files are supposed to be like:
+```
+.../ICS/navy-apps/apps/pal/repo
+├── AUTHORS -> docs/AUTHORS
+├── build
+│   └── device
+├── data
+│   ├── 1.rpg
+│   ├── 2.rpg
+│   ├── 3.rpg
+│   ├── 4.rpg
+│   ├── 5.rpg
+│   ├── abc.mkf
+│   ├── ball.mkf
+│   ├── data.mkf
+│   ├── desc.dat
+│   ├── fbp.mkf
+│   ├── fire.mkf
+│   ├── f.mkf
+│   ├── gop.mkf
+│   ├── map.mkf
+│   ├── mgo.mkf
+│   ├── m.msg
+│   ├── mus.mkf
+│   ├── pat.mkf
+│   ├── rgm.mkf
+│   ├── rng.mkf
+│   ├── sdlpal.cfg
+│   ├── sss.mkf
+│   ├── voc.mkf
+│   ├── wor16.asc
+│   ├── wor16.fon
+│   └── word.dat
+├── docs
+...
+```
+
+
 ## Init Navy-app
 ```
 cd navy-apps
@@ -71,4 +119,10 @@ make ISA=$ISA ramdisk
 ```
 cd nanos-lite
 make ARCH=$ISA-nemu update
+```
+
+## Run the PAL and Nterm NOW!!!!
+```
+cd nanos-lite
+make ARCH=$ISA-nemu run
 ```
