@@ -5,12 +5,18 @@ in Department of Computer Science and Technology, Nanjing University.
 
 The project includes:
 > [Link](https://nju-projectn.github.io/ics-pa-gitbook/ics2022/index.html)
+> 
 > The fundamental way to understand "how a program runs on a computer" is to implement a complete computer system from "zero". The small project (Programming Assignment, PA) of the computer system basic course of the Department of Computer Science and Technology of Nanjing University will propose x86/mips32 /riscv32(64) architecture corresponding subset of the teaching version, guiding students to implement a simplified but fully functional x86/mips32/riscv32(64) emulator NEMU (NJU EMUlator), and finally run the game "Legend of Sword and Fairy" on NEMU ", to allow students to explore the basic principles of "programs running on computers". NEMU was inspired by QEMU and removed a large number of parts that were significantly different from the course content. PA includes a preparation experiment (configuring the experimental environment) and 5 parts Coherent experimental content:
 > 
+> 
 > Turing machine and simple debugger
+> 
 > von Neumann computer system
+> 
 > batch processing system
+> 
 > time sharing multitasking
+> 
 > Program performance optimization
 
 Follow the instructions below. You can play PAL( an old PC game ) while running Nterm( a simple terminal ) synchronously and get outputing "hello" simultaneously on my implemented emulator.
