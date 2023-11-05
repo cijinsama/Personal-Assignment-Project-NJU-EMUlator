@@ -9,5 +9,6 @@
 !README.md
 !.gitignore
 !init.sh
+!/picture/*
 /fceux-am
 /am-kernels

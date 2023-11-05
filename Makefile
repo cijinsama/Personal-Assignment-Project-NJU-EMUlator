@@ -1,5 +1,5 @@
-STUID = 201870262
-STUNAME = 刘一  
+#STUID = 
+#STUNAME = 
 
 # DO NOT modify the following code!!!
 
