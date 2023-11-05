@@ -126,3 +126,11 @@ make ARCH=$ISA-nemu update
 cd nanos-lite
 make ARCH=$ISA-nemu run
 ```
+After the loading animation, you can see the game running while stdout outputing Hello
+![runningPAL]()
+
+You can press `F2` to change to Nterm, which is running synchronous with PAL
+![runningNterm]()
+You can also press `F1` to swich back.
+
+This synchronous running is based on The Time-Sharing Operating System
