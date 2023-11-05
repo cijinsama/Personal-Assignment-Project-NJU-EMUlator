@@ -2,6 +2,7 @@
 
 This project is the programming assignment of the class ICS(Introduction to Computer System)
 in Department of Computer Science and Technology, Nanjing University.
+[Link](https://github.com/NJU-ProjectN/ics-pa)
 
 The project includes:
 > [Link](https://nju-projectn.github.io/ics-pa-gitbook/ics2022/index.html)
